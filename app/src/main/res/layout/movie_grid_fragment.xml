@@ -1,10 +1,16 @@
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          tools:context=".MovieGridFragment"
-          tools:showIn="@layout/activity_main"
-          android:id="@+id/movie_grid"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:numColumns="2"
-          android:stretchMode="columnWidth"
-          android:gravity="center"/>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".MovieGridFragment"
+             tools:showIn="@layout/activity_main">
+
+    <GridView
+              android:id="@+id/movie_grid"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:numColumns="2"
+              android:stretchMode="columnWidth"
+              android:gravity="center"/>
+
+</FrameLayout>
