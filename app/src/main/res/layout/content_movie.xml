@@ -13,4 +13,52 @@
     tools:context="com.redraysoftware.trevie.MovieActivity"
     tools:showIn="@layout/activity_movie">
 
+    <TextView
+        android:id="@+id/movie_details_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Movie Title"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <TextView
+        android:id="@+id/movie_details_release_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/movie_details_title"
+        android:layout_alignStart="@+id/movie_details_title"
+        android:layout_below="@+id/movie_details_title"
+        android:text="Release Date"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+    <ImageView
+        android:id="@+id/movie_details_poster"
+        android:layout_width="110dp"
+        android:layout_height="160dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="8dp"
+        android:src="@drawable/temp"/>
+
+    <TextView
+        android:id="@+id/movie_details_synopsis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/movie_details_release_date"
+        android:layout_alignStart="@+id/movie_details_release_date"
+        android:layout_below="@+id/movie_details_release_date"
+        android:layout_marginTop="8dp"
+        android:text="SYNOPSIS"/>
+
+    <TextView
+        android:id="@+id/movie_details_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="R"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 </RelativeLayout>
