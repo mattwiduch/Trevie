@@ -1,5 +1,6 @@
 package com.redraysoftware.trevie;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -43,6 +44,10 @@ public class MovieGridFragment extends Fragment {
 
     @OnItemClick(R.id.movie_grid)
     public void startMovieActivity(int position) {
+        Intent intent = new Intent(getActivity(), MovieActivity.class);
+
+        startActivity(intent);
+
         Toast.makeText(getActivity(), "" + position,
                 Toast.LENGTH_SHORT).show();
     }
