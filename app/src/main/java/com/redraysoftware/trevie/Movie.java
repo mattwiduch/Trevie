@@ -6,14 +6,14 @@ import android.os.Parcelable;
 /**
  * Created by frano on 03/11/2015.
  */
-public class MovieDetails implements Parcelable{
+public class Movie implements Parcelable{
     private String mTitle;
     private String mReleaseDate;
     private String mRating;
     private String mSynopsis;
     private Integer mPosterId;
 
-    public MovieDetails() {
+    public Movie() {
         mTitle = "Jebaka Bujaka";
         mReleaseDate = "2015";
         mRating = "10/10";
@@ -21,22 +21,22 @@ public class MovieDetails implements Parcelable{
         mPosterId = R.drawable.temp;
     }
 
-    protected MovieDetails(Parcel in) {
+    protected Movie(Parcel in) {
         mTitle = in.readString();
         mReleaseDate = in.readString();
         mRating = in.readString();
         mSynopsis = in.readString();
     }
 
-    public static final Creator<MovieDetails> CREATOR = new Creator<MovieDetails>() {
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
         @Override
-        public MovieDetails createFromParcel(Parcel in) {
-            return new MovieDetails(in);
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
         }
 
         @Override
-        public MovieDetails[] newArray(int size) {
-            return new MovieDetails[size];
+        public Movie[] newArray(int size) {
+            return new Movie[size];
         }
     };
 
@@ -56,5 +56,9 @@ public class MovieDetails implements Parcelable{
 
     public int getPosterId() {
         return mPosterId;
+    }
+
+    public String getTitle() {
+        return mTitle;
     }
 }

@@ -12,10 +12,10 @@ import java.util.List;
 /**
  * Created by frano on 03/11/2015.
  */
-public class MovieDetailsAdapter extends ArrayAdapter<MovieDetails> {
+public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
     private Context mContext;
 
-    public MovieDetailsAdapter(Context context, int resourceId, List<MovieDetails> items) {
+    public MovieDetailsAdapter(Context context, int resourceId, List<Movie> items) {
         super(context, resourceId, items);
         mContext = context;
     }
@@ -23,7 +23,7 @@ public class MovieDetailsAdapter extends ArrayAdapter<MovieDetails> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
-        MovieDetails movieDetails = getItem(position);
+        Movie movie = getItem(position);
 
         if (convertView == null) {
             // inflate the GridView item layout
@@ -36,7 +36,7 @@ public class MovieDetailsAdapter extends ArrayAdapter<MovieDetails> {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setImageResource(movieDetails.getPosterId());
+        imageView.setImageResource(movie.getPosterId());
         return imageView;
     }
 }

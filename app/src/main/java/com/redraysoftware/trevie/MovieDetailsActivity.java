@@ -15,7 +15,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @Bind(R.id.movie_details_rating) TextView ratingTextView;
     @Bind(R.id.movie_details_synopsis) TextView synopsisTextView;
     @Bind(R.id.movie_details_poster) ImageView posterImageView;
-    private MovieDetails mMovieDetails;
+    private Movie mMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +27,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mMovie = getIntent().getParcelableExtra("Movie");
+        titleTextView.setText(mMovie.getTitle());
     }
 
 }
