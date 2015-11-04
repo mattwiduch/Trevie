@@ -23,7 +23,6 @@ public class MovieGridFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         //placeholder items
         List<MovieItem> movieItems = new ArrayList<MovieItem>();
         for (int i = 0; i < 33; i++) {
@@ -32,10 +31,10 @@ public class MovieGridFragment extends Fragment {
         }
 
         View view = inflater.inflate(R.layout.movie_grid_fragment, container, false);
-
         GridView gridView = (GridView) view.findViewById(R.id.movie_grid);
         gridView.setAdapter(new MovieItemAdapter(getActivity(), R.layout.movie_grid_item, movieItems));
 
+        //placeholder listener
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {

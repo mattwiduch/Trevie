@@ -29,7 +29,6 @@ public class MovieItemAdapter extends ArrayAdapter<MovieItem> {
             // inflate the GridView item layout
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.movie_grid_item, parent, false);
-
             //set views
             imageView = (ImageView) convertView.findViewById(R.id.movie_grid_poster);
             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
