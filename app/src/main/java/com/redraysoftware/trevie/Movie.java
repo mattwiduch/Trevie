@@ -61,4 +61,16 @@ public class Movie implements Parcelable{
     public String getTitle() {
         return mTitle;
     }
+
+    public String getReleaseDate() {
+        return mReleaseDate;
+    }
+
+    public String getRating() {
+        return mRating;
+    }
+
+    public String getSynopsis() {
+        return mSynopsis;
+    }
 }

@@ -30,6 +30,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         mMovie = getIntent().getParcelableExtra("Movie");
         titleTextView.setText(mMovie.getTitle());
+        releaseTextView.setText(mMovie.getReleaseDate());
+        ratingTextView.setText(mMovie.getRating());
+        synopsisTextView.setText(mMovie.getSynopsis());
     }
 
 }
