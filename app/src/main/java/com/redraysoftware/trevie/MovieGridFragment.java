@@ -5,17 +5,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnItemClick;
+
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MovieGridFragment extends Fragment {
+    @Bind(R.id.movie_grid) GridView gridView;
 
     public MovieGridFragment() {
     }
@@ -31,18 +35,15 @@ public class MovieGridFragment extends Fragment {
         }
 
         View view = inflater.inflate(R.layout.movie_grid_fragment, container, false);
-        GridView gridView = (GridView) view.findViewById(R.id.movie_grid);
+        ButterKnife.bind(this, view);
         gridView.setAdapter(new MovieItemAdapter(getActivity(), R.layout.movie_grid_item, movieItems));
 
-        //placeholder listener
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Toast.makeText(getActivity(), "" + position,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
         return view;
+    }
+
+    @OnItemClick(R.id.movie_grid)
+    public void startMovieActivity(int position) {
+        Toast.makeText(getActivity(), "" + position,
+                Toast.LENGTH_SHORT).show();
     }
 }
