@@ -20,7 +20,7 @@ import butterknife.OnItemClick;
  */
 public class MovieGridFragment extends Fragment {
     @Bind(R.id.movie_grid) GridView gridView;
-    private List<MovieItem> mMovieList;
+    private List<MovieDetails> mMovieList;
 
     public MovieGridFragment() {
     }
@@ -29,23 +29,23 @@ public class MovieGridFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //placeholder items
-        mMovieList = new ArrayList<MovieItem>();
+        mMovieList = new ArrayList<MovieDetails>();
         for (int i = 0; i < 33; i++) {
-            MovieItem item = new MovieItem();
+            MovieDetails item = new MovieDetails();
             mMovieList.add(item);
         }
 
         View view = inflater.inflate(R.layout.movie_grid_fragment, container, false);
         ButterKnife.bind(this, view);
-        gridView.setAdapter(new MovieItemAdapter(getActivity(), R.layout.movie_grid_item, mMovieList));
+        gridView.setAdapter(new MovieDetailsAdapter(getActivity(), R.layout.movie_grid_item, mMovieList));
 
         return view;
     }
 
     @OnItemClick(R.id.movie_grid)
     public void startMovieActivity(int position) {
-        Intent intent = new Intent(getActivity(), MovieActivity.class);
-        intent.putExtra("MovieItem", mMovieList.get(position));
+        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
+        intent.putExtra("MovieDetails", mMovieList.get(position));
         startActivity(intent);
     }
 }

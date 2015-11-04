@@ -9,12 +9,13 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MovieActivity extends AppCompatActivity {
+public class MovieDetailsActivity extends AppCompatActivity {
     @Bind(R.id.movie_details_title) TextView titleTextView;
     @Bind(R.id.movie_details_release_date) TextView releaseTextView;
     @Bind(R.id.movie_details_rating) TextView ratingTextView;
     @Bind(R.id.movie_details_synopsis) TextView synopsisTextView;
     @Bind(R.id.movie_details_poster) ImageView posterImageView;
+    private MovieDetails mMovieDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
