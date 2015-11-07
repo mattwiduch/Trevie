@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,7 +22,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,7 +32,7 @@ import butterknife.OnItemClick;
  */
 public class MovieGridFragment extends Fragment {
     @Bind(R.id.movie_grid) GridView gridView;
-    private List<Movie> mMovieList;
+    private MovieDetailsAdapter mMovieDetailsAdapter;
 
     public MovieGridFragment() {
     }
@@ -46,16 +47,10 @@ public class MovieGridFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //placeholder items
-        mMovieList = new ArrayList<Movie>();
-        for (int i = 0; i < 33; i++) {
-            Movie item = new Movie();
-            mMovieList.add(item);
-        }
-
+        mMovieDetailsAdapter = new MovieDetailsAdapter(getActivity(), R.layout.movie_grid_item, new ArrayList<Movie>());
         View view = inflater.inflate(R.layout.movie_grid_fragment, container, false);
         ButterKnife.bind(this, view);
-        gridView.setAdapter(new MovieDetailsAdapter(getActivity(), R.layout.movie_grid_item, mMovieList));
+        gridView.setAdapter(mMovieDetailsAdapter);
 
         return view;
     }
@@ -63,7 +58,7 @@ public class MovieGridFragment extends Fragment {
     @OnItemClick(R.id.movie_grid)
     public void startMovieActivity(int position) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-        intent.putExtra("Movie", mMovieList.get(position));
+        intent.putExtra("Movie", mMovieDetailsAdapter.getItem(position));
         startActivity(intent);
     }
 
@@ -159,8 +154,47 @@ public class MovieGridFragment extends Fragment {
             return null;
         }
 
-        private Movie[] getMovieDataFromJsonString(String moviesJsonString) {
-            return new Movie[0];
+        @Override
+        protected void onPostExecute(Movie[] results) {
+            if (results != null) {
+                mMovieDetailsAdapter.clear();
+                for(Movie movie : results) {
+                    mMovieDetailsAdapter.add(movie);
+                }
+                // New data is back from the server.  Hooray!
+            }
+        }
+
+        private Movie[] getMovieDataFromJsonString(String moviesJsonString) throws JSONException {
+
+            // Names of JSON objects to be extracted
+            final String TMDB_RESULTS = "results";
+            final String TMDB_TITLE = "title";
+            final String TMDB_RELEASE_DATE = "release_date";
+            final String TMDB_AVG_RATING = "vote_average";
+            final String TMDB_OVERVIEW = "overview";
+            final String TMDB_POSTER_PATH = "poster_path";
+
+            JSONObject moviesJson = new JSONObject(moviesJsonString);
+            JSONArray moviesArray = moviesJson.getJSONArray(TMDB_RESULTS);
+
+            Movie[] movies = new Movie[moviesArray.length()];
+
+            for (int i = 0; i < moviesArray.length(); i++) {
+                // Get the JSON object representing the movie
+                JSONObject movie = moviesArray.getJSONObject(i);
+
+                // Get appropriate data
+                String title = movie.getString(TMDB_TITLE);
+                String releaseDate = movie.getString(TMDB_RELEASE_DATE);
+                String avgRating = movie.getString(TMDB_AVG_RATING);
+                String overview = movie.getString(TMDB_OVERVIEW);
+                String posterPath = movie.getString(TMDB_POSTER_PATH);
+
+                movies[i] = new Movie(title, releaseDate, avgRating, overview, posterPath);
+            }
+
+            return movies;
         }
     }
 }

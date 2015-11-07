@@ -11,14 +11,14 @@ public class Movie implements Parcelable{
     private String mReleaseDate;
     private String mRating;
     private String mSynopsis;
-    private Integer mPosterId;
+    private Integer mPosterPath;
 
-    public Movie() {
-        mTitle = "Jebaka Bujaka";
-        mReleaseDate = "2015";
-        mRating = "10/10";
-        mSynopsis = "Wyjebany film kurwa no";
-        mPosterId = R.drawable.temp;
+    public Movie(String title, String releaseDate, String avgRating, String overview, String posterPath) {
+        mTitle = title;
+        mReleaseDate = releaseDate;
+        mRating = avgRating;
+        mSynopsis = overview;
+        mPosterPath = R.drawable.temp;//posterPath
     }
 
     protected Movie(Parcel in) {
@@ -51,11 +51,11 @@ public class Movie implements Parcelable{
         dest.writeString(mReleaseDate);
         dest.writeString(mRating);
         dest.writeString(mSynopsis);
-        dest.writeInt(mPosterId);
+        dest.writeInt(mPosterPath);
     }
 
-    public int getPosterId() {
-        return mPosterId;
+    public int getPosterPath() {
+        return mPosterPath;
     }
 
     public String getTitle() {

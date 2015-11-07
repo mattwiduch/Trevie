@@ -36,7 +36,7 @@ public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setImageResource(movie.getPosterId());
+        imageView.setImageResource(movie.getPosterPath());
         return imageView;
     }
 }
