@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +70,25 @@ public class MovieGridFragment extends Fragment {
 
             // Will store raw JSON response
             String moviesJsonString = null;
+
+            try {
+
+            } catch (IOException e){
+                Log.e(TAG, "Error ", e);
+                // Data retrieval failed so there is no point in going ahead
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(TAG, "Error closing stream ", e);
+                    }
+                }
+            }
 
             return new Movie[0];
         }
