@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import java.io.BufferedReader;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +53,22 @@ public class MovieGridFragment extends Fragment {
     }
 
     public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
+        private final String TAG = FetchMoviesTask.class.getSimpleName();
+
         @Override
         protected Movie[] doInBackground(String... params) {
+            //Verify size of parameters to ensure there's something to look up
+            if (params.length == 0) {
+                return null;
+            }
+
+            // Will retrieve data
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            // Will store raw JSON response
+            String moviesJsonString = null;
+
             return new Movie[0];
         }
     }
