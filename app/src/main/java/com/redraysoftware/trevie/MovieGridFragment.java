@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -128,10 +130,7 @@ public class MovieGridFragment extends Fragment {
                     // Stream was empty
                     return null;
                 }
-
                 moviesJsonString = buffer.toString();
-                Log.v(TAG, moviesJsonString);
-
             } catch (IOException e){
                 Log.e(TAG, "Error ", e);
                 // Data retrieval failed so there is no point in going ahead
@@ -149,6 +148,18 @@ public class MovieGridFragment extends Fragment {
                 }
             }
 
+            try {
+                return getMovieDataFromJsonString(moviesJsonString);
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
+
+            // This will only happen if there was an error getting or parsing the data
+            return null;
+        }
+
+        private Movie[] getMovieDataFromJsonString(String moviesJsonString) {
             return new Movie[0];
         }
     }
