@@ -11,14 +11,14 @@ public class Movie implements Parcelable{
     private String mReleaseDate;
     private String mRating;
     private String mSynopsis;
-    private Integer mPosterPath;
+    private String mPosterPath;
 
     public Movie(String title, String releaseDate, String avgRating, String overview, String posterPath) {
         mTitle = title;
         mReleaseDate = releaseDate;
         mRating = avgRating;
         mSynopsis = overview;
-        mPosterPath = R.drawable.temp;//posterPath
+        mPosterPath = posterPath;
     }
 
     protected Movie(Parcel in) {
@@ -26,6 +26,7 @@ public class Movie implements Parcelable{
         mReleaseDate = in.readString();
         mRating = in.readString();
         mSynopsis = in.readString();
+        mPosterPath = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -51,10 +52,10 @@ public class Movie implements Parcelable{
         dest.writeString(mReleaseDate);
         dest.writeString(mRating);
         dest.writeString(mSynopsis);
-        dest.writeInt(mPosterPath);
+        dest.writeString(mPosterPath);
     }
 
-    public int getPosterPath() {
+    public String getPosterPath() {
         return mPosterPath;
     }
 

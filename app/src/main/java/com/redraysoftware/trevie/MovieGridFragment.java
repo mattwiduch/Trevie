@@ -189,7 +189,7 @@ public class MovieGridFragment extends Fragment {
                 String releaseDate = movie.getString(TMDB_RELEASE_DATE);
                 String avgRating = movie.getString(TMDB_AVG_RATING);
                 String overview = movie.getString(TMDB_OVERVIEW);
-                String posterPath = movie.getString(TMDB_POSTER_PATH);
+                String posterPath = "http://image.tmdb.org/t/p/w185" + movie.getString(TMDB_POSTER_PATH);
 
                 movies[i] = new Movie(title, releaseDate, avgRating, overview, posterPath);
             }
