@@ -1,6 +1,7 @@
 package com.redraysoftware.trevie;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -47,5 +48,12 @@ public class MovieGridFragment extends Fragment {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         intent.putExtra("Movie", mMovieList.get(position));
         startActivity(intent);
+    }
+
+    public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
+        @Override
+        protected Movie[] doInBackground(String... params) {
+            return new Movie[0];
+        }
     }
 }
