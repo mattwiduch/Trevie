@@ -6,6 +6,8 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -33,6 +35,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         releaseTextView.setText(mMovie.getReleaseDate());
         ratingTextView.setText(mMovie.getRating());
         synopsisTextView.setText(mMovie.getSynopsis());
+        Picasso.with(this).load(mMovie.getPosterPath()).into(posterImageView);
+
     }
 
 }

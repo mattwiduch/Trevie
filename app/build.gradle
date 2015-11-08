@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildTypes.each {
+        it.buildConfigField 'String', 'OPEN_THE_MOVIEDB_API_KEY', MyTheMovieDBApiKey
+    }
 
     //Required by Butter Knife
     lintOptions {
