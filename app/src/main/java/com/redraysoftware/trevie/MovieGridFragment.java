@@ -1,10 +1,12 @@
 package com.redraysoftware.trevie;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -63,7 +65,21 @@ public class MovieGridFragment extends Fragment {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_sort) {
-            updateGrid(SORT_POPULARITY);
+            AlertDialog.Builder sortDialog = new AlertDialog.Builder(getActivity());
+            sortDialog.setTitle(R.string.sort_by)
+                    .setItems(R.array.sort_type, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // The 'which' argument contains the index position
+                            // of the selected item
+                            if (which == 0) {
+                                updateGrid(SORT_POPULARITY);
+                            }
+                            if (which == 1) {
+                                updateGrid(SORT_RATING);
+                            }
+                        }
+                    });
+            sortDialog.show();
             return true;
         }
         return super.onOptionsItemSelected(item);
