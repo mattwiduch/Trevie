@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -118,15 +119,15 @@ public class MovieGridFragment extends Fragment {
         FetchMoviesTask fetchMoviesTask = new FetchMoviesTask();
         fetchMoviesTask.execute(sortType);
 
-        // Change title in toolbar according to search type
-        String title = getResources().getString(R.string.app_name) + " - ";
+        // Change subTitle in toolbar according to search type
+        String subTitle = "";
         if (sortType.equals(SORT_POPULARITY)) {
-            title = title + getResources().getString(R.string.most_popular);
+            subTitle = getResources().getString(R.string.most_popular);
         }
         if (sortType.equals(SORT_RATING)) {
-            title = title + getResources().getString(R.string.highest_rated);
+            subTitle = getResources().getString(R.string.highest_rated);
         }
-        getActivity().setTitle(title);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(subTitle);
     }
 
     @Override
