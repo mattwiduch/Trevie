@@ -100,6 +100,16 @@ public class MovieGridFragment extends Fragment {
     private void updateGrid(String sortType) {
         FetchMoviesTask fetchMoviesTask = new FetchMoviesTask();
         fetchMoviesTask.execute(sortType);
+
+        // Change title in toolbar according to search type
+        String title = getResources().getString(R.string.app_name) + " - ";
+        if (sortType == SORT_POPULARITY) {
+            title = title + getResources().getString(R.string.most_popular);
+        }
+        if (sortType == SORT_RATING) {
+            title = title + getResources().getString(R.string.highest_rated);
+        }
+        getActivity().setTitle(title);
     }
 
     @Override
