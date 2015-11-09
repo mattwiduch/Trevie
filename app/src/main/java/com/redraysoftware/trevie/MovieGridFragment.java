@@ -37,6 +37,10 @@ public class MovieGridFragment extends Fragment {
     @Bind(R.id.movie_grid) GridView gridView;
     private MovieDetailsAdapter mMovieDetailsAdapter;
 
+    public final String SORT_POPULARITY = "popularity.desc";
+    public final String SORT_RATING = "vote_average.desc";
+    public final String VOTE_COUNT = "100";
+
     public MovieGridFragment() {
     }
 
@@ -58,14 +62,22 @@ public class MovieGridFragment extends Fragment {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        if (id == R.id.action_sort) {
+            updateGrid(SORT_POPULARITY);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        updateGrid(SORT_RATING);
+    }
+
+    private void updateGrid(String sortType) {
         FetchMoviesTask fetchMoviesTask = new FetchMoviesTask();
-        fetchMoviesTask.execute("sort");
+        fetchMoviesTask.execute(sortType);
     }
 
     @Override
@@ -115,8 +127,8 @@ public class MovieGridFragment extends Fragment {
                 Uri builtUri = Uri.parse(TMDB_BASE_URL).buildUpon()
                         .appendPath(DISCOVER_PATH)
                         .appendPath(MOVIE_PATH)
-                        .appendQueryParameter(SORT_PARAM, "vote_average.desc")
-                        .appendQueryParameter(VOTE_COUNT_PARAM, "100")
+                        .appendQueryParameter(SORT_PARAM, params[0])
+                        .appendQueryParameter(VOTE_COUNT_PARAM, VOTE_COUNT)
                         .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
                         .build();
 
