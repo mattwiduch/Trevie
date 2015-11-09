@@ -5,4 +5,6 @@
     <string name="sort_by">Sort movies by...</string>
     <string name="most_popular">Most Popular</string>
     <string name="highest_rated">Highest Rated</string>
+    <string name="pref_sort_key">sort type</string>
+    <string name="pref_file_key">user preferences</string>
 </resources>

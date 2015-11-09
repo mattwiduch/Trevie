@@ -1,7 +1,9 @@
 package com.redraysoftware.trevie;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,6 +44,7 @@ public class MovieGridFragment extends Fragment {
     @Bind(R.id.movie_grid)
     GridView gridView;
     private MovieDetailsAdapter mMovieDetailsAdapter;
+    private SharedPreferences mSharedPreferences;
 
     public MovieGridFragment() {
     }
@@ -51,6 +54,8 @@ public class MovieGridFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+        mSharedPreferences = getActivity()
+                .getSharedPreferences(getString(R.string.pref_file_key), Context.MODE_PRIVATE);
     }
 
     @Override
@@ -72,20 +77,31 @@ public class MovieGridFragment extends Fragment {
     }
 
     private void createSortDialog() {
+        String preferredSort = mSharedPreferences.getString(getString(R.string.pref_sort_key),
+                    SORT_POPULARITY);
+        int defaultChoice = -1;
+        if (preferredSort.equals(SORT_POPULARITY)) defaultChoice = 0;
+        if (preferredSort.equals(SORT_RATING)) defaultChoice = 1;
+
         final AlertDialog.Builder sortDialog = new AlertDialog.Builder(getActivity());
         sortDialog.setTitle(R.string.sort_by)
-                .setSingleChoiceItems(R.array.sort_type, 0, new DialogInterface.OnClickListener() {
+                .setSingleChoiceItems(R.array.sort_type, defaultChoice, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
                         // of the selected item
+                        SharedPreferences.Editor sharedPreferencesEditor = mSharedPreferences.edit();
+
                         if (which == 0) {
-                            updateGrid(SORT_POPULARITY);
-                            dialog.dismiss();
+                            sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
+                                    SORT_POPULARITY).apply();
                         }
                         if (which == 1) {
-                            updateGrid(SORT_RATING);
-                            dialog.dismiss();
+                            sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
+                                    SORT_RATING).apply();
                         }
+                        sharedPreferencesEditor.apply();
+                        dialog.dismiss();
+                        updateGrid();
                     }
                 });
         sortDialog.show();
@@ -94,19 +110,20 @@ public class MovieGridFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        updateGrid(SORT_POPULARITY);
+        updateGrid();
     }
 
-    private void updateGrid(String sortType) {
+    private void updateGrid() {
+        String sortType = mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY);
         FetchMoviesTask fetchMoviesTask = new FetchMoviesTask();
         fetchMoviesTask.execute(sortType);
 
         // Change title in toolbar according to search type
         String title = getResources().getString(R.string.app_name) + " - ";
-        if (sortType == SORT_POPULARITY) {
+        if (sortType.equals(SORT_POPULARITY)) {
             title = title + getResources().getString(R.string.most_popular);
         }
-        if (sortType == SORT_RATING) {
+        if (sortType.equals(SORT_RATING)) {
             title = title + getResources().getString(R.string.highest_rated);
         }
         getActivity().setTitle(title);
