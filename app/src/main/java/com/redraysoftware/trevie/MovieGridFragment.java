@@ -36,12 +36,12 @@ import butterknife.OnItemClick;
  * A placeholder fragment containing a simple view.
  */
 public class MovieGridFragment extends Fragment {
-    @Bind(R.id.movie_grid) GridView gridView;
-    private MovieDetailsAdapter mMovieDetailsAdapter;
-
     public final String SORT_POPULARITY = "popularity.desc";
     public final String SORT_RATING = "vote_average.desc";
     public final String VOTE_COUNT = "100";
+    @Bind(R.id.movie_grid)
+    GridView gridView;
+    private MovieDetailsAdapter mMovieDetailsAdapter;
 
     public MovieGridFragment() {
     }
@@ -65,30 +65,36 @@ public class MovieGridFragment extends Fragment {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_sort) {
-            AlertDialog.Builder sortDialog = new AlertDialog.Builder(getActivity());
-            sortDialog.setTitle(R.string.sort_by)
-                    .setItems(R.array.sort_type, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // The 'which' argument contains the index position
-                            // of the selected item
-                            if (which == 0) {
-                                updateGrid(SORT_POPULARITY);
-                            }
-                            if (which == 1) {
-                                updateGrid(SORT_RATING);
-                            }
-                        }
-                    });
-            sortDialog.show();
+            createSortDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void createSortDialog() {
+        final AlertDialog.Builder sortDialog = new AlertDialog.Builder(getActivity());
+        sortDialog.setTitle(R.string.sort_by)
+                .setSingleChoiceItems(R.array.sort_type, 0, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        if (which == 0) {
+                            updateGrid(SORT_POPULARITY);
+                            dialog.dismiss();
+                        }
+                        if (which == 1) {
+                            updateGrid(SORT_RATING);
+                            dialog.dismiss();
+                        }
+                    }
+                });
+        sortDialog.show();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
-        updateGrid(SORT_RATING);
+        updateGrid(SORT_POPULARITY);
     }
 
     private void updateGrid(String sortType) {
@@ -178,7 +184,7 @@ public class MovieGridFragment extends Fragment {
                     return null;
                 }
                 moviesJsonString = buffer.toString();
-            } catch (IOException e){
+            } catch (IOException e) {
                 Log.e(TAG, "Error ", e);
                 // Data retrieval failed so there is no point in going ahead
                 return null;
@@ -210,7 +216,7 @@ public class MovieGridFragment extends Fragment {
         protected void onPostExecute(Movie[] results) {
             if (results != null) {
                 mMovieDetailsAdapter.clear();
-                for(Movie movie : results) {
+                for (Movie movie : results) {
                     mMovieDetailsAdapter.add(movie);
                 }
                 // New data is back from the server.  Hooray!
