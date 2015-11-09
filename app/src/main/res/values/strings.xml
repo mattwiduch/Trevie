@@ -2,4 +2,9 @@
     <string name="app_name">Trevie</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_movie">MovieActivity</string>
+    <string name="sort_by">Sort movies by...</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="highest_rated">Highest Rated</string>
+    <string name="pref_sort_key">sort type</string>
+    <string name="pref_file_key">user preferences</string>
 </resources>

@@ -1,12 +1,19 @@
 package com.redraysoftware.trevie;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -31,17 +38,95 @@ import butterknife.OnItemClick;
  * A placeholder fragment containing a simple view.
  */
 public class MovieGridFragment extends Fragment {
-    @Bind(R.id.movie_grid) GridView gridView;
+    public final String SORT_POPULARITY = "popularity.desc";
+    public final String SORT_RATING = "vote_average.desc";
+    public final String VOTE_COUNT = "100";
+    @Bind(R.id.movie_grid)
+    GridView gridView;
     private MovieDetailsAdapter mMovieDetailsAdapter;
+    private SharedPreferences mSharedPreferences;
 
     public MovieGridFragment() {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Add this line in order for this fragment to handle menu events.
+        setHasOptionsMenu(true);
+        mSharedPreferences = getActivity()
+                .getSharedPreferences(getString(R.string.pref_file_key), Context.MODE_PRIVATE);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_grid, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_sort) {
+            createSortDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void createSortDialog() {
+        String preferredSort = mSharedPreferences.getString(getString(R.string.pref_sort_key),
+                    SORT_POPULARITY);
+        int defaultChoice = -1;
+        if (preferredSort.equals(SORT_POPULARITY)) defaultChoice = 0;
+        if (preferredSort.equals(SORT_RATING)) defaultChoice = 1;
+
+        final AlertDialog.Builder sortDialog = new AlertDialog.Builder(getActivity());
+        sortDialog.setTitle(R.string.sort_by)
+                .setSingleChoiceItems(R.array.sort_type, defaultChoice, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        SharedPreferences.Editor sharedPreferencesEditor = mSharedPreferences.edit();
+
+                        if (which == 0) {
+                            sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
+                                    SORT_POPULARITY).apply();
+                        }
+                        if (which == 1) {
+                            sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
+                                    SORT_RATING).apply();
+                        }
+                        sharedPreferencesEditor.apply();
+                        dialog.dismiss();
+                        updateGrid();
+                    }
+                });
+        sortDialog.show();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
+        updateGrid();
+    }
+
+    private void updateGrid() {
+        String sortType = mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY);
         FetchMoviesTask fetchMoviesTask = new FetchMoviesTask();
-        fetchMoviesTask.execute("sort");
+        fetchMoviesTask.execute(sortType);
+
+        // Change title in toolbar according to search type
+        String title = getResources().getString(R.string.app_name) + " - ";
+        if (sortType.equals(SORT_POPULARITY)) {
+            title = title + getResources().getString(R.string.most_popular);
+        }
+        if (sortType.equals(SORT_RATING)) {
+            title = title + getResources().getString(R.string.highest_rated);
+        }
+        getActivity().setTitle(title);
     }
 
     @Override
@@ -91,8 +176,8 @@ public class MovieGridFragment extends Fragment {
                 Uri builtUri = Uri.parse(TMDB_BASE_URL).buildUpon()
                         .appendPath(DISCOVER_PATH)
                         .appendPath(MOVIE_PATH)
-                        .appendQueryParameter(SORT_PARAM, "vote_average.desc")
-                        .appendQueryParameter(VOTE_COUNT_PARAM, "100")
+                        .appendQueryParameter(SORT_PARAM, params[0])
+                        .appendQueryParameter(VOTE_COUNT_PARAM, VOTE_COUNT)
                         .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
                         .build();
 
@@ -126,7 +211,7 @@ public class MovieGridFragment extends Fragment {
                     return null;
                 }
                 moviesJsonString = buffer.toString();
-            } catch (IOException e){
+            } catch (IOException e) {
                 Log.e(TAG, "Error ", e);
                 // Data retrieval failed so there is no point in going ahead
                 return null;
@@ -158,7 +243,7 @@ public class MovieGridFragment extends Fragment {
         protected void onPostExecute(Movie[] results) {
             if (results != null) {
                 mMovieDetailsAdapter.clear();
-                for(Movie movie : results) {
+                for (Movie movie : results) {
                     mMovieDetailsAdapter.add(movie);
                 }
                 // New data is back from the server.  Hooray!
