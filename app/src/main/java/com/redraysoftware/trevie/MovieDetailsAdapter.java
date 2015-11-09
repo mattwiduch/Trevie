@@ -38,7 +38,8 @@ public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
             imageView = (ImageView) convertView;
         }
 
-        Picasso.with(mContext).load(movie.getPosterPath()).placeholder(R.drawable.temp).fit().into(imageView);
+        Picasso.with(mContext).load(movie.getPosterPath()).placeholder(R.drawable.temp)
+                .error(R.drawable.error).fit().into(imageView);
         return imageView;
     }
 }

@@ -119,7 +119,7 @@ public class MovieGridFragment extends Fragment {
         FetchMoviesTask fetchMoviesTask = new FetchMoviesTask();
         fetchMoviesTask.execute(sortType);
 
-        // Change subTitle in toolbar according to search type
+        // Change subtitle in toolbar according to search type
         String subTitle = "";
         if (sortType.equals(SORT_POPULARITY)) {
             subTitle = getResources().getString(R.string.most_popular);
