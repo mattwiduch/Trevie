@@ -6,7 +6,6 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.redray.trevie.R;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
