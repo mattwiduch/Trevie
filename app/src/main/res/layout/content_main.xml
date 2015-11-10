@@ -1,5 +1,5 @@
 <fragment android:id="@+id/movie_grid_fragment"
-          android:name="com.redraysoftware.trevie.MovieGridFragment"
+          android:name="eu.redray.trevie.MovieGridFragment"
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:app="http://schemas.android.com/apk/res-auto"
           xmlns:tools="http://schemas.android.com/tools"

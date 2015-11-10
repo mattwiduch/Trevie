@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MovieDetailsActivity"
+    tools:context="eu.redray.trevie.MovieDetailsActivity"
     tools:showIn="@layout/activity_movie">
     <RelativeLayout
         android:layout_width="match_parent"

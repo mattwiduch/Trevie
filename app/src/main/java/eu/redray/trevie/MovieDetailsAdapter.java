@@ -1,4 +1,4 @@
-package com.redraysoftware.trevie;
+package eu.redray.trevie;
 
 import android.content.Context;
 import android.view.LayoutInflater;

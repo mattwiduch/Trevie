@@ -1,4 +1,4 @@
-package com.redraysoftware.trevie;
+package eu.redray.trevie;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

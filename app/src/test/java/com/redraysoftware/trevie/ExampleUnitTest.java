@@ -1,4 +1,4 @@
-package com.redraysoftware.trevie;
+package com.redray.trevie;
 
 import org.junit.Test;
 
