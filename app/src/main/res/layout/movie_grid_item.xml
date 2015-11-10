@@ -1,14 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <!-- the ImageView for the movie poster -->
-    <ImageView android:id="@+id/movie_grid_poster"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:contentDescription="Movie Poster"
-               android:scaleType="fitCenter"
-               android:adjustViewBounds="true"/>
+    <ImageView
+        android:id="@+id/grid_movie_poster"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/description_movie_poster"
+        android:scaleType="fitCenter">
+    </ImageView>
 
-</FrameLayout>
+    <RelativeLayout
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorPrimaryAlpha">
+
+        <TextView
+            android:id="@+id/grid_movie_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_toLeftOf="@+id/grid_movie_favourite"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="@string/loading"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/grid_movie_genre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="@string/loading"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"/>
+
+        <ImageView
+            android:id="@+id/grid_movie_favourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/description_favourite_button"
+            android:src="@mipmap/ic_star_border_white_24dp"/>
+    </RelativeLayout>
+
+</RelativeLayout>

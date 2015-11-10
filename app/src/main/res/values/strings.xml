@@ -7,4 +7,7 @@
     <string name="highest_rated">Highest Rated</string>
     <string name="pref_sort_key">sort type</string>
     <string name="pref_file_key">user preferences</string>
+    <string name="description_movie_poster">Movie Poster</string>
+    <string name="description_favourite_button">Favourite Button</string>
+    <string name="loading">Loading...</string>
 </resources>

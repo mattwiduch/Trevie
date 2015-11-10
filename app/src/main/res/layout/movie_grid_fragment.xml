@@ -2,6 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:background="@color/colorPrimary"
              tools:context=".MovieGridFragment"
              tools:showIn="@layout/activity_main">
 
@@ -9,6 +10,9 @@
                   android:id="@+id/movie_grid"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
+                  android:padding="4dp"
+                  android:horizontalSpacing="4dp"
+                  android:verticalSpacing="4dp"
                   android:gravity="center"
                   android:numColumns="2"
                   android:stretchMode="columnWidth"/>
