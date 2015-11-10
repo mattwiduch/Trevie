@@ -33,17 +33,14 @@ public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.movie_grid_item, parent, false);
             //set views
-            //imageView = (ImageView) convertView.findViewById(R.id.movie_grid_poster);
-            //imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             viewHolder = new ViewHolder();
-            viewHolder.movieTitle = (TextView) convertView.findViewById(R.id.grid_movie_title);
-            viewHolder.movieGenre = (TextView) convertView.findViewById(R.id.grid_movie_genre);
             viewHolder.moviePoster = (ImageView) convertView.findViewById(R.id.grid_movie_poster);
             viewHolder.moviePoster.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             viewHolder.favouriteButton = (ImageView) convertView.findViewById(R.id.grid_movie_favourite);
+            viewHolder.movieTitle = (TextView) convertView.findViewById(R.id.grid_movie_title);
+            viewHolder.movieGenre = (TextView) convertView.findViewById(R.id.grid_movie_genre);
             convertView.setTag(viewHolder);
         } else {
-            //imageView = (ImageView) convertView;
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
@@ -54,13 +51,14 @@ public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
                 .error(R.drawable.error).fit().into(viewHolder.moviePoster);
         viewHolder.movieTitle.setText(movie.getTitle());
         viewHolder.movieTitle.setSelected(true);
+        viewHolder.movieGenre.setText(movie.getReleaseYear());
         return convertView;
     }
 
     private static class ViewHolder {
-        TextView movieTitle;
-        TextView movieGenre;
         ImageView moviePoster;
         ImageView favouriteButton;
+        TextView movieTitle;
+        TextView movieGenre;
     }
 }

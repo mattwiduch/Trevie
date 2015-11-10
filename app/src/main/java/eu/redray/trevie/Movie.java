@@ -74,4 +74,8 @@ public class Movie implements Parcelable{
     public String getSynopsis() {
         return mSynopsis;
     }
+
+    public String getReleaseYear() {
+        return mReleaseDate.substring(0, 4);
+    }
 }
