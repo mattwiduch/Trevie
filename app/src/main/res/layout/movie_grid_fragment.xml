@@ -1,22 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="eu.redray.trevie.MovieGridFragment"
-             tools:showIn="@layout/activity_main"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="eu.redray.trevie.MovieGridFragment"
+              tools:showIn="@layout/activity_main">
 
-        <GridView
-                  android:id="@+id/movie_grid"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:padding="8dp"
-                  android:paddingTop="4dp"
-                  android:horizontalSpacing="8dp"
-                  android:verticalSpacing="8dp"
-                  android:gravity="center"
-                  android:numColumns="2"
-                  android:stretchMode="columnWidth"
-                  android:clipToPadding="false"/>
+    <GridView
+        android:id="@+id/movie_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:gravity="center"
+        android:numColumns="2"
+        android:paddingBottom="2dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:paddingTop="4dp"
+        android:stretchMode="columnWidth"/>
 
 </LinearLayout>

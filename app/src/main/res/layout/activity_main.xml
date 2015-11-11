@@ -21,13 +21,13 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:titleTextAppearance="@style/AppTheme.ToolbarTitleStyle"
             app:subtitleTextAppearance="@style/AppTheme.ToolbarSubtitleStyle"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:background="@drawable/shadow"
-        android:layout_below="@id/toolbar"/>
+        android:background="@drawable/shadow"/>
 
     </LinearLayout>
 
