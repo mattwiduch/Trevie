@@ -17,7 +17,7 @@
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
         android:paddingTop="4dp"
-        android:scrollbarStyle="outsideInset"
+        android:scrollbarStyle="outsideOverlay"
         android:stretchMode="columnWidth"/>
 
 </LinearLayout>
