@@ -3,9 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 22
     buildToolsVersion "23.0.0"
-
     defaultConfig {
-        applicationId "com.redraysoftware.trevie"
+        applicationId 'eu.redray.trevie'
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
@@ -20,15 +19,16 @@ android {
     buildTypes.each {
         it.buildConfigField 'String', 'OPEN_THE_MOVIEDB_API_KEY', MyTheMovieDBApiKey
     }
-
     //Required by Butter Knife
     lintOptions {
         disable 'InvalidPackage'
     }
+    productFlavors {
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'

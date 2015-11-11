@@ -35,7 +35,6 @@ public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
             //set views
             viewHolder = new ViewHolder();
             viewHolder.moviePoster = (ImageView) convertView.findViewById(R.id.grid_movie_poster);
-            viewHolder.moviePoster.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             viewHolder.favouriteButton = (ImageView) convertView.findViewById(R.id.grid_movie_favourite);
             viewHolder.movieTitle = (TextView) convertView.findViewById(R.id.grid_movie_title);
             viewHolder.movieGenre = (TextView) convertView.findViewById(R.id.grid_movie_genre);

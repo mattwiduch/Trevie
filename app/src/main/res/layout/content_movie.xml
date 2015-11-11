@@ -5,9 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="eu.redray.trevie.MovieDetailsActivity"
     tools:showIn="@layout/activity_movie">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
