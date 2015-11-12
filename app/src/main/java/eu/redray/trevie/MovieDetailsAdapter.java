@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 /**
- * Created by frano on 03/11/2015.
+ * Creates custom adapter to display movie items in grid view.
  */
 public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
     private Context mContext;
@@ -56,6 +56,9 @@ public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
         return convertView;
     }
 
+    /**
+     * Holds all the views used to display data in movie grid item.
+     */
     private static class ViewHolder {
         ImageView moviePoster;
         ImageView favouriteButton;

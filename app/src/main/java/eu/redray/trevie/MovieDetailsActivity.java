@@ -15,6 +15,9 @@ import com.squareup.picasso.Picasso;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * Displays details of movie selected on the grid.
+ */
 public class MovieDetailsActivity extends AppCompatActivity {
     @Bind(R.id.movie_details_title)
     TextView titleTextView;

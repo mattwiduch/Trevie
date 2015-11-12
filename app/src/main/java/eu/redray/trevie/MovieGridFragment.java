@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
 /**
- * A placeholder fragment containing a simple view.
+ * A fragment that contains movie grid view.
  */
 public class MovieGridFragment extends Fragment {
     public final String SORT_POPULARITY = "popularity.desc";
@@ -81,6 +81,9 @@ public class MovieGridFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Creates dialog that lets user choose sorting method for movie items in the grid.
+     */
     private void createSortDialog() {
         String preferredSort = mSharedPreferences.getString(getString(R.string.pref_sort_key),
                 SORT_POPULARITY);
@@ -117,6 +120,10 @@ public class MovieGridFragment extends Fragment {
         updateGrid();
     }
 
+
+    /**
+     * Updates the movie grid according to chosen sorting method.
+     */
     private void updateGrid() {
         String sortType = mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY);
         FetchMoviesTask fetchMoviesTask = new FetchMoviesTask();
@@ -144,6 +151,12 @@ public class MovieGridFragment extends Fragment {
         return view;
     }
 
+
+    /**
+     * Starts new activity that shows details of selected movie.
+     *
+     * @param position the location of the movie in the grid
+     */
     @OnItemClick(R.id.movie_grid)
     public void startMovieActivity(int position) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
@@ -151,6 +164,9 @@ public class MovieGridFragment extends Fragment {
         startActivity(intent);
     }
 
+    /**
+     * Fetches movie data from the remote database in the background thread.
+     */
     public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
         private final String TAG = FetchMoviesTask.class.getSimpleName();
 
@@ -255,6 +271,13 @@ public class MovieGridFragment extends Fragment {
             }
         }
 
+        /**
+         * Reads movie data from JSON string and creates Movie objects using that data.
+         *
+         * @param moviesJsonString JSON string that contains movie data
+         * @return                 the array of movies loaded from JSON string
+         * @throws JSONException
+         */
         private Movie[] getMovieDataFromJsonString(String moviesJsonString) throws JSONException {
 
             // Names of JSON objects to be extracted

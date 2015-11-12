@@ -14,15 +14,18 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- Toolbar title style. -->
     <style name="AppTheme.ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textStyle">bold</item>
     </style>
 
+    <!-- Toolbar subtitle style. -->
     <style name="AppTheme.ToolbarSubtitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/colorPrimaryAlpha</item>
     </style>
 
+    <!-- Dialog style. -->
     <style name="AppTheme.DialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/colorAccent</item>
     </style>

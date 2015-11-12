@@ -8,7 +8,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by frano on 03/11/2015.
+ * Represents movie item.
  */
 public class Movie implements Parcelable {
     public static final String EXTRA_DETAILS = "movie_details";
