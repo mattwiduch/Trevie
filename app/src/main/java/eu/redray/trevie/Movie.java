@@ -10,7 +10,18 @@ import android.os.Parcelable;
 /**
  * Created by frano on 03/11/2015.
  */
-public class Movie implements Parcelable{
+public class Movie implements Parcelable {
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
     private String mTitle;
     private String mReleaseDate;
     private String mRating;
@@ -32,18 +43,6 @@ public class Movie implements Parcelable{
         mSynopsis = in.readString();
         mPosterPath = in.readString();
     }
-
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
 
     @Override
     public int describeContents() {

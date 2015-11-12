@@ -83,7 +83,7 @@ public class MovieGridFragment extends Fragment {
 
     private void createSortDialog() {
         String preferredSort = mSharedPreferences.getString(getString(R.string.pref_sort_key),
-                    SORT_POPULARITY);
+                SORT_POPULARITY);
         int defaultChoice = -1;
         if (preferredSort.equals(SORT_POPULARITY)) defaultChoice = 0;
         if (preferredSort.equals(SORT_RATING)) defaultChoice = 1;
