@@ -2,14 +2,14 @@
     <string name="app_name">Trevie</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_movie">MovieActivity</string>
-    <string name="sort_by">Sort movies by...</string>
+    <string name="sort_by">Sort movies by…</string>
     <string name="most_popular">Most Popular</string>
     <string name="highest_rated">Highest Rated</string>
     <string name="pref_sort_key">sort type</string>
     <string name="pref_file_key">user preferences</string>
     <string name="description_movie_poster">Movie Poster</string>
     <string name="description_favourite_button">Favourite Button</string>
-    <string name="loading">...</string>
+    <string name="loading">…</string>
     <string name="label_movie_genre">Genre:</string>
     <string name="label_movie_duration">Duration:</string>
     <string name="label_movie_release_date">Release Date:</string>
