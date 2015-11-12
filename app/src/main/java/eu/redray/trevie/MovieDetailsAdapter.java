@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2015 Mateusz Widuch. All rights reserved.
+ */
+
 package eu.redray.trevie;
 
 import android.content.Context;
@@ -37,7 +41,7 @@ public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
             viewHolder.moviePoster = (ImageView) convertView.findViewById(R.id.grid_movie_poster);
             viewHolder.favouriteButton = (ImageView) convertView.findViewById(R.id.grid_movie_favourite);
             viewHolder.movieTitle = (TextView) convertView.findViewById(R.id.grid_movie_title);
-            viewHolder.movieGenre = (TextView) convertView.findViewById(R.id.grid_movie_genre);
+            viewHolder.movieYear = (TextView) convertView.findViewById(R.id.grid_movie_genre);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -50,7 +54,7 @@ public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
                 .error(R.drawable.error).fit().into(viewHolder.moviePoster);
         viewHolder.movieTitle.setText(movie.getTitle());
         viewHolder.movieTitle.setSelected(true);
-        viewHolder.movieGenre.setText(movie.getReleaseYear());
+        viewHolder.movieYear.setText(movie.getReleaseYear());
         return convertView;
     }
 
@@ -58,6 +62,6 @@ public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
         ImageView moviePoster;
         ImageView favouriteButton;
         TextView movieTitle;
-        TextView movieGenre;
+        TextView movieYear;
     }
 }

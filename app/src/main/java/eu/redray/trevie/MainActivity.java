@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2015 Mateusz Widuch. All rights reserved.
+ */
+
 package eu.redray.trevie;
 
 import android.os.Bundle;
