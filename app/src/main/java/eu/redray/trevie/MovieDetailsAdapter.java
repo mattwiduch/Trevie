@@ -29,7 +29,6 @@ public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //ImageView imageView;
         ViewHolder viewHolder;
 
         if (convertView == null) {
@@ -46,7 +45,6 @@ public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
 
         // Update view
         Movie movie = getItem(position);

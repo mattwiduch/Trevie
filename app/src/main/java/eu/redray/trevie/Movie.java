@@ -11,6 +11,7 @@ import android.os.Parcelable;
  * Created by frano on 03/11/2015.
  */
 public class Movie implements Parcelable {
+    public static final String EXTRA_DETAILS = "movie_details";
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
         @Override
         public Movie createFromParcel(Parcel in) {

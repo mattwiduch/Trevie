@@ -26,20 +26,20 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView synopsisTextView;
     @Bind(R.id.movie_details_poster)
     ImageView posterImageView;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
     private Movie mMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
-
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mMovie = getIntent().getParcelableExtra("Movie");
+        mMovie = getIntent().getParcelableExtra(Movie.EXTRA_DETAILS);
         titleTextView.setText(mMovie.getTitle());
         releaseTextView.setText(mMovie.getReleaseDate());
         ratingTextView.setText(mMovie.getRating());

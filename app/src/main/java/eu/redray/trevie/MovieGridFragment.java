@@ -104,7 +104,6 @@ public class MovieGridFragment extends Fragment {
                             sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
                                     SORT_RATING).apply();
                         }
-                        sharedPreferencesEditor.apply();
                         dialog.dismiss();
                         updateGrid();
                     }
@@ -148,7 +147,7 @@ public class MovieGridFragment extends Fragment {
     @OnItemClick(R.id.movie_grid)
     public void startMovieActivity(int position) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-        intent.putExtra("Movie", mMovieDetailsAdapter.getItem(position));
+        intent.putExtra(Movie.EXTRA_DETAILS, mMovieDetailsAdapter.getItem(position));
         startActivity(intent);
     }
 
@@ -216,6 +215,7 @@ public class MovieGridFragment extends Fragment {
                     return null;
                 }
                 moviesJsonString = buffer.toString();
+
             } catch (IOException e) {
                 Log.e(TAG, "Error ", e);
                 // Data retrieval failed so there is no point in going ahead
