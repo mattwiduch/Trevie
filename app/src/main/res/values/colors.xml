@@ -6,4 +6,5 @@
     <color name="colorSecondary">#FFF8E1</color>
     <color name="colorAccent">#FFC107</color>
     <color name="colorBackground">#EEEEEE</color>
+    <color name="colorDivider">#1F000000</color>
 </resources>

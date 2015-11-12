@@ -9,5 +9,11 @@
     <string name="pref_file_key">user preferences</string>
     <string name="description_movie_poster">Movie Poster</string>
     <string name="description_favourite_button">Favourite Button</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">...</string>
+    <string name="label_movie_genre">Genre:</string>
+    <string name="label_movie_duration">Duration:</string>
+    <string name="label_movie_release_date">Release Date:</string>
+    <string name="label_movie_country">Country:</string>
+    <string name="label_movie_average_rating">Average Rating:</string>
+    <string name="label_movie_synopsis">Plot Synopsis</string>
 </resources>

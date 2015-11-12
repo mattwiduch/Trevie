@@ -7,6 +7,6 @@
         android:id="@+id/action_sort"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        android:icon="@mipmap/ic_sort_black"
+        android:icon="@drawable/ic_sort_black"
         app:showAsAction="always"/>
 </menu>
