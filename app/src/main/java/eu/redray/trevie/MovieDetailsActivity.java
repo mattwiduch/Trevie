@@ -4,7 +4,9 @@
 
 package eu.redray.trevie;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
@@ -14,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Displays details of movie selected on the grid.
@@ -37,6 +40,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     ImageView posterImageView;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
     private Movie mMovie;
 
     @Override
@@ -62,4 +66,24 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Creates dialog that lets user choose trailer to play.
+     */
+    @OnClick(R.id.trailer_button) void onClick() {
+        final String[] trailersList = {"Trailer 1", "Trailer 2", "Trailer 3"};
+
+        final AlertDialog.Builder sortDialog = new AlertDialog.Builder(this);
+        sortDialog.setTitle(R.string.choose_trailer)
+                .setItems(trailersList, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        switch (which) {
+
+                        }
+                        dialog.dismiss();
+                    }
+                });
+        sortDialog.show();
+    }
 }
