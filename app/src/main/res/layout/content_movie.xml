@@ -231,10 +231,28 @@
         <TextView
             android:id="@+id/movie_details_synopsis"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- User Reviews -->
+        <TextView
+            android:id="@+id/movie_details_reviews_label"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/movie_details_separator2"/>
+            android:layout_marginTop="16dp"
+            android:text="@string/label_movie_reviews"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"/>
+        <View
+            android:id="@+id/movie_details_separator3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorDivider"/>
+        <TextView
+            android:id="@+id/movie_details_reviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

@@ -34,4 +34,5 @@
     <string name="play_trailer">Trailer</string>
     <string name="choose_trailer">Choose trailer to play...</string>
     <string name="error_message_notrailers">There are no trailers to play</string>
+    <string name="label_movie_reviews">User Reviews</string>
 </resources>
