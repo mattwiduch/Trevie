@@ -209,7 +209,8 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
                         .build();
                 //String reviewsJsonString = getJsonString(reviewsUri);*/
 
-            movies[i] = new Movie(id, title, releaseDate, avgRating, overview, posterPath, "", "", "", null);
+            movies[i] = new Movie(id, title, releaseDate, avgRating, overview, posterPath,
+                    "", "", "", null, null);
             UpdateDetailsTask updateDetailsTask = new UpdateDetailsTask();
             updateDetailsTask.execute(movies[i]);
             UpdateTrailersTask updateTrailersTask = new UpdateTrailersTask();

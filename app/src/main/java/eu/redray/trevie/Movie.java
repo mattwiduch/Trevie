@@ -38,20 +38,21 @@ public class Movie implements Parcelable {
     private String mGenres;
     private String mCountries;
     private ArrayList mTrailerLinks;
+    private ArrayList mUserReviews;
 
     public Movie(String id, String title, String releaseDate, String avgRating, String overview, String posterPath,
-                 String runtime, String genres, String countries, ArrayList trailers) {
+                 String runtime, String genres, String countries, ArrayList trailers, ArrayList reviews) {
         mId = id;
         mTitle = title;
         mReleaseDate = releaseDate;
         mRating = avgRating;
         mSynopsis = overview;
-
         mPosterPath = posterPath;
         mRuntime = runtime;
         mGenres = genres;
         mCountries = countries;
         mTrailerLinks = trailers;
+        mUserReviews = reviews;
     }
 
     protected Movie(Parcel in) {
@@ -65,6 +66,7 @@ public class Movie implements Parcelable {
         mGenres = in.readString();
         mCountries = in.readString();
         mTrailerLinks = in.readArrayList(Uri.class.getClassLoader());
+        mTrailerLinks = in.readArrayList(String.class.getClassLoader());
     }
 
     @Override
@@ -84,6 +86,7 @@ public class Movie implements Parcelable {
         dest.writeString(mGenres);
         dest.writeString(mCountries);
         dest.writeList(mTrailerLinks);
+        dest.writeList(mUserReviews);
     }
 
     public String getId() {
@@ -144,5 +147,13 @@ public class Movie implements Parcelable {
 
     public ArrayList getTrailerLinks() {
         return mTrailerLinks;
+    }
+
+    public ArrayList getUserReviews() {
+        return mUserReviews;
+    }
+
+    public void setUserReviews(ArrayList userReviews) {
+        mUserReviews = userReviews;
     }
 }
