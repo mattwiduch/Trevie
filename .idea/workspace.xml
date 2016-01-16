@@ -18,7 +18,9 @@
   <component name="ChangeListManager">
     <list default="true" id="72833544-6897-4dad-bf5a-bdcc81a9791a" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_movie.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/content_movie.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/FetchMoviesTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/FetchMoviesTask.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/Movie.java" afterPath="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/Movie.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/MovieDetailsActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/MovieDetailsActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
     </list>
     <ignored path="Trevie.iws" />
@@ -40,61 +42,49 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MovieGridFragment.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/MovieGridFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.925926">
-              <caret line="122" column="9" selection-start-line="122" selection-start-column="9" selection-end-line="122" selection-end-column="9" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="content_movie.xml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/content_movie.xml">
-          <provider selected="true" editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-15.166667">
-              <caret line="242" column="40" selection-start-line="242" selection-start-column="40" selection-end-line="242" selection-end-column="40" />
-              <folding>
-                <element signature="e#377#417#0" expanded="true" />
-                <element signature="e#657#690#0" expanded="true" />
-                <element signature="e#719#754#0" expanded="true" />
-                <element signature="e#784#819#0" expanded="true" />
-                <element signature="e#894#2285#0" expanded="false" />
-                <element signature="e#2152#2190#0" expanded="true" />
-                <element signature="e#2326#2529#0" expanded="false" />
-                <element signature="e#2843#3164#0" expanded="false" />
-                <element signature="e#3083#3117#0" expanded="true" />
-                <element signature="e#3557#6530#0" expanded="false" />
-                <element signature="e#4137#4164#0" expanded="true" />
-                <element signature="e#4671#4701#0" expanded="true" />
-                <element signature="e#5207#5241#0" expanded="true" />
-                <element signature="e#5747#5776#0" expanded="true" />
-                <element signature="e#6281#6317#0" expanded="true" />
-                <element signature="e#6552#9177#0" expanded="false" />
-                <element signature="e#9381#9403#0" expanded="true" />
-                <element signature="e#10158#10188#0" expanded="true" />
-                <element signature="e#10289#10581#0" expanded="false" />
-                <element signature="e#10590#10751#0" expanded="false" />
-                <element signature="e#11025#11054#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="MovieDetailsActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/MovieDetailsActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="112" column="47" selection-start-line="112" selection-start-column="47" selection-end-line="112" selection-end-column="47" />
+              <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
               <folding>
-                <element signature="e#2588#2632#0" expanded="true" />
-                <element signature="e#3396#3419#0" expanded="true" />
+                <element signature="e#2440#2472#0" expanded="true" />
+                <element signature="e#2955#2999#0" expanded="true" />
+                <element signature="e#3763#3786#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FetchMoviesTask.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/FetchMoviesTask.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="330" column="64" selection-start-line="330" selection-start-column="64" selection-end-line="330" selection-end-column="64" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#FetchMoviesTask#0;class#FetchMoviesTask#0" expanded="false" />
+                <element signature="method#doInBackground#0;class#FetchMoviesTask#0" expanded="false" />
+                <element signature="method#onPostExecute#0;class#FetchMoviesTask#0" expanded="false" />
+                <element signature="method#getJsonString#0;class#FetchMoviesTask#0" expanded="false" />
+                <element signature="class#UpdateDetailsTask#0;class#FetchMoviesTask#0" expanded="false" />
+                <element signature="method#doInBackground#0;class#UpdateDetailsTask#0;class#FetchMoviesTask#0" expanded="false" />
+                <element signature="method#updateMovieDetailsFromJsonData#0;class#UpdateDetailsTask#0;class#FetchMoviesTask#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Movie.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/Movie.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-1.6992288">
+              <caret line="63" column="38" selection-start-line="63" selection-start-column="38" selection-end-line="63" selection-end-column="38" />
+              <folding>
+                <element signature="e#3737#3738#0" expanded="true" />
+                <element signature="e#3772#3773#0" expanded="true" />
+                <element signature="e#3829#3830#0" expanded="true" />
+                <element signature="e#3871#3872#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1564,10 +1554,10 @@
         <option value="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/MovieGridFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/utility/YouTubeUri.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/MovieDetailsActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/Movie.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/FetchMoviesTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/content_movie.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/MovieDetailsActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/FetchMoviesTask.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/Movie.java" />
       </list>
     </option>
   </component>
@@ -2032,7 +2022,7 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299712" sideWeight="0.5028612" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3299712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299712" sideWeight="0.49713877" order="2" side_tool="false" content_ui="tabs" />
@@ -2046,7 +2036,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24964234" sideWeight="0.5083933" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39913544" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39913544" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -2071,10 +2061,18 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/MovieDetailsActivity.java</url>
+          <line>72</line>
+          <properties />
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="15" />
+      <option name="time" value="17" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -2102,8 +2100,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="112" column="5" selection-start-line="112" selection-start-column="5" selection-end-line="112" selection-end-column="5" />
           <folding>
-            <element signature="e#3586#3587#0" expanded="true" />
-            <element signature="e#3619#3620#0" expanded="true" />
+            <element signature="e#3585#3586#0" expanded="true" />
+            <element signature="e#3618#3619#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2157,8 +2155,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="112" column="5" selection-start-line="112" selection-start-column="5" selection-end-line="112" selection-end-column="5" />
           <folding>
-            <element signature="e#3586#3587#0" expanded="true" />
-            <element signature="e#3619#3620#0" expanded="true" />
+            <element signature="e#3585#3586#0" expanded="true" />
+            <element signature="e#3618#3619#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2324,52 +2322,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/MovieDetailsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="112" column="47" selection-start-line="112" selection-start-column="47" selection-end-line="112" selection-end-column="47" />
-          <folding>
-            <element signature="e#2588#2632#0" expanded="true" />
-            <element signature="e#3396#3419#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/Movie.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.7414188">
-          <caret line="151" column="37" selection-start-line="151" selection-start-column="37" selection-end-line="151" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/FetchMoviesTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.65675056">
-          <caret line="212" column="42" selection-start-line="212" selection-start-column="42" selection-end-line="212" selection-end-column="42" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#FetchMoviesTask#0;class#FetchMoviesTask#0" expanded="false" />
-            <element signature="method#doInBackground#0;class#FetchMoviesTask#0" expanded="false" />
-            <element signature="method#onPostExecute#0;class#FetchMoviesTask#0" expanded="false" />
-            <element signature="method#getJsonString#0;class#FetchMoviesTask#0" expanded="false" />
-            <element signature="method#doInBackground#0;class#UpdateDetailsTask#0;class#FetchMoviesTask#0" expanded="false" />
-            <element signature="method#updateMovieDetailsFromJsonData#0;class#UpdateDetailsTask#0;class#FetchMoviesTask#0" expanded="false" />
-            <element signature="method#doInBackground#0;class#UpdateTrailersTask#0;class#FetchMoviesTask#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/MovieGridFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.925926">
-          <caret line="122" column="9" selection-start-line="122" selection-start-column="9" selection-end-line="122" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/content_movie.xml">
       <provider selected="true" editor-type-id="android-designer">
         <state />
@@ -2399,6 +2351,58 @@
             <element signature="e#10289#10581#0" expanded="false" />
             <element signature="e#10590#10751#0" expanded="false" />
             <element signature="e#11025#11054#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/MovieGridFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.13145539">
+          <caret line="122" column="9" selection-start-line="122" selection-start-column="9" selection-end-line="122" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/MovieDetailsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+          <folding>
+            <element signature="e#2440#2472#0" expanded="true" />
+            <element signature="e#2955#2999#0" expanded="true" />
+            <element signature="e#3763#3786#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/FetchMoviesTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="330" column="64" selection-start-line="330" selection-start-column="64" selection-end-line="330" selection-end-column="64" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#FetchMoviesTask#0;class#FetchMoviesTask#0" expanded="false" />
+            <element signature="method#doInBackground#0;class#FetchMoviesTask#0" expanded="false" />
+            <element signature="method#onPostExecute#0;class#FetchMoviesTask#0" expanded="false" />
+            <element signature="method#getJsonString#0;class#FetchMoviesTask#0" expanded="false" />
+            <element signature="class#UpdateDetailsTask#0;class#FetchMoviesTask#0" expanded="false" />
+            <element signature="method#doInBackground#0;class#UpdateDetailsTask#0;class#FetchMoviesTask#0" expanded="false" />
+            <element signature="method#updateMovieDetailsFromJsonData#0;class#UpdateDetailsTask#0;class#FetchMoviesTask#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/eu/redray/trevie/Movie.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.6992288">
+          <caret line="63" column="38" selection-start-line="63" selection-start-column="38" selection-end-line="63" selection-end-column="38" />
+          <folding>
+            <element signature="e#3737#3738#0" expanded="true" />
+            <element signature="e#3772#3773#0" expanded="true" />
+            <element signature="e#3829#3830#0" expanded="true" />
+            <element signature="e#3871#3872#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -45,6 +45,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     ImageView posterImageView;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(R.id.movie_details_reviews)
+    TextView reviewsTextView;
 
     private Movie mMovie;
 
@@ -68,7 +70,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         countriesTextView.setText(mMovie.getCountries());
         countriesTextView.setSelected(true);
         Picasso.with(this).load(mMovie.getPosterPath()).into(posterImageView);
-
+        if (mMovie.getUserReviews() == null || mMovie.getUserReviews().size() < 1) {
+            reviewsTextView.setText(R.string.error_message_noreviews);
+        } else if (mMovie.getUserReviews().size() == 1){
+            reviewsTextView.setText((String)mMovie.getUserReviews().get(0));
+        }
     }
 
     /**

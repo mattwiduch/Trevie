@@ -66,7 +66,7 @@ public class Movie implements Parcelable {
         mGenres = in.readString();
         mCountries = in.readString();
         mTrailerLinks = in.readArrayList(Uri.class.getClassLoader());
-        mTrailerLinks = in.readArrayList(String.class.getClassLoader());
+        mUserReviews = in.readArrayList(String.class.getClassLoader());
     }
 
     @Override

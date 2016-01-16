@@ -174,48 +174,17 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
             String overview = movie.getString(TMDB_OVERVIEW);
             String posterPath = "http://image.tmdb.org/t/p/w185" + movie.getString(TMDB_POSTER_PATH);
 
-            /*
-            // Construct query URL
-            final String TMDB_BASE_URL = "https://api.themoviedb.org/3";
-            final String DISCOVER_PATH = "discover";
-            final String MOVIE_PATH = "movie";
-            final String TRAILERS_PATH = "videos";
-            final String REVIEWS_PATH = "reviews";
-            final String SORT_PARAM = "sort_by";
-            final String VOTE_COUNT_PARAM = "vote_count.gte";
-            final String API_KEY_PARAM = "api_key";
-
-                Uri trailersUri = Uri.parse(TMDB_BASE_URL).buildUpon()
-                        .appendPath(MOVIE_PATH)
-                        .appendPath(id)
-                        .appendPath(TRAILERS_PATH)
-                        .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
-                        .build();
-            String trailersJsonString = getJsonString(trailersUri);
-            JSONObject trailersJson = new JSONObject(trailersJsonString);
-            JSONArray trailersArray = trailersJson.getJSONArray(TMDB_RESULTS);
-            ArrayList<Uri> trailersLinks = new ArrayList<>();
-
-            for (int j = 0; j < trailersArray.length(); j++) {
-                JSONObject trailer = trailersArray.getJSONObject(j);
-                trailersLinks.add(YouTubeUri.create(trailer.getString(TMDB_KEY)));
-            }
-
-                Uri reviewsUri = Uri.parse(TMDB_BASE_URL).buildUpon()
-                        .appendPath(MOVIE_PATH)
-                        .appendPath(id)
-                        .appendPath(REVIEWS_PATH)
-                        .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
-                        .build();
-                //String reviewsJsonString = getJsonString(reviewsUri);*/
-
+            // Create new movie object
             movies[i] = new Movie(id, title, releaseDate, avgRating, overview, posterPath,
                     "", "", "", null, null);
+
+            // Update additional movie details in background threads
             UpdateDetailsTask updateDetailsTask = new UpdateDetailsTask();
             updateDetailsTask.execute(movies[i]);
             UpdateTrailersTask updateTrailersTask = new UpdateTrailersTask();
             updateTrailersTask.execute(movies[i]);
-
+            UpdateReviewsTask updateReviewsTask = new UpdateReviewsTask();
+            updateReviewsTask.execute(movies[i]);
         }
 
         return movies;
@@ -321,6 +290,48 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
             }
 
             movie.setTrailerLinks(trailersLinks);
+        }
+    }
+
+    private class UpdateReviewsTask extends AsyncTask<Movie, Void, Void> {
+        final String TMDB_RESULTS = "results";
+        final String TMDB_CONTENT = "content";
+
+        @Override
+        protected Void doInBackground(Movie... params) {
+            //Verify size of parameters to ensure there's something to look up
+            if (params.length == 0) {
+                return null;
+            }
+                Uri reviewsUri = Uri.parse(TMDB_BASE_URL).buildUpon()
+                        .appendPath(MOVIE_PATH)
+                        .appendPath(params[0].getId())
+                        .appendPath(REVIEWS_PATH)
+                        .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
+                        .build();
+                String reviewsJsonString = getJsonString(reviewsUri);
+            if (reviewsJsonString == null) return null;
+
+            try {
+                updateMovieReviewsFromJsonData(params[0], getJsonString(reviewsUri));
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private void updateMovieReviewsFromJsonData(Movie movie, String reviewsJsonString) throws JSONException{
+            JSONObject reviewsJson = new JSONObject(reviewsJsonString);
+            JSONArray reviewsArray = reviewsJson.getJSONArray(TMDB_RESULTS);
+            ArrayList<String> userReviews = new ArrayList<>();
+
+            for (int j = 0; j < reviewsArray.length(); j++) {
+                JSONObject review = reviewsArray.getJSONObject(j);
+                userReviews.add(review.getString(TMDB_CONTENT));
+            }
+
+            movie.setUserReviews(userReviews);
         }
     }
 }
