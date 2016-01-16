@@ -4,8 +4,11 @@
 
 package eu.redray.trevie;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.ArrayList;
 
 /**
  * Represents movie item.
@@ -34,9 +37,10 @@ public class Movie implements Parcelable {
     private String mRuntime;
     private String mGenres;
     private String mCountries;
+    private ArrayList mTrailerLinks;
 
     public Movie(String id, String title, String releaseDate, String avgRating, String overview, String posterPath,
-                 String runtime, String genres, String countries) {
+                 String runtime, String genres, String countries, ArrayList trailers) {
         mId = id;
         mTitle = title;
         mReleaseDate = releaseDate;
@@ -46,6 +50,7 @@ public class Movie implements Parcelable {
         mRuntime = runtime;
         mGenres = genres;
         mCountries = countries;
+        mTrailerLinks = trailers;
     }
 
     protected Movie(Parcel in) {
@@ -58,6 +63,7 @@ public class Movie implements Parcelable {
         mRuntime = in.readString();
         mGenres = in.readString();
         mCountries = in.readString();
+        mTrailerLinks = in.readArrayList(Uri.class.getClassLoader());
     }
 
     @Override
@@ -76,6 +82,7 @@ public class Movie implements Parcelable {
         dest.writeString(mRuntime);
         dest.writeString(mGenres);
         dest.writeString(mCountries);
+        dest.writeList(mTrailerLinks);
     }
 
     public String getId() {
