@@ -14,6 +14,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+
+import eu.redray.trevie.utility.YouTubeUri;
 
 /**
  * Fetches movie data from the remote database in the background thread.
@@ -152,7 +155,7 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
         final String TMDB_OVERVIEW = "overview";
         final String TMDB_POSTER_PATH = "poster_path";
         final String TMDB_ID = "id";
-        final String TMDB_KEY = "key";
+
 
         JSONObject moviesJson = new JSONObject(moviesJsonString);
         JSONArray moviesArray = moviesJson.getJSONArray(TMDB_RESULTS);
@@ -209,6 +212,9 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
             movies[i] = new Movie(id, title, releaseDate, avgRating, overview, posterPath, "", "", "", null);
             UpdateDetailsTask updateDetailsTask = new UpdateDetailsTask();
             updateDetailsTask.execute(movies[i]);
+            UpdateTrailersTask updateTrailersTask = new UpdateTrailersTask();
+            updateTrailersTask.execute(movies[i]);
+
         }
 
         return movies;
@@ -245,8 +251,8 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
             return null;
         }
 
-        private void updateMovieDetailsFromJsonData(Movie movie, String detailsString) throws JSONException{
-            JSONObject detailsJson = new JSONObject(detailsString);
+        private void updateMovieDetailsFromJsonData(Movie movie, String detailsJsonString) throws JSONException{
+            JSONObject detailsJson = new JSONObject(detailsJsonString);
             String runtime = detailsJson.getString(TMDB_RUNTIME) + " minutes";
 
             JSONArray genresArray = detailsJson.getJSONArray(TMDB_GENRES);
@@ -270,6 +276,50 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
             movie.setRuntime(runtime);
             movie.setGenres(genres);
             movie.setCountries(countries);
+        }
+    }
+
+    private class UpdateTrailersTask extends AsyncTask<Movie, Void, Void> {
+        final String TMDB_RESULTS = "results";
+        final String TMDB_KEY = "key";
+
+        @Override
+        protected Void doInBackground(Movie... params) {
+            //Verify size of parameters to ensure there's something to look up
+            if (params.length == 0) {
+                return null;
+            }
+
+            Uri trailersUri = Uri.parse(TMDB_BASE_URL).buildUpon()
+                    .appendPath(MOVIE_PATH)
+                    .appendPath(params[0].getId())
+                    .appendPath(TRAILERS_PATH)
+                    .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
+                    .build();
+
+            String moviesJsonString = getJsonString(trailersUri);
+            if (moviesJsonString == null) return null;
+
+            try {
+                updateMovieTrailersFromJsonData(params[0], getJsonString(trailersUri));
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private void updateMovieTrailersFromJsonData(Movie movie, String trailersJsonString) throws JSONException{
+            JSONObject trailersJson = new JSONObject(trailersJsonString);
+            JSONArray trailersArray = trailersJson.getJSONArray(TMDB_RESULTS);
+            ArrayList<Uri> trailersLinks = new ArrayList<>();
+
+            for (int j = 0; j < trailersArray.length(); j++) {
+                JSONObject trailer = trailersArray.getJSONObject(j);
+                trailersLinks.add(YouTubeUri.create(trailer.getString(TMDB_KEY)));
+            }
+
+            movie.setTrailerLinks(trailersLinks);
         }
     }
 }
