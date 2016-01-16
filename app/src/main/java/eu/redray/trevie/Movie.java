@@ -46,6 +46,7 @@ public class Movie implements Parcelable {
         mReleaseDate = releaseDate;
         mRating = avgRating;
         mSynopsis = overview;
+
         mPosterPath = posterPath;
         mRuntime = runtime;
         mGenres = genres;
@@ -117,11 +118,31 @@ public class Movie implements Parcelable {
         return mRuntime;
     }
 
+    public void setTrailerLinks(ArrayList trailerLinks) {
+        mTrailerLinks = trailerLinks;
+    }
+
+    public void setCountries(String countries) {
+        mCountries = countries;
+    }
+
+    public void setGenres(String genres) {
+        mGenres = genres;
+    }
+
+    public void setRuntime(String runtime) {
+        mRuntime = runtime;
+    }
+
     public String getGenres() {
         return mGenres;
     }
 
     public String getCountries() {
         return mCountries;
+    }
+
+    public ArrayList getTrailerLinks() {
+        return mTrailerLinks;
     }
 }
