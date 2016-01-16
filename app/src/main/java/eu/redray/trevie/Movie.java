@@ -7,8 +7,6 @@ package eu.redray.trevie;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
-
 /**
  * Represents movie item.
  */
@@ -34,11 +32,11 @@ public class Movie implements Parcelable {
     private String mSynopsis;
     private String mPosterPath;
     private String mRuntime;
-    private List<String> mGenres;
-    private List<String> mCountries;
+    private String mGenres;
+    private String mCountries;
 
     public Movie(String id, String title, String releaseDate, String avgRating, String overview, String posterPath,
-                 String runtime, List<String> genres, List<String> countries) {
+                 String runtime, String genres, String countries) {
         mId = id;
         mTitle = title;
         mReleaseDate = releaseDate;
@@ -58,8 +56,8 @@ public class Movie implements Parcelable {
         mSynopsis = in.readString();
         mPosterPath = in.readString();
         mRuntime = in.readString();
-        mGenres = in.readArrayList(String.class.getClassLoader());
-        mCountries = in.readArrayList(String.class.getClassLoader());
+        mGenres = in.readString();
+        mCountries = in.readString();
     }
 
     @Override
@@ -76,8 +74,12 @@ public class Movie implements Parcelable {
         dest.writeString(mSynopsis);
         dest.writeString(mPosterPath);
         dest.writeString(mRuntime);
-        dest.writeList(mGenres);
-        dest.writeList(mCountries);
+        dest.writeString(mGenres);
+        dest.writeString(mCountries);
+    }
+
+    public String getId() {
+        return mId;
     }
 
     public String getPosterPath() {
@@ -108,11 +110,11 @@ public class Movie implements Parcelable {
         return mRuntime;
     }
 
-    public List<String> getGenres() {
+    public String getGenres() {
         return mGenres;
     }
 
-    public List<String> getCountries() {
+    public String getCountries() {
         return mCountries;
     }
 }
