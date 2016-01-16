@@ -9,7 +9,7 @@ public class YouTubeUri {
 
     final static String YT_BASE_URL = "https://www.youtube.com";
     final static String WATCH_PATH = "watch";
-    final static String VIDEO_PARAM = "v=";
+    final static String VIDEO_PARAM = "v";
 
     public static Uri create(String key) {
         Uri uri = Uri.parse(YT_BASE_URL).buildUpon()
