@@ -27,6 +27,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView ratingTextView;
     @Bind(R.id.movie_details_synopsis)
     TextView synopsisTextView;
+    @Bind(R.id.movie_details_duration)
+    TextView runtimeTextView;
+    @Bind(R.id.movie_details_genre)
+    TextView genresTextView;
+    @Bind(R.id.movie_details_country)
+    TextView countriesTextView;
     @Bind(R.id.movie_details_poster)
     ImageView posterImageView;
     @Bind(R.id.toolbar)
@@ -47,6 +53,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         releaseTextView.setText(mMovie.getReleaseDate());
         ratingTextView.setText(mMovie.getRating());
         synopsisTextView.setText(mMovie.getSynopsis());
+        runtimeTextView.setText(mMovie.getRuntime());
+        genresTextView.setText(mMovie.getGenres());
+        genresTextView.setSelected(true);
+        countriesTextView.setText(mMovie.getCountries());
+        countriesTextView.setSelected(true);
         Picasso.with(this).load(mMovie.getPosterPath()).into(posterImageView);
 
     }

@@ -30,7 +30,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/movie_details_favourite"
-                android:text="@string/loading"
+                android:layout_toStartOf="@+id/movie_details_favourite"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textStyle="bold"/>
 
@@ -43,6 +43,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:contentDescription="@string/description_favourite_button"
                 android:src="@drawable/ic_star_border_black_24dp"/>
 
@@ -67,17 +68,17 @@
 
             <ImageView
                 android:id="@+id/movie_details_poster"
-                android:layout_width="110dp"
+                android:layout_width="0dp"
                 android:layout_height="160dp"
-                android:layout_weight="1"
+                android:layout_weight="4"
                 android:contentDescription="@string/description_movie_poster"
                 android:src="@drawable/temp"/>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right"
+                android:layout_weight="3"
+                android:gravity="end"
                 android:orientation="vertical">
 
                 <TextView
@@ -133,10 +134,10 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="left"
+                android:layout_weight="4"
+                android:gravity="start"
                 android:orientation="vertical">
 
                 <TextView
@@ -144,15 +145,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
-                    android:text="@string/loading"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+
+                    />
 
                 <TextView
                     android:id="@+id/movie_details_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
-                    android:text="@string/loading"
                     android:textSize="12sp"/>
 
                 <TextView
@@ -160,7 +166,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
-                    android:text="@string/loading"
                     android:textSize="12sp"/>
 
                 <TextView
@@ -168,15 +173,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
-                    android:text="@string/loading"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"/>
 
                 <TextView
                     android:id="@+id/movie_details_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
-                    android:text="@string/loading"
                     android:textSize="12sp"/>
 
             </LinearLayout>
@@ -189,8 +197,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/movie_details_separator2"
-            android:text="@string/loading"/>
+            android:layout_below="@+id/movie_details_separator2"/>
 
         <TextView
             android:id="@+id/movie_details_synopsis_label"
