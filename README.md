@@ -1,7 +1,7 @@
-# Trevie
+## Trevie
 An app to allow users to discover the most popular movies playing.
 
-## Open Weather Map API Key is required.
+### TheMovieDB API Key is required.
 
 In order for the Trevie app to function properly an API key for TheMovieDB must be included with the build.
 
