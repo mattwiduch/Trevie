@@ -35,7 +35,7 @@ public class MovieGridFragment extends Fragment {
 
     @Bind(R.id.movie_grid)
     GridView gridView;
-    private MovieDetailsAdapter mMovieDetailsAdapter;
+    private MovieGridAdapter mMovieGridAdapter;
     private SharedPreferences mSharedPreferences;
 
     public MovieGridFragment() {
@@ -113,7 +113,7 @@ public class MovieGridFragment extends Fragment {
      */
     private void updateGrid() {
         String sortType = mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY);
-        FetchMoviesTask fetchMoviesTask = new FetchMoviesTask(mMovieDetailsAdapter);
+        FetchMoviesTask fetchMoviesTask = new FetchMoviesTask(mMovieGridAdapter);
         fetchMoviesTask.execute(sortType);
 
         // Change subtitle in toolbar according to search type
@@ -130,10 +130,10 @@ public class MovieGridFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mMovieDetailsAdapter = new MovieDetailsAdapter(getActivity(), R.layout.movie_grid_item, new ArrayList<Movie>());
+        mMovieGridAdapter = new MovieGridAdapter(getActivity(), R.layout.movie_grid_item, new ArrayList<Movie>());
         View view = inflater.inflate(R.layout.movie_grid_fragment, container, false);
         ButterKnife.bind(this, view);
-        gridView.setAdapter(mMovieDetailsAdapter);
+        gridView.setAdapter(mMovieGridAdapter);
 
         return view;
     }
@@ -147,7 +147,7 @@ public class MovieGridFragment extends Fragment {
     @OnItemClick(R.id.movie_grid)
     public void startMovieActivity(int position) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-        intent.putExtra(Movie.EXTRA_DETAILS, mMovieDetailsAdapter.getItem(position));
+        intent.putExtra(Movie.EXTRA_DETAILS, mMovieGridAdapter.getItem(position));
         startActivity(intent);
     }
 }
