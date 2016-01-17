@@ -29,4 +29,11 @@
     <!-- Descriptions for images -->
     <string name="description_movie_poster">Movie Poster</string>
     <string name="description_favourite_button">Favourite Button</string>
+
+    <!-- Strings related to playing trailers -->
+    <string name="play_trailer">Trailer</string>
+    <string name="choose_trailer">Choose trailer to play...</string>
+    <string name="error_message_notrailers">There are no trailers to play</string>
+    <string name="label_movie_reviews">User Reviews</string>
+    <string name="error_message_noreviews">There are no reviews.</string>
 </resources>

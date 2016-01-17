@@ -7,6 +7,7 @@ package eu.redray.trevie;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -21,6 +22,38 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Log.v("TREVIE", "onCreate");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v("TREVIE", "onStart");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.v("TREVIE", "onPause");
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v("TREVIE", "onResume");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.v("TREVIE", "onRestart");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v("TREVIE", "onDestroy");
     }
 
     @Override
