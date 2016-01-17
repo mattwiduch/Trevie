@@ -61,10 +61,15 @@ public class MovieDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mMovie = arguments.getParcelable(Movie.EXTRA_DETAILS);
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
         ButterKnife.bind(this, rootView);
 
-        mMovie = getActivity().getIntent().getParcelableExtra(Movie.EXTRA_DETAILS);
         titleTextView.setText(mMovie.getTitle());
         releaseTextView.setText(mMovie.getReleaseDate());
         ratingTextView.setText(mMovie.getRating());
