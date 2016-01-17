@@ -12,11 +12,11 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:gravity="center"
-        android:numColumns="4"
+        android:numColumns="3"
         android:paddingBottom="2dp"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
-        android:paddingTop="4dp"
+        android:paddingTop="0dp"
         android:scrollbarStyle="outsideOverlay"
         android:smoothScrollbar="true"
         android:stretchMode="columnWidth"/>
