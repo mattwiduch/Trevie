@@ -6,12 +6,12 @@ package eu.redray.trevie;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,6 +42,18 @@ public class MovieGridFragment extends Fragment {
     public MovieGridFragment() {
     }
 
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(Movie movie);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +61,7 @@ public class MovieGridFragment extends Fragment {
         setHasOptionsMenu(true);
         mSharedPreferences = getActivity()
                 .getSharedPreferences(getString(R.string.pref_file_key), Context.MODE_PRIVATE);
+        Log.v("TREVIE", "onCreate");
     }
 
     @Override
@@ -105,8 +119,8 @@ public class MovieGridFragment extends Fragment {
     public void onStart() {
         super.onStart();
         updateGrid();
+        Log.v("TREVIE", "onStart");
     }
-
 
     /**
      * Updates the movie grid according to chosen sorting method.
@@ -115,6 +129,13 @@ public class MovieGridFragment extends Fragment {
         String sortType = mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY);
         FetchMoviesTask fetchMoviesTask = new FetchMoviesTask(mMovieGridAdapter);
         fetchMoviesTask.execute(sortType);
+        try {
+            fetchMoviesTask.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         // Change subtitle in toolbar according to search type
         String subTitle = "";
@@ -125,6 +146,7 @@ public class MovieGridFragment extends Fragment {
             subTitle = getResources().getString(R.string.highest_rated);
         }
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(subTitle);
+        Log.v("TREVIE", "UpdateGrid");
     }
 
     @Override
@@ -135,9 +157,9 @@ public class MovieGridFragment extends Fragment {
         ButterKnife.bind(this, view);
         gridView.setAdapter(mMovieGridAdapter);
 
+        Log.v("TREVIE", "onCreateView");
         return view;
     }
-
 
     /**
      * Starts new activity that shows details of selected movie.
@@ -146,8 +168,11 @@ public class MovieGridFragment extends Fragment {
      */
     @OnItemClick(R.id.movie_grid)
     public void startMovieActivity(int position) {
-        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-        intent.putExtra(Movie.EXTRA_DETAILS, mMovieGridAdapter.getItem(position));
-        startActivity(intent);
+        Log.v("TREVIE", "UpdateDetails " + position);
+        Movie movie = mMovieGridAdapter.getItem(position);
+        if (movie != null) {
+            ((Callback) getActivity())
+                    .onItemSelected(movie);
+        }
     }
 }
