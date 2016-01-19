@@ -4,6 +4,7 @@
 
 package eu.redray.trevie;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,7 +15,10 @@ import android.view.MenuItem;
 /**
  * Starts the application.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieGridFragment.Callback {
+    private static final String TAG = "TREVIE";
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,38 +26,44 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Log.v("TREVIE", "onCreate");
+        Log.v(TAG, "onCreate");
+
+        if (findViewById(R.id.movie_detail_container) != null) {
+            mTwoPane = true;
+        } else {
+            mTwoPane = false;
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.v("TREVIE", "onStart");
+        Log.v(TAG, "onStart");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.v("TREVIE", "onPause");
+        Log.v(TAG, "onPause");
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v("TREVIE", "onResume");
+        Log.v(TAG, "onResume");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.v("TREVIE", "onRestart");
+        Log.v(TAG, "onRestart");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.v("TREVIE", "onDestroy");
+        Log.v(TAG, "onDestroy");
     }
 
     @Override
@@ -76,5 +86,27 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(Movie movie) {
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle args = new Bundle();
+            args.putParcelable(Movie.EXTRA_DETAILS, movie);
+
+            MovieDetailsFragment fragment = new MovieDetailsFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, MovieDetailsActivity.class);
+            intent.putExtra(Movie.EXTRA_DETAILS, movie);
+            startActivity(intent);
+        }
     }
 }

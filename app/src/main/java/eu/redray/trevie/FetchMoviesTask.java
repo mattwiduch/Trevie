@@ -24,7 +24,7 @@ import eu.redray.trevie.utility.YouTubeUri;
 public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
     private final String TAG = FetchMoviesTask.class.getSimpleName();
     public final String VOTE_COUNT = "100";
-    private MovieDetailsAdapter mMovieDetailsAdapter;
+    private MovieGridAdapter mMovieGridAdapter;
 
     // Construct query URL
     final String TMDB_BASE_URL = "https://api.themoviedb.org/3";
@@ -36,9 +36,9 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
     final String VOTE_COUNT_PARAM = "vote_count.gte";
     final String API_KEY_PARAM = "api_key";
 
-    public FetchMoviesTask(MovieDetailsAdapter movieDetailsAdapter) {
+    public FetchMoviesTask(MovieGridAdapter movieGridAdapter) {
         super();
-        mMovieDetailsAdapter = movieDetailsAdapter;
+        mMovieGridAdapter = movieGridAdapter;
     }
 
     @Override
@@ -73,9 +73,9 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
     @Override
     protected void onPostExecute(Movie[] results) {
         if (results != null) {
-            mMovieDetailsAdapter.clear();
+            mMovieGridAdapter.clear();
             for (Movie movie : results) {
-                mMovieDetailsAdapter.add(movie);
+                mMovieGridAdapter.add(movie);
             }
             // New data is back from the server.  Hooray!
         }

@@ -19,10 +19,10 @@ import java.util.List;
 /**
  * Creates custom adapter to display movie items in grid view.
  */
-public class MovieDetailsAdapter extends ArrayAdapter<Movie> {
+public class MovieGridAdapter extends ArrayAdapter<Movie> {
     private Context mContext;
 
-    public MovieDetailsAdapter(Context context, int resourceId, List<Movie> items) {
+    public MovieGridAdapter(Context context, int resourceId, List<Movie> items) {
         super(context, resourceId, items);
         mContext = context;
     }
