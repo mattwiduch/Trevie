@@ -4,9 +4,12 @@
 
 package eu.redray.trevie;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,5 +43,19 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     .add(R.id.movie_detail_container, fragment)
                     .commit();
         }
+    }
+
+    // Override up button behaviour so it goes back to previously created MainActivity
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = NavUtils.getParentActivityIntent(this);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                NavUtils.navigateUpTo(this, intent);
+                return(true);
+        }
+
+        return(super.onOptionsItemSelected(item));
     }
 }
