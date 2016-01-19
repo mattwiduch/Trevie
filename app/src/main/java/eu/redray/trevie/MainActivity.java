@@ -16,6 +16,7 @@ import android.view.MenuItem;
  * Starts the application.
  */
 public class MainActivity extends AppCompatActivity implements MovieGridFragment.Callback {
+    private static final String TAG = "TREVIE";
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
     private boolean mTwoPane;
 
@@ -25,21 +26,10 @@ public class MainActivity extends AppCompatActivity implements MovieGridFragment
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Log.v("TREVIE", "onCreate");
+        Log.v(TAG, "onCreate");
 
         if (findViewById(R.id.movie_detail_container) != null) {
-            // The detail container view will be present only in the large-screen layouts
-            // (res/layout-sw600dp). If this view is present, then the activity should be
-            // in two-pane mode.
             mTwoPane = true;
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            if (savedInstanceState == null) {
-                //getSupportFragmentManager().beginTransaction()
-                  //      .replace(R.id.movie_detail_container, new MovieDetailsFragment(), DETAILFRAGMENT_TAG)
-                    //    .commit();
-            }
         } else {
             mTwoPane = false;
         }
@@ -48,42 +38,32 @@ public class MainActivity extends AppCompatActivity implements MovieGridFragment
     @Override
     protected void onStart() {
         super.onStart();
-        Log.v("TREVIE", "onStart");
+        Log.v(TAG, "onStart");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.v("TREVIE", "onPause");
+        Log.v(TAG, "onPause");
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v("TREVIE", "onResume");
-        if (mTwoPane) {
-            MovieGridFragment fragment = (MovieGridFragment) getSupportFragmentManager().findFragmentById(R.id.movie_grid_fragment);
-            //fragment.startMovieActivity(0);
-            fragment.gridView.requestFocusFromTouch();
-            fragment.gridView.setSelection(0);
-            //fragment.gridView.performItemClick(
-            //        fragment.gridView.getAdapter().getView(0, null, null), 0, 0);
-            //fragment.gridView.getAdapter().getView(0, null, null).performClick();
-            //fragment.gridView.performItemClick(null, 0, fragment.gridView.getItemIdAtPosition(0));
-        }
+        Log.v(TAG, "onResume");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.v("TREVIE", "onRestart");
+        Log.v(TAG, "onRestart");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.v("TREVIE", "onDestroy");
+        Log.v(TAG, "onDestroy");
     }
 
     @Override
