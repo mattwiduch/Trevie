@@ -126,6 +126,7 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
 
                         // reset to first position on sort
                         mPosition = 0;
+                        mGridState = null;
                         //mOffset = 0;
                         // Update GridView
                         updateGrid();
@@ -292,6 +293,7 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
                         gridView.getAdapter().getView(0, null, null),
                         0,
                         gridView.getAdapter().getItemId(0));
+                gridView.smoothScrollToPosition(0);
             }
         }
     };
