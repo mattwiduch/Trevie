@@ -8,8 +8,6 @@
     android:fitsSystemWindows="true"
     tools:context="eu.redray.trevie.MainActivity">
 
-    <include layout="@layout/content_main"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,6 +27,10 @@
         android:layout_height="4dp"
         android:background="@drawable/shadow"/>
 
+        <include layout="@layout/content_main"/>
+
     </LinearLayout>
+
+
 
 </android.support.design.widget.CoordinatorLayout>
