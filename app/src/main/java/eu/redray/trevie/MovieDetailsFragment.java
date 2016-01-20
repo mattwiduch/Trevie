@@ -110,22 +110,21 @@ public class MovieDetailsFragment extends Fragment {
         inflater.inflate(R.menu.menu_details, menu);
         // Locate MenuItem with ShareActionProvider
         MenuItem item = menu.findItem(R.id.menu_item_share_trailer);
-
         // Fetch and store ShareActionProvider
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.menu_item_share_trailer) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    /**
+     * Creates share trailer intent
+     */
+    private Intent createShareTrailerIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        shareIntent.setType("text/plain");
+        // Add movie title and trailer link to the intent
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, mMovie.getTitle() + " Trailer");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, mMovie.getTrailerLinks().get(0).toString());
+        return shareIntent;
     }
 
     /**
@@ -280,6 +279,11 @@ public class MovieDetailsFragment extends Fragment {
                             0, Math.round(16 * displayMetrics.density));
                     detailsLayout.addView(textView);
                 }
+            }
+
+            // Set share trailer intent if there is provider available
+            if (mShareActionProvider != null) {
+                mShareActionProvider.setShareIntent(createShareTrailerIntent());
             }
         }
 
