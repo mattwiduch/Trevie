@@ -17,13 +17,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -46,11 +46,17 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
     private SharedPreferences mSharedPreferences;
 
     // Used to (re)store app state
-    private int mPosition = GridView.INVALID_POSITION;
-    //private int mOffset = 0;
     private static final String SELECTED_KEY = "selected_position";
-    //private static final String OFFSET_KEY = "selected_offset";
+    private static final String PAGE_KEY = "page_to_load";
+    private static final String GRID_KEY = "grid_state";
     private Parcelable mGridState = null;
+
+    // Used to load additional pages
+    private static final int FIRST_PAGE = 1;
+    private static final int LAST_PAGE = 1000;
+    private int mPage = FIRST_PAGE;
+    private boolean mNextPage = true;
+    private boolean mRestored = false;
 
     public MovieGridFragment() {
         setArguments(new Bundle());
@@ -75,7 +81,6 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
         setHasOptionsMenu(true);
         mSharedPreferences = getActivity()
                 .getSharedPreferences(getString(R.string.pref_file_key), Context.MODE_PRIVATE);
-        Log.v("TREVIE-MGF", "onCreate");
     }
 
     @Override
@@ -124,10 +129,14 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
                         }
                         dialog.dismiss();
 
-                        // reset to first position on sort
-                        mPosition = 0;
+                        // Clear the grid
+                        mMovieGridAdapter.clear();
+                        // Set next page to load to first
+                        mPage = FIRST_PAGE;
+                        // Remove grid state as it is not related to new query
                         mGridState = null;
-                        //mOffset = 0;
+                        // Set restored flag to false
+                        mRestored = false;
                         // Update GridView
                         updateGrid();
                     }
@@ -139,14 +148,6 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
     public void onStart() {
         super.onStart();
         updateGrid();
-        Log.v("TREVIE-MGF", "onStart");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        //Log.v("TREVIE-MGF", "onPause. Saving... " + mPosition);
-        //getArguments().putInt(SELECTED_KEY, gridView.getLastVisiblePosition());
     }
 
     /**
@@ -154,8 +155,6 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
      */
     private void updateGrid() {
         String sortType = mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY);
-        //FetchMoviesTask fetchMoviesTask = new FetchMoviesTask(mMovieGridAdapter);
-        //fetchMoviesTask.execute(sortType);
 
         // Change subtitle in toolbar according to search type
         String subTitle = "";
@@ -166,70 +165,107 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
             subTitle = getResources().getString(R.string.highest_rated);
         }
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(subTitle);
-        Log.v("TREVIE-MGF", "UpdateGrid");
+
+        // Restart loader so it get new data
         getLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this).forceLoad();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mMovieGridAdapter = new MovieGridAdapter(getActivity(), R.layout.movie_grid_item, new ArrayList<Movie>());
         View view = inflater.inflate(R.layout.movie_grid_fragment, container, false);
         ButterKnife.bind(this, view);
+
+        // Create adapter and add it to the grid
+        mMovieGridAdapter = new MovieGridAdapter(getActivity(), R.layout.movie_grid_item, new ArrayList<Movie>());
         gridView.setAdapter(mMovieGridAdapter);
 
+        // Loads additional results when user scroll to the bottom of the list
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-        //Bundle mySavedInstanceState = getArguments();
-        //int persistentVariable = mySavedInstanceState.getInt(SELECTED_KEY);
-        //mPosition = persistentVariable;
-        //Log.v("TREVIE-MGF", "onCreateView. Loading persistent..." + persistentVariable);
+            }
 
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                // The list is empty
+                if (totalItemCount == 0) return;
+
+                // Checks if user reached the bottom of the scroll view
+                if (firstVisibleItem + visibleItemCount == totalItemCount) {
+                    // Check if we need to load next page
+                    if (mNextPage && mPage <= LAST_PAGE) {
+                        mPage++;
+                        mNextPage = false;
+                        updateGrid();
+                    }
+                } else if (!mNextPage){
+                    // Scrolling inside the list
+                    mNextPage = true;
+                }
+            }
+        });
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-    }
-
+    /**
+     * Restores grid state
+     *
+     * @param view View that was created
+     * @param savedInstanceState Bundle with saved state
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Retrieve app state
-        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
-            mPosition = savedInstanceState.getInt(SELECTED_KEY);
-            //mOffset = savedInstanceState.getInt(OFFSET_KEY);
-            mGridState = savedInstanceState.getParcelable(SELECTED_KEY);
-            Log.v("TREVIE-MGF", "State retrieved. Position: " + mPosition);// + " / Offset: " + mOffset);
-        }
 
+        // Retrieve app state
+        if (savedInstanceState != null
+                && savedInstanceState.containsKey(SELECTED_KEY)
+                && savedInstanceState.containsKey(GRID_KEY)
+                && savedInstanceState.containsKey(PAGE_KEY)) {
+
+            // Retrieve all movies and add them to the grid
+            ArrayList<Movie> movies = savedInstanceState.getParcelableArrayList(GRID_KEY);
+            mMovieGridAdapter.clear();
+            mMovieGridAdapter.addAll(movies);
+
+            // Retrieve grid state and restore it
+            mGridState = savedInstanceState.getParcelable(SELECTED_KEY);
+            if (mGridState != null) {
+                gridView.onRestoreInstanceState(mGridState);
+            }
+
+            // Restore number of page to load
+            mPage = savedInstanceState.getInt(PAGE_KEY);
+
+            // Set flag so loader doesn't add data when grid is restored
+            mRestored = true;
+        }
     }
 
     /**
-     * Saves instance state
+     * Saves grid state
      *
-     * @param outState Bundle containing all saved information
+     * @param outState Bundle to contain saved state
      */
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // Calculates offset from top of the view to selected item
-        //View v = gridView.getChildAt(0);
-        //int offset = (v == null) ? 0 : (v.getTop() - gridView.getPaddingTop());
-
-        // Saves position of currently selected grid item, if any
-        if (getActivity().findViewById(R.id.movie_detail_container) != null && mPosition != GridView.INVALID_POSITION) {
-            outState.putInt(SELECTED_KEY, mPosition);
-            //outState.putInt(OFFSET_KEY, offset);
-            Log.v("TREVIE-MGF", "State Saved!! Position: " + mPosition);// + " / Offset: " + offset);
-        } else {
-            outState.putInt(SELECTED_KEY, gridView.getLastVisiblePosition());
-            //outState.putInt(OFFSET_KEY, offset);
-            Log.v("TREVIE-MGF", "First Visible Saved!! Position: " + gridView.getLastVisiblePosition());// + " / Offset: " + offset);
+        // Add all grid items to a list
+        ArrayList<Movie> movieList = new ArrayList<>();
+        for (int i = 0; i < gridView.getAdapter().getCount(); i++) {
+            movieList.add((Movie)gridView.getAdapter().getItem(i));
         }
+        // Retain the list
+        outState.putParcelableArrayList(GRID_KEY, movieList);
+
+        // Retain grid state
         mGridState = gridView.onSaveInstanceState();
-        Log.v("TREVIE-MGF", "Grid State Saved!! State: " + mGridState);
         outState.putParcelable(SELECTED_KEY, mGridState);
+
+        // Retain number of page to load
+        outState.putInt(PAGE_KEY, mPage);
+
         super.onSaveInstanceState(outState);
     }
 
@@ -240,8 +276,6 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
      */
     @OnItemClick(R.id.movie_grid)
     public void startMovieActivity(int position) {
-        Log.v("TREVIE-MGF", "UpdateDetails " + position);
-        mPosition = position;
         Movie movie = mMovieGridAdapter.getItem(position);
         if (movie != null) {
             ((Callback) getActivity())
@@ -255,40 +289,47 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public Loader<Movie[]> onCreateLoader(int id, Bundle args) {
-        Log.v("TREVIE-MGF", "Create Loader");
         String sortType = mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY);
-        return new MoviesLoader(getActivity(), sortType);
+        return new MoviesLoader(getActivity(), sortType, mPage);
     }
 
     @Override
     public void onLoadFinished(Loader<Movie[]> loader, Movie[] data) {
-        if (data != null) {
-            mMovieGridAdapter.clear();
-            for (Movie movie : data) {
-                mMovieGridAdapter.add(movie);
+        // The flag prevents loader from adding data when we restore state
+        if (!mRestored) {
+            // Add loaded data to the grid
+            if (data != null) {
+                if (mPage == FIRST_PAGE) {
+                    mMovieGridAdapter.clear();
+                }
+                for (Movie movie : data) {
+                    mMovieGridAdapter.add(movie);
+                }
             }
-        }
 
-        if (getActivity().findViewById(R.id.movie_detail_container) != null
-                && mGridState == null) {//(mPosition == GridView.INVALID_POSITION || mPosition == 0)) {
-            handler.sendEmptyMessage(0);
+            // Go to first item in the grid on new query
+            if (mGridState == null && mPage == FIRST_PAGE) {
+                if (getActivity().findViewById(R.id.movie_detail_container) != null) {
+                    handler.sendEmptyMessage(0);
+                } else {
+                    gridView.smoothScrollToPosition(0);
+                }
+            }
+        } else {
+            mRestored = false;
         }
-        //gridView.smoothScrollToPosition(mPosition);
-        Log.v("TREVIE-MGF", "Load Finished " + mPosition);
-        if (mGridState != null) {
-            Log.v("TREVIE-MGF", "Restoring GridView state...");
-            gridView.onRestoreInstanceState(mGridState);
-        }
-
     }
 
+    @Override
+    public void onLoaderReset(Loader<Movie[]> loader) {
+        mMovieGridAdapter.clear();
+    }
 
     // Performs click on first grid item
     private Handler handler = new Handler()  { // handler for commiting fragment after data is loaded
         @Override
         public void handleMessage(Message msg) {
             if(msg.what == 0) {
-                Log.d("TREVIE-MGF", "onload finished : handler called. setting the fragment.");
                 gridView.performItemClick(
                         gridView.getAdapter().getView(0, null, null),
                         0,
@@ -297,9 +338,4 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
             }
         }
     };
-
-    @Override
-    public void onLoaderReset(Loader<Movie[]> loader) {
-        mMovieGridAdapter.clear();
-    }
 }

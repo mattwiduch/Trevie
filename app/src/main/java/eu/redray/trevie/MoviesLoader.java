@@ -23,6 +23,7 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
     private final String TAG = MoviesLoader.class.getSimpleName();
     public final String VOTE_COUNT = "100";
     private String mSortParameter;
+    private int mPageToLoad;
     private boolean DEBUG = true;
 
     // We hold a reference to the Loader's data here.
@@ -32,15 +33,15 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
     final String TMDB_BASE_URL = "https://api.themoviedb.org/3";
     final String DISCOVER_PATH = "discover";
     final String MOVIE_PATH = "movie";
-    final String TRAILERS_PATH = "videos";
-    final String REVIEWS_PATH = "reviews";
     final String SORT_PARAM = "sort_by";
     final String VOTE_COUNT_PARAM = "vote_count.gte";
+    final String PAGE_NUMBER = "page";
     final String API_KEY_PARAM = "api_key";
 
-    public MoviesLoader(Context context, String sortParameter) {
+    public MoviesLoader(Context context, String sortParameter, int page) {
         super(context);
         mSortParameter = sortParameter;
+        mPageToLoad = page;
     }
 
     @Override
@@ -56,8 +57,10 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
                 .appendPath(MOVIE_PATH)
                 .appendQueryParameter(SORT_PARAM, mSortParameter)
                 .appendQueryParameter(VOTE_COUNT_PARAM, VOTE_COUNT)
+                .appendQueryParameter(PAGE_NUMBER, String.valueOf(mPageToLoad))
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
                 .build();
+        Log.v("TREVIE-ML", "Loading page... " + mPageToLoad);
 
         String moviesJsonString = getJsonString(moviesUri);
         if (moviesJsonString == null) return null;
