@@ -52,7 +52,7 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
     private static final String GRID_KEY = "grid_state";
     private Parcelable mGridState = null;
 
-    //used to load additional pages
+    // Used to load additional pages
     private static final int FIRST_PAGE = 1;
     private static final int LAST_PAGE = 1000;
     private int mPage = FIRST_PAGE;
@@ -153,13 +153,6 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
         Log.v("TREVIE-MGF", "onStart");
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        //Log.v("TREVIE-MGF", "onPause. Saving... " + mPosition);
-        //getArguments().putInt(SELECTED_KEY, gridView.getLastVisiblePosition());
-    }
-
     /**
      * Updates the movie grid according to chosen sorting method.
      */
@@ -229,65 +222,63 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
         return view;
     }
 
+    /**
+     * Restores grid state
+     *
+     * @param view View that was created
+     * @param savedInstanceState Bundle with saved state
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         // Retrieve app state
-        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
-            //mPosition = savedInstanceState.getInt(SELECTED_KEY);
-            //mOffset = savedInstanceState.getInt(OFFSET_KEY);
-            //getLoaderManager().getLoader(MOVIES_LOADER_ID).reset();
-            mGridState = savedInstanceState.getParcelable(SELECTED_KEY);
-            //gridView.smoothScrollToPosition(savedInstanceState.getInt("LAST_VISIBLE"));
-            //Log.v("TREVIE-MGF", "State retrieved. Position: " + mPosition);// + " / Offset: " + mOffset);
+        if (savedInstanceState != null
+                && savedInstanceState.containsKey(SELECTED_KEY)
+                && savedInstanceState.containsKey(GRID_KEY)
+                && savedInstanceState.containsKey(PAGE_KEY)) {
+
+            // Retrieve all movies and add them to the grid
             ArrayList<Movie> movies = savedInstanceState.getParcelableArrayList(GRID_KEY);
-            mRestored = true;
-            mPage = savedInstanceState.getInt(PAGE_KEY);
             mMovieGridAdapter.clear();
             mMovieGridAdapter.addAll(movies);
-            movies.clear();
+
+            // Retrieve grid state and restore it
+            mGridState = savedInstanceState.getParcelable(SELECTED_KEY);
             if (mGridState != null) {
                 gridView.onRestoreInstanceState(mGridState);
             }
-        }
 
+            // Restore number of page to load
+            mPage = savedInstanceState.getInt(PAGE_KEY);
+
+            // Set flag so loader doesn't add data when grid is restored
+            mRestored = true;
+        }
     }
 
     /**
-     * Saves instance state
+     * Saves grid state
      *
-     * @param outState Bundle containing all saved information
+     * @param outState Bundle to contain saved state
      */
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // Calculates offset from top of the view to selected item
-        //View v = gridView.getChildAt(0);
-        //int offset = (v == null) ? 0 : (v.getTop() - gridView.getPaddingTop());
-        /*
-        // Saves position of currently selected grid item, if any
-        if (getActivity().findViewById(R.id.movie_detail_container) != null && mPosition != GridView.INVALID_POSITION) {
-            outState.putInt(SELECTED_KEY, mPosition);
-            //outState.putInt(OFFSET_KEY, offset);
-            Log.v("TREVIE-MGF", "State Saved!! Position: " + mPosition);// + " / Offset: " + offset);
-        } else {
-            outState.putInt(SELECTED_KEY, gridView.getLastVisiblePosition());
-            //outState.putInt(OFFSET_KEY, offset);
-            Log.v("TREVIE-MGF", "First Visible Saved!! Position: " + gridView.getLastVisiblePosition());// + " / Offset: " + offset);
-        }
-        */
-        mGridState = gridView.onSaveInstanceState();
-        Log.v("TREVIE-MGF", "Grid State Saved!! State: " + mGridState);
-        outState.putParcelable(SELECTED_KEY, mGridState);
-        //outState.putInt("LAST_VISIBLE", gridView.getLastVisiblePosition());
-        int count = gridView.getAdapter().getCount();
+        // Add all grid items to a list
         ArrayList<Movie> movieList = new ArrayList<>();
-
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < gridView.getAdapter().getCount(); i++) {
             movieList.add((Movie)gridView.getAdapter().getItem(i));
         }
-
+        // Retain the list
         outState.putParcelableArrayList(GRID_KEY, movieList);
+
+        // Retain grid state
+        mGridState = gridView.onSaveInstanceState();
+        outState.putParcelable(SELECTED_KEY, mGridState);
+
+        // Retain number of page to load
         outState.putInt(PAGE_KEY, mPage);
+
         super.onSaveInstanceState(outState);
     }
 
