@@ -24,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -46,11 +47,18 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
     private SharedPreferences mSharedPreferences;
 
     // Used to (re)store app state
-    private int mPosition = GridView.INVALID_POSITION;
+    //private int mPosition = GridView.INVALID_POSITION;
     //private int mOffset = 0;
     private static final String SELECTED_KEY = "selected_position";
     //private static final String OFFSET_KEY = "selected_offset";
     private Parcelable mGridState = null;
+
+    //used to load additional pages
+    private static final int FIRST_PAGE = 1;
+    private static final int LAST_PAGE = 1000;
+    private int mPage = FIRST_PAGE;
+    private boolean mNextPage = true;
+    private boolean mRestored = false;
 
     public MovieGridFragment() {
         setArguments(new Bundle());
@@ -124,9 +132,13 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
                         }
                         dialog.dismiss();
 
+                        mMovieGridAdapter.clear();
                         // reset to first position on sort
-                        mPosition = 0;
+                        //mPosition = 0;
+                        mPage = FIRST_PAGE;
+                        //mNextPage = false;
                         mGridState = null;
+                        mRestored = false;
                         //mOffset = 0;
                         // Update GridView
                         updateGrid();
@@ -177,6 +189,37 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
         View view = inflater.inflate(R.layout.movie_grid_fragment, container, false);
         ButterKnife.bind(this, view);
         gridView.setAdapter(mMovieGridAdapter);
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                // the list is empty, return
+                if (totalItemCount == 0) return;
+
+                // if "the first item visible on the screen" +
+                // "number of item visible" == "total items actually in the list"
+                // then I'm at the end, get next page
+                if (firstVisibleItem + visibleItemCount == totalItemCount) {
+                    //since the method is called several times, check if I already get the new page
+                    if (mNextPage && mPage <= LAST_PAGE) {
+                        mPage++;
+                        mNextPage = false;
+                        //new GetUrlsAsyncTask().execute(context, mPage);
+                        updateGrid();
+                        Log.v("TREVIE-MGF", "Scrolled! " + (mPage - 1));
+                        //getLoaderManager().getLoader(MOVIES_LOADER_ID).onContentChanged();
+                    }
+                } else if (!mNextPage){
+                    //scrolling inside the list
+                    Log.v("TREVIE-MGF", "Scrolled without load! " + (mPage));
+                    mNextPage = true;
+                }
+            }
+        });
 
 
         //Bundle mySavedInstanceState = getArguments();
@@ -188,20 +231,25 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Retrieve app state
         if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
-            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+            //mPosition = savedInstanceState.getInt(SELECTED_KEY);
             //mOffset = savedInstanceState.getInt(OFFSET_KEY);
+            //getLoaderManager().getLoader(MOVIES_LOADER_ID).reset();
             mGridState = savedInstanceState.getParcelable(SELECTED_KEY);
-            Log.v("TREVIE-MGF", "State retrieved. Position: " + mPosition);// + " / Offset: " + mOffset);
+            //gridView.smoothScrollToPosition(savedInstanceState.getInt("LAST_VISIBLE"));
+            //Log.v("TREVIE-MGF", "State retrieved. Position: " + mPosition);// + " / Offset: " + mOffset);
+            ArrayList<Movie> movies = savedInstanceState.getParcelableArrayList("key");
+            mRestored = true;
+            mPage = savedInstanceState.getInt("PAGE2LOAD");
+            mMovieGridAdapter.clear();
+            mMovieGridAdapter.addAll(movies);
+            movies.clear();
+            if (mGridState != null) {
+                gridView.onRestoreInstanceState(mGridState);
+            }
         }
 
     }
@@ -216,7 +264,7 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
         // Calculates offset from top of the view to selected item
         //View v = gridView.getChildAt(0);
         //int offset = (v == null) ? 0 : (v.getTop() - gridView.getPaddingTop());
-
+        /*
         // Saves position of currently selected grid item, if any
         if (getActivity().findViewById(R.id.movie_detail_container) != null && mPosition != GridView.INVALID_POSITION) {
             outState.putInt(SELECTED_KEY, mPosition);
@@ -227,9 +275,20 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
             //outState.putInt(OFFSET_KEY, offset);
             Log.v("TREVIE-MGF", "First Visible Saved!! Position: " + gridView.getLastVisiblePosition());// + " / Offset: " + offset);
         }
+        */
         mGridState = gridView.onSaveInstanceState();
         Log.v("TREVIE-MGF", "Grid State Saved!! State: " + mGridState);
         outState.putParcelable(SELECTED_KEY, mGridState);
+        //outState.putInt("LAST_VISIBLE", gridView.getLastVisiblePosition());
+        int count = gridView.getAdapter().getCount();
+        ArrayList<Movie> movieList = new ArrayList<>();
+
+        for (int i = 0; i < count; i++) {
+            movieList.add((Movie)gridView.getAdapter().getItem(i));
+        }
+
+        outState.putParcelableArrayList("key", movieList);
+        outState.putInt("PAGE2LOAD", mPage);
         super.onSaveInstanceState(outState);
     }
 
@@ -241,7 +300,7 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
     @OnItemClick(R.id.movie_grid)
     public void startMovieActivity(int position) {
         Log.v("TREVIE-MGF", "UpdateDetails " + position);
-        mPosition = position;
+        //mPosition = position;
         Movie movie = mMovieGridAdapter.getItem(position);
         if (movie != null) {
             ((Callback) getActivity())
@@ -257,31 +316,35 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
     public Loader<Movie[]> onCreateLoader(int id, Bundle args) {
         Log.v("TREVIE-MGF", "Create Loader");
         String sortType = mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY);
-        return new MoviesLoader(getActivity(), sortType);
+        return new MoviesLoader(getActivity(), sortType, mPage);
     }
 
     @Override
     public void onLoadFinished(Loader<Movie[]> loader, Movie[] data) {
+    if (!mRestored) {
         if (data != null) {
-            mMovieGridAdapter.clear();
+            if (mPage == FIRST_PAGE) {
+                mMovieGridAdapter.clear();
+                Log.v("TREVIE-MGF", "Clearing GridView....");
+            }
             for (Movie movie : data) {
                 mMovieGridAdapter.add(movie);
             }
         }
 
-        if (getActivity().findViewById(R.id.movie_detail_container) != null
-                && mGridState == null) {//(mPosition == GridView.INVALID_POSITION || mPosition == 0)) {
-            handler.sendEmptyMessage(0);
+        if (mGridState == null && mPage == FIRST_PAGE) {
+            if (getActivity().findViewById(R.id.movie_detail_container) != null) {
+                handler.sendEmptyMessage(0);
+            } else {
+                gridView.smoothScrollToPosition(0);
+            }
         }
-        //gridView.smoothScrollToPosition(mPosition);
-        Log.v("TREVIE-MGF", "Load Finished " + mPosition);
-        if (mGridState != null) {
-            Log.v("TREVIE-MGF", "Restoring GridView state...");
-            gridView.onRestoreInstanceState(mGridState);
-        }
-
+    } else {
+        mRestored = false;
     }
 
+
+    }
 
     // Performs click on first grid item
     private Handler handler = new Handler()  { // handler for commiting fragment after data is loaded
@@ -302,4 +365,5 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
     public void onLoaderReset(Loader<Movie[]> loader) {
         mMovieGridAdapter.clear();
     }
+
 }
