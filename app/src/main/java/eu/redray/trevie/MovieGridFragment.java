@@ -47,10 +47,9 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
     private SharedPreferences mSharedPreferences;
 
     // Used to (re)store app state
-    //private int mPosition = GridView.INVALID_POSITION;
-    //private int mOffset = 0;
     private static final String SELECTED_KEY = "selected_position";
-    //private static final String OFFSET_KEY = "selected_offset";
+    private static final String PAGE_KEY = "page_to_load";
+    private static final String GRID_KEY = "grid_state";
     private Parcelable mGridState = null;
 
     //used to load additional pages
@@ -241,9 +240,9 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
             mGridState = savedInstanceState.getParcelable(SELECTED_KEY);
             //gridView.smoothScrollToPosition(savedInstanceState.getInt("LAST_VISIBLE"));
             //Log.v("TREVIE-MGF", "State retrieved. Position: " + mPosition);// + " / Offset: " + mOffset);
-            ArrayList<Movie> movies = savedInstanceState.getParcelableArrayList("key");
+            ArrayList<Movie> movies = savedInstanceState.getParcelableArrayList(GRID_KEY);
             mRestored = true;
-            mPage = savedInstanceState.getInt("PAGE2LOAD");
+            mPage = savedInstanceState.getInt(PAGE_KEY);
             mMovieGridAdapter.clear();
             mMovieGridAdapter.addAll(movies);
             movies.clear();
@@ -287,8 +286,8 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
             movieList.add((Movie)gridView.getAdapter().getItem(i));
         }
 
-        outState.putParcelableArrayList("key", movieList);
-        outState.putInt("PAGE2LOAD", mPage);
+        outState.putParcelableArrayList(GRID_KEY, movieList);
+        outState.putInt(PAGE_KEY, mPage);
         super.onSaveInstanceState(outState);
     }
 
