@@ -60,6 +60,8 @@ public class MovieDetailsFragment extends Fragment {
     LinearLayout detailsLayout;
     @Bind(R.id.movie_details_title)
     TextView titleTextView;
+    @Bind(R.id.movie_details_favourite)
+    ImageView favouriteIconImageView;
     @Bind(R.id.movie_details_release_date)
     TextView releaseTextView;
     @Bind(R.id.movie_details_rating)
@@ -98,6 +100,15 @@ public class MovieDetailsFragment extends Fragment {
         synopsisTextView.setText(mMovie.getSynopsis());
         Picasso.with(getActivity()).load(mMovie.getPosterPath()).into(posterImageView);
 
+        // Sets favourite icon
+        if(mMovie.isFavourite(getActivity(),
+                getActivity().getSharedPreferences(getString(R.string.preference_favourite_movies),
+                        Context.MODE_PRIVATE))) {
+            favouriteIconImageView.setImageResource(R.drawable.ic_star_black_yellow_24dp);
+        } else {
+            favouriteIconImageView.setImageResource(R.drawable.ic_star_border_black_24dp);
+        }
+
         // Fetches additional movie details
         UpdateDetailsTask updateDetailsTask = new UpdateDetailsTask();
         updateDetailsTask.execute(mMovie);
@@ -130,7 +141,8 @@ public class MovieDetailsFragment extends Fragment {
     /**
      * Creates dialog that lets user choose trailer to play.
      */
-    @OnClick(R.id.trailer_button) void onTrailerClick() {
+    @OnClick(R.id.trailer_button)
+    void onTrailerClick() {
         final ArrayList<Uri> trailers = mMovie.getTrailerLinks();
         if (trailers.size() < 1) {
             // Show error message if there are no trailers to play
