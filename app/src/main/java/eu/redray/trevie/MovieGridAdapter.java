@@ -79,9 +79,11 @@ public class MovieGridAdapter extends ArrayAdapter<Movie> {
 
         if(movie.isFavourite(sharedPreferences.getStringSet(mContext.getString(R.string.preference_favourite_movies),
                 new HashSet<String>()))) {
-            viewHolder.favouriteIcon.setImageResource(R.drawable.ic_star_border_yellow_24dp);
+            // Show icon if movie is favourite
+            viewHolder.favouriteIcon.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.favouriteIcon.setImageResource(R.drawable.ic_star_border_white_24dp);
+            // Hide icon if movie is not favourite
+            viewHolder.favouriteIcon.setVisibility(View.INVISIBLE);
         }
     }
 }
