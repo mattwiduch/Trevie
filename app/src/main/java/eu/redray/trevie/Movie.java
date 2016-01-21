@@ -4,14 +4,12 @@
 
 package eu.redray.trevie;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents movie item.
@@ -162,11 +160,10 @@ public class Movie implements Parcelable {
 
     /**
      * Checks if user has added movie to their favourites collection
-     * @param sharedPreferences Handle to user's preferences
+     * @param favourites Set containing id's of favourtie movies
      * @return Returns true if movie is in favourites collection
      */
-    public boolean isFavourite(Context context, SharedPreferences sharedPreferences) {
-        return sharedPreferences.getStringSet(context.getString(R.string.preference_favourite_movies),
-                new HashSet<String>()).contains(mId);
+    public boolean isFavourite(Set<String> favourites) {
+        return favourites.contains(mId);
     }
 }
