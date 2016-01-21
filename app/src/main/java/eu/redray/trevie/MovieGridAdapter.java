@@ -5,6 +5,7 @@
 package eu.redray.trevie;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -38,7 +40,7 @@ public class MovieGridAdapter extends ArrayAdapter<Movie> {
             //set views
             viewHolder = new ViewHolder();
             viewHolder.moviePoster = (ImageView) convertView.findViewById(R.id.grid_movie_poster);
-            viewHolder.favouriteButton = (ImageView) convertView.findViewById(R.id.grid_movie_favourite);
+            viewHolder.favouriteIcon = (ImageView) convertView.findViewById(R.id.grid_movie_favourite);
             viewHolder.movieTitle = (TextView) convertView.findViewById(R.id.grid_movie_title);
             viewHolder.movieYear = (TextView) convertView.findViewById(R.id.grid_movie_genre);
             convertView.setTag(viewHolder);
@@ -53,6 +55,8 @@ public class MovieGridAdapter extends ArrayAdapter<Movie> {
         viewHolder.movieTitle.setText(movie.getTitle());
         viewHolder.movieTitle.setSelected(true);
         viewHolder.movieYear.setText(movie.getReleaseYear());
+        // Set correct favourite icon
+        setFavouriteIcon(viewHolder, movie);
         return convertView;
     }
 
@@ -61,8 +65,25 @@ public class MovieGridAdapter extends ArrayAdapter<Movie> {
      */
     private static class ViewHolder {
         ImageView moviePoster;
-        ImageView favouriteButton;
+        ImageView favouriteIcon;
         TextView movieTitle;
         TextView movieYear;
+    }
+
+    /**
+     * Sets correct favourite icon based on favourites collection
+     */
+    private void setFavouriteIcon(ViewHolder viewHolder, Movie movie) {
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(
+                mContext.getString(R.string.preference_favourite_movies), Context.MODE_PRIVATE);
+
+        if(movie.isFavourite(sharedPreferences.getStringSet(mContext.getString(R.string.preference_favourite_movies),
+                new HashSet<String>()))) {
+            // Show icon if movie is favourite
+            viewHolder.favouriteIcon.setVisibility(View.VISIBLE);
+        } else {
+            // Hide icon if movie is not favourite
+            viewHolder.favouriteIcon.setVisibility(View.INVISIBLE);
+        }
     }
 }

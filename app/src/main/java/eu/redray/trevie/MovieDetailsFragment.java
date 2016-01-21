@@ -7,6 +7,7 @@ package eu.redray.trevie;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,6 +43,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,12 +57,15 @@ import eu.redray.trevie.utility.YouTubeUri;
 public class MovieDetailsFragment extends Fragment {
     private final String TAG = MovieDetailsFragment.class.getSimpleName();
     private ShareActionProvider mShareActionProvider;
+    private SharedPreferences mSharedPreferences;
     private Movie mMovie;
 
     @Bind(R.id.movie_details_layout)
     LinearLayout detailsLayout;
     @Bind(R.id.movie_details_title)
     TextView titleTextView;
+    @Bind(R.id.movie_details_favourite)
+    ImageView favouriteIconImageView;
     @Bind(R.id.movie_details_release_date)
     TextView releaseTextView;
     @Bind(R.id.movie_details_rating)
@@ -88,6 +94,9 @@ public class MovieDetailsFragment extends Fragment {
             mMovie = arguments.getParcelable(Movie.EXTRA_DETAILS);
         }
 
+        mSharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_favourite_movies),
+                Context.MODE_PRIVATE);
+
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
         ButterKnife.bind(this, rootView);
 
@@ -98,11 +107,35 @@ public class MovieDetailsFragment extends Fragment {
         synopsisTextView.setText(mMovie.getSynopsis());
         Picasso.with(getActivity()).load(mMovie.getPosterPath()).into(posterImageView);
 
+        // Sets favourite icon
+        setFavouriteIcon();
+
         // Fetches additional movie details
         UpdateDetailsTask updateDetailsTask = new UpdateDetailsTask();
         updateDetailsTask.execute(mMovie);
 
         return rootView;
+    }
+
+    /**
+     * Sets correct favourite icon based on favourites collection
+     */
+    private void setFavouriteIcon() {
+        if(isFavourite()) {
+            favouriteIconImageView.setImageResource(R.drawable.ic_star_black_yellow_24dp);
+        } else {
+            favouriteIconImageView.setImageResource(R.drawable.ic_star_border_black_24dp);
+        }
+    }
+
+    /**
+     * Checks if movie is present in favourites collection
+     * @return
+     */
+    private boolean isFavourite() {
+        return mMovie.isFavourite(mSharedPreferences.getStringSet(
+                getActivity().getString(R.string.preference_favourite_movies),
+                new HashSet<String>()));
     }
 
     @Override
@@ -128,9 +161,39 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     /**
+     * Updates favourite collection based on user action
+     */
+    @OnClick(R.id.movie_details_favourite)
+    void toggleFavourite() {
+        // Get set containing id's of favourite movies
+        Set<String> favourites = mSharedPreferences.getStringSet(
+                getActivity().getString(R.string.preference_favourite_movies),
+                new HashSet<String>());
+
+        // Update favourites collection
+        if (isFavourite()) {
+            // remove movie's id from collection
+            favourites.remove(mMovie.getId());
+        } else {
+            // add movie's id to collection
+            favourites.add(mMovie.getId());
+        }
+
+        // Add updated collection to shared preferences
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.clear();
+        editor.putStringSet(getString(R.string.preference_favourite_movies), favourites);
+        editor.commit();
+
+        // Sets correct icon
+        setFavouriteIcon();
+    }
+
+    /**
      * Creates dialog that lets user choose trailer to play.
      */
-    @OnClick(R.id.trailer_button) void onTrailerClick() {
+    @OnClick(R.id.trailer_button)
+    void onTrailerClick() {
         final ArrayList<Uri> trailers = mMovie.getTrailerLinks();
         if (trailers.size() < 1) {
             // Show error message if there are no trailers to play
