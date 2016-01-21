@@ -187,6 +187,14 @@ public class MovieDetailsFragment extends Fragment {
 
         // Sets correct icon
         setFavouriteIcon();
+
+        //get gridview then get child then update icon
+
+        // Re-draw master fragment
+        MovieGridFragment mgf = (MovieGridFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.movie_grid_fragment);
+        if ( null != mgf ) {
+            mgf.updateFavouriteIcon();
+        }
     }
 
     /**

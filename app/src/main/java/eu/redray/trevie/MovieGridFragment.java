@@ -63,6 +63,11 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
         setArguments(new Bundle());
     }
 
+    public void updateFavouriteIcon() {
+        mGridState = gridView.onSaveInstanceState();
+        updateGrid();
+    }
+
     /**
      * A callback interface that all activities containing this fragment must
      * implement. This mechanism allows activities to be notified of item
