@@ -191,30 +191,34 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
 
         // Loads additional results when user scroll to the bottom of the list
         gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                // The list is empty
-                if (totalItemCount == 0) return;
-
-                // Checks if user reached the bottom of the scroll view
-                if (firstVisibleItem + visibleItemCount == totalItemCount) {
-                    // Check if we need to load next page
-                    if (mNextPage && mPage <= LAST_PAGE) {
-                        mPage++;
-                        mNextPage = false;
-                        updateGrid();
-                    }
-                } else if (!mNextPage){
-                    // Scrolling inside the list
-                    mNextPage = true;
                 }
-            }
-        });
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    // The list is empty
+                    if (totalItemCount == 0) return;
+                    // Disable loading on scroll for favourites
+                    if (mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY)
+                            .equals(SORT_FAVOURITES)) return;
+
+                    // Checks if user reached the bottom of the scroll view
+                    if (firstVisibleItem + visibleItemCount == totalItemCount) {
+                        // Check if we need to load next page
+                        if (mNextPage && mPage <= LAST_PAGE) {
+                            mPage++;
+                            mNextPage = false;
+                            updateGrid();
+                        }
+                    } else if (!mNextPage) {
+                        // Scrolling inside the list
+                        mNextPage = true;
+                    }
+                }
+            });
+
         return view;
     }
 
