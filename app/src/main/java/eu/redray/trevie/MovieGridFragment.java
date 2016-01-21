@@ -325,7 +325,7 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
             }
 
             // Go to first item in the grid on new query
-            if (mGridState == null && mPage == FIRST_PAGE) {
+            if (gridView.getCount() > 0 && mGridState == null && mPage == FIRST_PAGE) {
                 if (getActivity().findViewById(R.id.movie_detail_container) != null) {
                     handler.sendEmptyMessage(0);
                 } else {
