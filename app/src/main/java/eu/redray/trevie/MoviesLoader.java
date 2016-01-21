@@ -24,7 +24,7 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
     public final String VOTE_COUNT = "100";
     private String mSortParameter;
     private int mPageToLoad;
-    private boolean DEBUG = true;
+    private boolean DEBUG = false;
 
     // We hold a reference to the Loader's data here.
     private Movie[] mMovies;
@@ -46,7 +46,6 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
 
     @Override
     public Movie[] loadInBackground() {
-        Log.v("TREVIE-ML", "Started background thread");
         //Verify size of parameters to ensure there's something to look up
         if (mSortParameter == null) {
             return null;
@@ -60,7 +59,6 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
                 .appendQueryParameter(PAGE_NUMBER, String.valueOf(mPageToLoad))
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
                 .build();
-        Log.v("TREVIE-ML", "Loading page... " + mPageToLoad);
 
         String moviesJsonString = getJsonString(moviesUri);
         if (moviesJsonString == null) return null;
