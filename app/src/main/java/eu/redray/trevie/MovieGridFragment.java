@@ -38,6 +38,7 @@ import butterknife.OnItemClick;
 public class MovieGridFragment extends Fragment implements LoaderManager.LoaderCallbacks<Movie[]> {
     public final String SORT_POPULARITY = "popularity.desc";
     public final String SORT_RATING = "vote_average.desc";
+    public final String SORT_FAVOURITES = "favourites";
     private static final int MOVIES_LOADER_ID = 0;
 
     @Bind(R.id.movie_grid)
@@ -110,6 +111,7 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
         int defaultChoice = -1;
         if (preferredSort.equals(SORT_POPULARITY)) defaultChoice = 0;
         if (preferredSort.equals(SORT_RATING)) defaultChoice = 1;
+        if (preferredSort.equals(SORT_FAVOURITES)) defaultChoice = 2;
 
         final AlertDialog.Builder sortDialog = new AlertDialog.Builder(getActivity());
         sortDialog.setTitle(R.string.sort_by)
@@ -126,6 +128,10 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
                         if (which == 1) {
                             sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
                                     SORT_RATING).apply();
+                        }
+                        if (which == 2) {
+                            sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
+                                    SORT_FAVOURITES).apply();
                         }
                         dialog.dismiss();
 
@@ -164,9 +170,12 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
         if (sortType.equals(SORT_RATING)) {
             subTitle = getResources().getString(R.string.highest_rated);
         }
+        if (sortType.equals(SORT_FAVOURITES)) {
+            subTitle = getResources().getString(R.string.sort_favourites);
+        }
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(subTitle);
 
-        // Restart loader so it get new data
+        // Restart loader so it gets new data
         getLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this).forceLoad();
     }
 

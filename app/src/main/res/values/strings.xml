@@ -17,6 +17,7 @@
     <string name="sort_by">Sort movies by…</string>
     <string name="most_popular">Most Popular</string>
     <string name="highest_rated">Highest Rated</string>
+    <string name="sort_favourites">Favourites</string>
 
     <!-- Labels for movie details screen -->
     <string name="label_movie_genre">Genre:</string>
