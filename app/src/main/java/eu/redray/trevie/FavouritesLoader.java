@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,63 +14,60 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by frano on 18/01/2016.
  */
-public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
+public class FavouritesLoader extends AsyncTaskLoader<Movie[]> {
     private final String TAG = MoviesLoader.class.getSimpleName();
     public final String VOTE_COUNT = "100";
-    private String mSortParameter;
-    private int mPageToLoad;
     private boolean DEBUG = false;
 
     // We hold a reference to the Loader's data here.
     private Movie[] mMovies;
 
-    // Construct query URL
+    // Query URL values
     final String TMDB_BASE_URL = "https://api.themoviedb.org/3";
-    final String DISCOVER_PATH = "discover";
     final String MOVIE_PATH = "movie";
-    final String SORT_PARAM = "sort_by";
-    final String VOTE_COUNT_PARAM = "vote_count.gte";
-    final String PAGE_NUMBER = "page";
     final String API_KEY_PARAM = "api_key";
 
-    public MoviesLoader(Context context, String sortParameter, int page) {
+    public FavouritesLoader(Context context) {
         super(context);
-        mSortParameter = sortParameter;
-        mPageToLoad = page;
     }
 
     @Override
     public Movie[] loadInBackground() {
-        //Verify size of parameters to ensure there's something to look up
-        if (mSortParameter == null) {
-            return null;
+        // Get ids of all favourite movies
+        Set<String> favourites = getContext().getSharedPreferences(
+                getContext().getString(R.string.preference_favourite_movies), Context.MODE_PRIVATE)
+                .getStringSet(getContext().getString(R.string.preference_favourite_movies),
+                        new HashSet<String>());
+
+        ArrayList<Movie> movies = new ArrayList<>();
+
+        // Fetch details for each movie
+        for (String id : favourites) {
+            // Movie details Uri
+            Uri movieUri = Uri.parse(TMDB_BASE_URL).buildUpon()
+                    .appendPath(MOVIE_PATH)
+                    .appendPath(id)
+                    .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
+                    .build();
+
+            String moviesJsonString = getJsonString(movieUri);
+            if (moviesJsonString == null) return null;
+
+            try {
+                movies.add(getMovieDataFromJsonString(moviesJsonString));
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
         }
-
-        Uri moviesUri = Uri.parse(TMDB_BASE_URL).buildUpon()
-                .appendPath(DISCOVER_PATH)
-                .appendPath(MOVIE_PATH)
-                .appendQueryParameter(SORT_PARAM, mSortParameter)
-                .appendQueryParameter(VOTE_COUNT_PARAM, VOTE_COUNT)
-                .appendQueryParameter(PAGE_NUMBER, String.valueOf(mPageToLoad))
-                .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
-                .build();
-
-        String moviesJsonString = getJsonString(moviesUri);
-        if (moviesJsonString == null) return null;
-
-        try {
-            return getMovieDataFromJsonString(moviesJsonString);
-        } catch (JSONException e) {
-            Log.e(TAG, e.getMessage(), e);
-            e.printStackTrace();
-        }
-
-        // This will only happen if there was an error getting or parsing the data
-        return null;
+        return movies.toArray(new Movie[movies.size()]);
     }
 
     private String getJsonString(Uri builtUri) {
@@ -139,7 +135,7 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
      * @return                 the array of movies loaded from JSON string
      * @throws JSONException
      */
-    private Movie[] getMovieDataFromJsonString(String moviesJsonString) throws JSONException {
+    private Movie getMovieDataFromJsonString(String moviesJsonString) throws JSONException {
         // Names of JSON objects to be extracted
         final String TMDB_RESULTS = "results";
         final String TMDB_TITLE = "title";
@@ -149,29 +145,18 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
         final String TMDB_POSTER_PATH = "poster_path";
         final String TMDB_ID = "id";
 
+        JSONObject movieJson = new JSONObject(moviesJsonString);
 
-        JSONObject moviesJson = new JSONObject(moviesJsonString);
-        JSONArray moviesArray = moviesJson.getJSONArray(TMDB_RESULTS);
+        // Get appropriate data
+        String id = movieJson.getString(TMDB_ID);
+        String title = movieJson.getString(TMDB_TITLE);
+        String releaseDate = movieJson.getString(TMDB_RELEASE_DATE);
+        String avgRating = movieJson.getString(TMDB_AVG_RATING);
+        String overview = movieJson.getString(TMDB_OVERVIEW);
+        String posterPath = "http://image.tmdb.org/t/p/w185" + movieJson.getString(TMDB_POSTER_PATH);
 
-        Movie[] movies = new Movie[moviesArray.length()];
-
-        for (int i = 0; i < moviesArray.length(); i++) {
-            // Get the JSON object representing the movie
-            JSONObject movie = moviesArray.getJSONObject(i);
-
-            // Get appropriate data
-            String id = movie.getString(TMDB_ID);
-            String title = movie.getString(TMDB_TITLE);
-            String releaseDate = movie.getString(TMDB_RELEASE_DATE);
-            String avgRating = movie.getString(TMDB_AVG_RATING);
-            String overview = movie.getString(TMDB_OVERVIEW);
-            String posterPath = "http://image.tmdb.org/t/p/w185" + movie.getString(TMDB_POSTER_PATH);
-
-            // Create new movie object
-            movies[i] = new Movie(id, title, releaseDate, avgRating, overview, posterPath,
-                    "", "", "", null, null);
-        }
-        return movies;
+        return new Movie(id, title, releaseDate, avgRating, overview, posterPath,
+                "", "", "", null, null);
     }
 
     /**

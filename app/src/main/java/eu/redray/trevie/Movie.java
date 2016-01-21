@@ -9,6 +9,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Represents movie item.
@@ -155,5 +156,14 @@ public class Movie implements Parcelable {
 
     public void setUserReviews(ArrayList userReviews) {
         mUserReviews = userReviews;
+    }
+
+    /**
+     * Checks if user has added movie to their favourites collection
+     * @param favourites Set containing id's of favourtie movies
+     * @return Returns true if movie is in favourites collection
+     */
+    public boolean isFavourite(Set<String> favourites) {
+        return favourites.contains(mId);
     }
 }
