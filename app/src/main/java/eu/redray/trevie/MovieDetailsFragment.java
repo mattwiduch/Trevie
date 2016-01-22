@@ -181,10 +181,12 @@ public class MovieDetailsFragment extends Fragment {
         // Update favourites collection
         if (isFavourite()) {
             // remove movie's id from collection
-            favourites.remove(mMovie.getId());
+            favourites.remove(String.valueOf(mMovie.getId()));
+            Log.v(TAG, "Adding....");
         } else {
             // add movie's id to collection
-            favourites.add(mMovie.getId());
+            favourites.add(String.valueOf(mMovie.getId()));
+            Log.v(TAG, "Removing...");
         }
 
         // Add updated collection to shared preferences
@@ -279,14 +281,14 @@ public class MovieDetailsFragment extends Fragment {
             // Movie details Uri
             Uri detailsUri = Uri.parse(TMDB_BASE_URL).buildUpon()
                     .appendPath(MOVIE_PATH)
-                    .appendPath(params[0].getId())
+                    .appendPath(params[0].getId() + "")
                     .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
                     .build();
 
             // Trailers Uri
             Uri trailersUri = Uri.parse(TMDB_BASE_URL).buildUpon()
                     .appendPath(MOVIE_PATH)
-                    .appendPath(params[0].getId())
+                    .appendPath(params[0].getId() + "")
                     .appendPath(TRAILERS_PATH)
                     .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
                     .build();
@@ -294,7 +296,7 @@ public class MovieDetailsFragment extends Fragment {
             // Reviews Uri
             Uri reviewsUri = Uri.parse(TMDB_BASE_URL).buildUpon()
                     .appendPath(MOVIE_PATH)
-                    .appendPath(params[0].getId())
+                    .appendPath(params[0].getId() + "")
                     .appendPath(REVIEWS_PATH)
                     .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
                     .build();

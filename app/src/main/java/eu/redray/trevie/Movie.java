@@ -29,7 +29,7 @@ public class Movie implements Parcelable {
         }
     };
 
-    private String mId;
+    private int mId;
     private String mTitle;
     private String mReleaseDate;
     private String mRating;
@@ -41,7 +41,7 @@ public class Movie implements Parcelable {
     private ArrayList mTrailerLinks;
     private ArrayList mUserReviews;
 
-    public Movie(String id, String title, String releaseDate, String avgRating, String overview, String posterPath,
+    public Movie(int id, String title, String releaseDate, String avgRating, String overview, String posterPath,
                  String runtime, String genres, String countries, ArrayList trailers, ArrayList reviews) {
         mId = id;
         mTitle = title;
@@ -57,7 +57,7 @@ public class Movie implements Parcelable {
     }
 
     protected Movie(Parcel in) {
-        mId = in.readString();
+        mId = in.readInt();
         mTitle = in.readString();
         mReleaseDate = in.readString();
         mRating = in.readString();
@@ -77,7 +77,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mId);
+        dest.writeInt(mId);
         dest.writeString(mTitle);
         dest.writeString(mReleaseDate);
         dest.writeString(mRating);
@@ -90,7 +90,7 @@ public class Movie implements Parcelable {
         dest.writeList(mUserReviews);
     }
 
-    public String getId() {
+    public int getId() {
         return mId;
     }
 
@@ -164,7 +164,7 @@ public class Movie implements Parcelable {
      * @return Returns true if movie is in favourites collection
      */
     public boolean isFavourite(Set<String> favourites) {
-        return favourites.contains(mId);
+        return favourites.contains(String.valueOf(mId));
     }
 
     /**

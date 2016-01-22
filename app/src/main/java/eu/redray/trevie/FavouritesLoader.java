@@ -148,7 +148,7 @@ public class FavouritesLoader extends AsyncTaskLoader<Movie[]> {
         JSONObject movieJson = new JSONObject(moviesJsonString);
 
         // Get appropriate data
-        String id = movieJson.getString(TMDB_ID);
+        int id = movieJson.getInt(TMDB_ID);
         String title = movieJson.getString(TMDB_TITLE);
         String releaseDate = movieJson.getString(TMDB_RELEASE_DATE);
         String avgRating = movieJson.getString(TMDB_AVG_RATING);

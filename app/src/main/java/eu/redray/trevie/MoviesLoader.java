@@ -160,7 +160,7 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
             JSONObject movie = moviesArray.getJSONObject(i);
 
             // Get appropriate data
-            String id = movie.getString(TMDB_ID);
+            int id = movie.getInt(TMDB_ID);
             String title = movie.getString(TMDB_TITLE);
             String releaseDate = movie.getString(TMDB_RELEASE_DATE);
             String avgRating = movie.getString(TMDB_AVG_RATING);
