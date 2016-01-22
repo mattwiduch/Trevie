@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -81,6 +82,8 @@ public class MovieDetailsFragment extends Fragment {
     TextView countriesTextView;
     @Bind(R.id.movie_details_poster)
     ImageView posterImageView;
+    @Bind(R.id.trailer_button)
+    Button trailerButton;
     @Bind(R.id.movie_details_reviews)
     TextView reviewsTextView;
 
@@ -110,6 +113,9 @@ public class MovieDetailsFragment extends Fragment {
 
         // Sets favourite icon
         setFavouriteIcon();
+
+        // Disables trailer button until data is loaded
+        trailerButton.setEnabled(false);
 
         // Fetches additional movie details
         UpdateDetailsTask updateDetailsTask = new UpdateDetailsTask();
@@ -363,7 +369,10 @@ public class MovieDetailsFragment extends Fragment {
                 // And if trailer is available
                 if (mMovie.getTrailerLinks() != null && mMovie.getTrailerLinks().size() > 0) {
                     mShareActionProvider.setShareIntent(createShareTrailerIntent());
+                    // Set share menu item visible
                     mShareMenuItem.setVisible(true);
+                    // Activate play trailer button
+                    trailerButton.setEnabled(true);
                 }
             }
         }
