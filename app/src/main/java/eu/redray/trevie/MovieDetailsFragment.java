@@ -264,6 +264,10 @@ public class MovieDetailsFragment extends Fragment {
             if (params.length == 0) {
                 return null;
             }
+            // Check if additional data needs to be downloaded
+            if (!mMovie.needsMoreData()) {
+                return null;
+            }
 
             // Movie details Uri
             Uri detailsUri = Uri.parse(TMDB_BASE_URL).buildUpon()

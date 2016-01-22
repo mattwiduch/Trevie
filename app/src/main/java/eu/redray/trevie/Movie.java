@@ -166,4 +166,12 @@ public class Movie implements Parcelable {
     public boolean isFavourite(Set<String> favourites) {
         return favourites.contains(mId);
     }
+
+    /**
+     * Checks if additional data needs to be downloaded
+     */
+    public boolean needsMoreData() {
+        return (mRuntime.equals("") && mCountries.equals("") && mGenres.equals("")
+                && mTrailerLinks == null && mUserReviews == null);
+    }
 }
