@@ -358,7 +358,12 @@ public class MovieDetailsFragment extends Fragment {
 
             // Set share trailer intent if there is provider available
             if (mShareActionProvider != null) {
-                mShareActionProvider.setShareIntent(createShareTrailerIntent());
+                // And if trailer is available
+                if (mMovie.getTrailerLinks() != null && mMovie.getTrailerLinks().size() > 0) {
+                    mShareActionProvider.setShareIntent(createShareTrailerIntent());
+                } else {
+                    //mShareActionProvider
+                }
             }
         }
 
