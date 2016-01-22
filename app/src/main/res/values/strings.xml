@@ -9,6 +9,7 @@
     <!-- Keys for SharedPreferences -->
     <string name="pref_sort_key">sort type</string>
     <string name="pref_file_key">user preferences</string>
+    <string name="pref_favourite_movies">eu.redray.trevie.FAVOURITE_MOVIES</string>
 
     <!-- TextView placeholder text -->
     <string name="loading">…</string>
@@ -26,6 +27,8 @@
     <string name="label_movie_country">Country:</string>
     <string name="label_movie_average_rating">Average Rating:</string>
     <string name="label_movie_synopsis">Plot Synopsis</string>
+    <string name="label_movie_reviews">User Reviews</string>
+    <string name="error_message_noreviews">There are no reviews.</string>
 
     <!-- Descriptions for images -->
     <string name="description_movie_poster">Movie Poster</string>
@@ -35,8 +38,5 @@
     <string name="play_trailer">Trailer</string>
     <string name="choose_trailer">Choose trailer to play...</string>
     <string name="error_message_notrailers">There are no trailers to play</string>
-    <string name="label_movie_reviews">User Reviews</string>
-    <string name="error_message_noreviews">There are no reviews.</string>
     <string name="share_trailer">Share Trailer</string>
-    <string name="preference_favourite_movies">FAVOURITE_MOVIES</string>
 </resources>

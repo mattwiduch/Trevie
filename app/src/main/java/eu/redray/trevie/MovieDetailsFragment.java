@@ -98,7 +98,7 @@ public class MovieDetailsFragment extends Fragment {
             mMovie = arguments.getParcelable(Movie.EXTRA_DETAILS);
         }
 
-        mSharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_favourite_movies),
+        mSharedPreferences = getActivity().getSharedPreferences(getString(R.string.pref_favourite_movies),
                 Context.MODE_PRIVATE);
 
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
@@ -141,7 +141,7 @@ public class MovieDetailsFragment extends Fragment {
      */
     private boolean isFavourite() {
         return mMovie.isFavourite(mSharedPreferences.getStringSet(
-                getActivity().getString(R.string.preference_favourite_movies),
+                getActivity().getString(R.string.pref_favourite_movies),
                 new HashSet<String>()));
     }
 
@@ -175,7 +175,7 @@ public class MovieDetailsFragment extends Fragment {
     void toggleFavourite() {
         // Get set containing id's of favourite movies
         Set<String> favourites = mSharedPreferences.getStringSet(
-                getActivity().getString(R.string.preference_favourite_movies),
+                getActivity().getString(R.string.pref_favourite_movies),
                 new HashSet<String>());
 
         // Update favourites collection
@@ -190,7 +190,7 @@ public class MovieDetailsFragment extends Fragment {
         // Add updated collection to shared preferences
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.clear();
-        editor.putStringSet(getString(R.string.preference_favourite_movies), favourites);
+        editor.putStringSet(getString(R.string.pref_favourite_movies), favourites);
         editor.commit();
 
         // Sets correct icon

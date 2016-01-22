@@ -75,9 +75,9 @@ public class MovieGridAdapter extends ArrayAdapter<Movie> {
      */
     private void setFavouriteIcon(ViewHolder viewHolder, Movie movie) {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(
-                mContext.getString(R.string.preference_favourite_movies), Context.MODE_PRIVATE);
+                mContext.getString(R.string.pref_favourite_movies), Context.MODE_PRIVATE);
 
-        if(movie.isFavourite(sharedPreferences.getStringSet(mContext.getString(R.string.preference_favourite_movies),
+        if(movie.isFavourite(sharedPreferences.getStringSet(mContext.getString(R.string.pref_favourite_movies),
                 new HashSet<String>()))) {
             // Show icon if movie is favourite
             viewHolder.favouriteIcon.setVisibility(View.VISIBLE);
