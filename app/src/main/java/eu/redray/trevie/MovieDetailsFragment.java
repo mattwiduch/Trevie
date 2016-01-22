@@ -57,6 +57,7 @@ import eu.redray.trevie.utility.YouTubeUri;
 public class MovieDetailsFragment extends Fragment {
     private final String TAG = MovieDetailsFragment.class.getSimpleName();
     private ShareActionProvider mShareActionProvider;
+    private MenuItem mShareMenuItem;
     private SharedPreferences mSharedPreferences;
     private Movie mMovie;
 
@@ -142,9 +143,10 @@ public class MovieDetailsFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_details, menu);
         // Locate MenuItem with ShareActionProvider
-        MenuItem item = menu.findItem(R.id.menu_item_share_trailer);
+        mShareMenuItem = menu.findItem(R.id.menu_item_share_trailer);
+        mShareMenuItem.setVisible(false);
         // Fetch and store ShareActionProvider
-        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mShareMenuItem);
     }
 
     /**
@@ -361,8 +363,7 @@ public class MovieDetailsFragment extends Fragment {
                 // And if trailer is available
                 if (mMovie.getTrailerLinks() != null && mMovie.getTrailerLinks().size() > 0) {
                     mShareActionProvider.setShareIntent(createShareTrailerIntent());
-                } else {
-                    //mShareActionProvider
+                    mShareMenuItem.setVisible(true);
                 }
             }
         }
