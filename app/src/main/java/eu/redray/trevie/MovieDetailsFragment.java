@@ -214,8 +214,7 @@ public class MovieDetailsFragment extends Fragment {
         if (trailers.size() < 1) {
             // Show error message if there are no trailers to play
             Toast.makeText(getActivity(), getString(R.string.error_message_notrailers), Toast.LENGTH_LONG).show();
-        }
-        if (trailers.size() == 1) {
+        } else if (trailers.size() == 1) {
             // Launch trailer immediately if there is only one available
             launchTrailerIntent(trailers.get(0));
         } else {
