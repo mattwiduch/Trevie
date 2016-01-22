@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import static com.facebook.stetho.Stetho.initializeWithDefaults;
+
 /**
  * Starts the application.
  */
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements MovieGridFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Initialise Stetho debug bridge
+        initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
