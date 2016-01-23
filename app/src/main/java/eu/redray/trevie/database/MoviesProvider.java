@@ -75,8 +75,8 @@ public class MoviesProvider extends ContentProvider {
 
     //trailers.movie_id = ?
     private static final String sTrailerByMovieIdSelection =
-            MoviesContract.MoviesEntry.TABLE_NAME +
-                    "." + MoviesContract.MoviesEntry._ID + " = ? ";
+            MoviesContract.TrailersEntry.TABLE_NAME +
+                    "." + MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY + " = ? ";
 
     private Cursor getTrailersByMovieId(Uri uri, String[] projection, String sortOrder) {
             String movieId = MoviesContract.MoviesEntry.getMovieIdFromUri(uri);
@@ -95,6 +95,45 @@ public class MoviesProvider extends ContentProvider {
                     null,
                     sortOrder
             );
+    }
+
+    private static final SQLiteQueryBuilder sReviewsByMovieIdQueryBuilder;
+    static{
+        sReviewsByMovieIdQueryBuilder = new SQLiteQueryBuilder();
+
+        //This is left outer join which looks like
+        //movies LEFT OUTER JOIN trailers ON movies._ID = trailers.movie_id ORDER BY movies._ID
+        sReviewsByMovieIdQueryBuilder.setTables(
+                MoviesContract.MoviesEntry.TABLE_NAME + " LEFT OUTER JOIN " +
+                        MoviesContract.ReviewsEntry.TABLE_NAME + " ON " +
+                        MoviesContract.MoviesEntry.TABLE_NAME + "." + MoviesContract.MoviesEntry._ID +
+                        " = " + MoviesContract.ReviewsEntry.TABLE_NAME + "." +
+                        MoviesContract.ReviewsEntry.COLUMN_MOVIE_KEY
+        );
+    }
+
+    //reviews.movie_id = ?
+    private static final String sReviewsByMovieIdSelection =
+            MoviesContract.ReviewsEntry.TABLE_NAME +
+                    "." + MoviesContract.ReviewsEntry.COLUMN_MOVIE_KEY + " = ? ";
+
+    private Cursor getReviewsByMovieId(Uri uri, String[] projection, String sortOrder) {
+        String movieId = MoviesContract.MoviesEntry.getMovieIdFromUri(uri);
+
+        String[] selectionArgs;
+        String selection;
+
+        selection = sReviewsByMovieIdSelection;
+        selectionArgs = new String[]{movieId};
+
+        return sReviewsByMovieIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
     }
 
     /**
@@ -167,15 +206,7 @@ public class MoviesProvider extends ContentProvider {
             }
             // "reviews"
             case REVIEWS: {
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        MoviesContract.ReviewsEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
+                retCursor = getReviewsByMovieId(uri, projection, sortOrder);
                 break;
             }
 

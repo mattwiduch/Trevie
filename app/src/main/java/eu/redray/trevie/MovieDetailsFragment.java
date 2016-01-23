@@ -200,6 +200,16 @@ public class MovieDetailsFragment extends Fragment {
                 }
             }
 
+            // Populate reviews db with reviews for this particular movie
+            if (mMovie.getUserReviews() != null) {
+                for (Object review : mMovie.getUserReviews()) {
+                    ContentValues reviewsValues = new ContentValues();
+                    reviewsValues.put(MoviesContract.ReviewsEntry.COLUMN_MOVIE_KEY, mMovie.getId());
+                    reviewsValues.put(MoviesContract.ReviewsEntry.COLUMN_REVIEW, review.toString());
+                    getActivity().getContentResolver().insert(MoviesContract.ReviewsEntry.CONTENT_URI, reviewsValues);
+                }
+            }
+
         }
 
         // Sets correct icon
