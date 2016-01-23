@@ -172,6 +172,11 @@ public class MovieDetailsFragment extends Fragment {
                     MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY + " = ?",
                     new String[]{String.valueOf(mMovie.getId())});
 
+            // Remove all related reviews
+            getActivity().getContentResolver().delete(MoviesContract.ReviewsEntry.CONTENT_URI,
+                    MoviesContract.ReviewsEntry.COLUMN_MOVIE_KEY + " = ?",
+                    new String[]{String.valueOf(mMovie.getId())});
+
             // Remove poster image from storage
             boolean deleted = PosterHeper.deletePoster(getActivity(), mMovie.getTitle());
             Log.v(TAG, "Deleted... " + deleted);
