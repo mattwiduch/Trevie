@@ -20,7 +20,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -137,7 +136,6 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             mFavouritesGridAdapter.swapCursor(data);
-            Log.v("TREVIE_MGF", "Finished loading cursor...");
             // Retrieve State
             if (mGridState != null) {
                 gridView.onRestoreInstanceState(mGridState);
@@ -181,6 +179,16 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
     static final int COL_MOVIE_RUNTIME = 6;
     static final int COL_MOVIE_GENRES = 7;
     static final int COL_MOVIE_COUNTRIES = 8;
+
+    // Specifies columns we need to read from trailers database
+    private static final String[] TRAILERS_COLUMNS = {
+            MoviesContract.TrailersEntry.TABLE_NAME + "." + MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY,
+            MoviesContract.TrailersEntry.COLUMN_URL
+    };
+
+    // These indices are tied to TRAILER_COLUMNS
+    static final int COL_TRAILER_ID = 0;
+    static final int COL_TRAILER_URL = 1;
 
     public MovieGridFragment() {
         setArguments(new Bundle());
@@ -425,7 +433,6 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         // Retain grid state
         mGridState = gridView.onSaveInstanceState();
         outState.putParcelable(GRID_KEY, mGridState);
-        Log.v("TREVIE-MGF", "Saving bundle... " + mGridState);
 
         super.onSaveInstanceState(outState);
     }
@@ -452,6 +459,23 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
 
     // Creates new movie object based on cursor data
     private Movie createMovie(Cursor cursor) {
+        Cursor trailersCursor = getActivity().getContentResolver().query(
+                MoviesContract.TrailersEntry.buildTrailerId(String.valueOf(cursor.getInt(COL_MOVIE_ID))),
+                TRAILERS_COLUMNS,
+                null,
+                null,
+                null
+        );
+        ArrayList<Uri> trailers = new ArrayList<>();
+
+        if (trailersCursor != null && trailersCursor.moveToFirst()) {
+            do {
+                Uri link = Uri.parse(trailersCursor.getString(COL_TRAILER_URL));
+                trailers.add(link);
+            } while (trailersCursor.moveToNext());
+            trailersCursor.close();
+        }
+
         return new Movie(cursor.getInt(COL_MOVIE_ID),
                 cursor.getString(COL_MOVIE_TITLE),
                 cursor.getString(COL_MOVIE_RELEASE_DATE),
@@ -461,7 +485,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
                 cursor.getString(COL_MOVIE_RUNTIME),
                 cursor.getString(COL_MOVIE_GENRES),
                 cursor.getString(COL_MOVIE_COUNTRIES),
-                null,
+                trailers,
                 null);
     }
 

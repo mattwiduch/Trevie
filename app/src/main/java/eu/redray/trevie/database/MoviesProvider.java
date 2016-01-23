@@ -18,6 +18,7 @@ public class MoviesProvider extends ContentProvider {
     static final int MOVIES = 100;
     static final int MOVIES_WITH_ID = 101;
     static final int TRAILERS = 200;
+    static final int TRAILERS_WITH_ID = 201;
     static final int REVIEWS = 300;
 
     @Override
@@ -137,7 +138,7 @@ public class MoviesProvider extends ContentProvider {
     }
 
     /**
-     * Matches each URI to MOVIE, MOVIE_WITH_ID, TRAILERS and REVIEWS integer constants
+     * Matches each URI to MOVIE, MOVIE_WITH_ID, TRAILERS_WITH_ID and REVIEWS integer constants
      * @return UriMatcher
      */
     static UriMatcher buildUriMatcher() {
@@ -149,6 +150,7 @@ public class MoviesProvider extends ContentProvider {
         matcher.addURI(authority, MoviesContract.PATH_MOVIES, MOVIES);
         matcher.addURI(authority, MoviesContract.PATH_MOVIES + "/#", MOVIES_WITH_ID);
         matcher.addURI(authority, MoviesContract.PATH_TRAILERS, TRAILERS);
+        matcher.addURI(authority, MoviesContract.PATH_TRAILERS + "/#", TRAILERS_WITH_ID);
         matcher.addURI(authority, MoviesContract.PATH_REVIEWS, REVIEWS);
 
         // Returns the matcher
@@ -167,8 +169,10 @@ public class MoviesProvider extends ContentProvider {
                 return MoviesContract.MoviesEntry.CONTENT_ITEM_TYPE;
             case TRAILERS:
                 return MoviesContract.TrailersEntry.CONTENT_TYPE;
+            case TRAILERS_WITH_ID:
+                return MoviesContract.TrailersEntry.CONTENT_ITEM_TYPE;
             case REVIEWS:
-                return MoviesContract.ReviewsEntry.CONTENT_TYPE;
+                return MoviesContract.ReviewsEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -199,8 +203,7 @@ public class MoviesProvider extends ContentProvider {
                 );
                 break;
             }
-            // "trailers"
-            case TRAILERS: {
+            case TRAILERS_WITH_ID: {
                 retCursor = getTrailersByMovieId(uri, projection, sortOrder);
                 break;
             }
