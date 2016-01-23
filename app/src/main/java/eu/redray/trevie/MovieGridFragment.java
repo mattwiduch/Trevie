@@ -35,6 +35,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import eu.redray.trevie.database.MoviesContract;
+import eu.redray.trevie.utility.FavouritesHelper;
 
 /**
  * A fragment that contains movie grid view.
@@ -178,24 +179,6 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
     static final int COL_MOVIE_RUNTIME = 6;
     static final int COL_MOVIE_GENRES = 7;
     static final int COL_MOVIE_COUNTRIES = 8;
-
-    // Specifies columns we need to read from trailers database
-    private static final String[] TRAILERS_COLUMNS = {
-            MoviesContract.TrailersEntry.TABLE_NAME + "." + MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY,
-            MoviesContract.TrailersEntry.COLUMN_URL
-    };
-    // These indices are tied to TRAILER_COLUMNS
-    static final int COL_TRAILER_ID = 0;
-    static final int COL_TRAILER_URL = 1;
-
-    // Specifies columns we need to read from reviews database
-    private static final String[] REVIEWS_COLUMNS = {
-            MoviesContract.ReviewsEntry.TABLE_NAME + "." + MoviesContract.ReviewsEntry.COLUMN_MOVIE_KEY,
-            MoviesContract.ReviewsEntry.COLUMN_REVIEW
-    };
-    // These indices are tied to TRAILER_COLUMNS
-    static final int COL_REVIEW_ID = 0;
-    static final int COL_REVIEW_CONTENT = 1;
 
     public MovieGridFragment() {
         setArguments(new Bundle());
@@ -466,39 +449,13 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
 
     // Creates new movie object based on cursor data
     private Movie createMovie(Cursor cursor) {
-        Cursor trailersCursor = getActivity().getContentResolver().query(
-                MoviesContract.TrailersEntry.buildTrailerId(String.valueOf(cursor.getInt(COL_MOVIE_ID))),
-                TRAILERS_COLUMNS,
-                null,
-                null,
-                null
-        );
-        ArrayList<Uri> trailers = new ArrayList<>();
+        // Get movie trailers
+        ArrayList<Uri> trailers = FavouritesHelper.getTrailers(getActivity(),
+                String.valueOf(cursor.getInt(COL_MOVIE_ID)));
+        // Get movie reviews
+        ArrayList<String> reviews = FavouritesHelper.getReviews(getActivity(),
+                String.valueOf(cursor.getInt(COL_MOVIE_ID)));
 
-        if (trailersCursor != null && trailersCursor.moveToFirst()) {
-            do {
-                Uri link = Uri.parse(trailersCursor.getString(COL_TRAILER_URL));
-                trailers.add(link);
-            } while (trailersCursor.moveToNext());
-            trailersCursor.close();
-        }
-
-        Cursor reviewsCursor = getActivity().getContentResolver().query(
-                MoviesContract.ReviewsEntry.buildReviewId(String.valueOf(cursor.getInt(COL_MOVIE_ID))),
-                REVIEWS_COLUMNS,
-                null,
-                null,
-                null
-        );
-        ArrayList<String> reviews = new ArrayList<>();
-
-        if (reviewsCursor != null && reviewsCursor.moveToFirst()) {
-            do {
-                String review = reviewsCursor.getString(COL_REVIEW_CONTENT);
-                reviews.add(review);
-            } while (reviewsCursor.moveToNext());
-            reviewsCursor.close();
-        }
 
         return new Movie(cursor.getInt(COL_MOVIE_ID),
                 cursor.getString(COL_MOVIE_TITLE),
