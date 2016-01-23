@@ -167,6 +167,11 @@ public class MovieDetailsFragment extends Fragment {
                     MoviesContract.MoviesEntry._ID + " = ?",
                     new String[]{String.valueOf(mMovie.getId())});
 
+            // Remove all related trailers
+            getActivity().getContentResolver().delete(MoviesContract.TrailersEntry.CONTENT_URI,
+                    MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY + " = ?",
+                    new String[]{String.valueOf(mMovie.getId())});
+
             // Remove poster image from storage
             boolean deleted = PosterHeper.deletePoster(getActivity(), mMovie.getTitle());
             Log.v(TAG, "Deleted... " + deleted);
