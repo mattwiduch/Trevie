@@ -168,7 +168,6 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
             MoviesContract.MoviesEntry.COLUMN_GENRES,
             MoviesContract.MoviesEntry.COLUMN_COUNTRIES
     };
-
     // These indices are tied to MOVIE_COLUMNS. If MOVIE_COLUMNS changes, these must change too
     static final int COL_MOVIE_ID = 0;
     static final int COL_MOVIE_TITLE = 1;
@@ -185,10 +184,18 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
             MoviesContract.TrailersEntry.TABLE_NAME + "." + MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY,
             MoviesContract.TrailersEntry.COLUMN_URL
     };
-
     // These indices are tied to TRAILER_COLUMNS
     static final int COL_TRAILER_ID = 0;
     static final int COL_TRAILER_URL = 1;
+
+    // Specifies columns we need to read from reviews database
+    private static final String[] REVIEWS_COLUMNS = {
+            MoviesContract.ReviewsEntry.TABLE_NAME + "." + MoviesContract.ReviewsEntry.COLUMN_MOVIE_KEY,
+            MoviesContract.ReviewsEntry.COLUMN_REVIEW
+    };
+    // These indices are tied to TRAILER_COLUMNS
+    static final int COL_REVIEW_ID = 0;
+    static final int COL_REVIEW_CONTENT = 1;
 
     public MovieGridFragment() {
         setArguments(new Bundle());
@@ -476,6 +483,23 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
             trailersCursor.close();
         }
 
+        Cursor reviewsCursor = getActivity().getContentResolver().query(
+                MoviesContract.ReviewsEntry.buildReviewId(String.valueOf(cursor.getInt(COL_MOVIE_ID))),
+                REVIEWS_COLUMNS,
+                null,
+                null,
+                null
+        );
+        ArrayList<String> reviews = new ArrayList<>();
+
+        if (reviewsCursor != null && reviewsCursor.moveToFirst()) {
+            do {
+                String review = reviewsCursor.getString(COL_REVIEW_CONTENT);
+                reviews.add(review);
+            } while (reviewsCursor.moveToNext());
+            reviewsCursor.close();
+        }
+
         return new Movie(cursor.getInt(COL_MOVIE_ID),
                 cursor.getString(COL_MOVIE_TITLE),
                 cursor.getString(COL_MOVIE_RELEASE_DATE),
@@ -486,7 +510,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
                 cursor.getString(COL_MOVIE_GENRES),
                 cursor.getString(COL_MOVIE_COUNTRIES),
                 trailers,
-                null);
+                reviews);
     }
 
     // Performs click on first grid item

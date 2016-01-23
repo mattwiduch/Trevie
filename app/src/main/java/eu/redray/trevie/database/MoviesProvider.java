@@ -20,6 +20,7 @@ public class MoviesProvider extends ContentProvider {
     static final int TRAILERS = 200;
     static final int TRAILERS_WITH_ID = 201;
     static final int REVIEWS = 300;
+    static final int REVIEWS_WITH_ID = 301;
 
     @Override
     public boolean onCreate() {
@@ -152,6 +153,7 @@ public class MoviesProvider extends ContentProvider {
         matcher.addURI(authority, MoviesContract.PATH_TRAILERS, TRAILERS);
         matcher.addURI(authority, MoviesContract.PATH_TRAILERS + "/#", TRAILERS_WITH_ID);
         matcher.addURI(authority, MoviesContract.PATH_REVIEWS, REVIEWS);
+        matcher.addURI(authority, MoviesContract.PATH_REVIEWS + "/#", REVIEWS_WITH_ID);
 
         // Returns the matcher
         return matcher;
@@ -172,6 +174,8 @@ public class MoviesProvider extends ContentProvider {
             case TRAILERS_WITH_ID:
                 return MoviesContract.TrailersEntry.CONTENT_ITEM_TYPE;
             case REVIEWS:
+                return MoviesContract.ReviewsEntry.CONTENT_TYPE;
+            case REVIEWS_WITH_ID:
                 return MoviesContract.ReviewsEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -208,7 +212,7 @@ public class MoviesProvider extends ContentProvider {
                 break;
             }
             // "reviews"
-            case REVIEWS: {
+            case REVIEWS_WITH_ID: {
                 retCursor = getReviewsByMovieId(uri, projection, sortOrder);
                 break;
             }
