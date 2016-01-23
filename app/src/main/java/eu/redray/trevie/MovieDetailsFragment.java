@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.redray.trevie.database.MoviesContract;
+import eu.redray.trevie.utility.PosterHeper;
 import eu.redray.trevie.utility.YouTubeUri;
 
 /**
@@ -164,14 +166,24 @@ public class MovieDetailsFragment extends Fragment {
             getActivity().getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI,
                     MoviesContract.MoviesEntry._ID + " = ?",
                     new String[]{String.valueOf(mMovie.getId())});
+
+            // Remove poster image from storage
+            boolean deleted = PosterHeper.deletePoster(getActivity(), mMovie.getTitle());
+            Log.v(TAG, "Deleted... " + deleted);
         } else {
             ContentValues movieValues = new ContentValues();
+
+            // Save poster image
+            String posterPath = PosterHeper.savePoster(getActivity(),
+                    ((BitmapDrawable)posterImageView.getDrawable()).getBitmap(),
+                    mMovie.getTitle());
+
             movieValues.put(MoviesContract.MoviesEntry._ID, mMovie.getId());
             movieValues.put(MoviesContract.MoviesEntry.COLUMN_TITLE, mMovie.getTitle());
             movieValues.put(MoviesContract.MoviesEntry.COLUMN_AVG_RATING, mMovie.getRating());
             movieValues.put(MoviesContract.MoviesEntry.COLUMN_COUNTRIES, mMovie.getCountries());
             movieValues.put(MoviesContract.MoviesEntry.COLUMN_GENRES, mMovie.getGenres());
-            movieValues.put(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH, mMovie.getPosterPath());
+            movieValues.put(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH, posterPath);
             movieValues.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE,mMovie.getReleaseDate());
             movieValues.put(MoviesContract.MoviesEntry.COLUMN_RUNTIME, mMovie.getRuntime());
             movieValues.put(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS, mMovie.getSynopsis());
