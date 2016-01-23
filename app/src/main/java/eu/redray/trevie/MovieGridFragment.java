@@ -250,7 +250,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         int defaultChoice = -1;
         if (preferredSort.equals(SORT_POPULARITY)) defaultChoice = 0;
         if (preferredSort.equals(SORT_RATING)) defaultChoice = 1;
-        if (preferredSort.equals(SORT_FAVOURITES)) defaultChoice = 2;
+        if (preferredSort.equals(SORT_FAVOURITES) || !isConnected) defaultChoice = 2;
 
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setTitle(R.string.sort_by);
@@ -267,10 +267,8 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
                                 SORT_POPULARITY).apply();
                     } else {
                         which = 2;
-                        Toast.makeText(getActivity(),
-                                R.string.error_noconnection,
-                                Toast.LENGTH_LONG)
-                                .show();
+                        Toast.makeText(getActivity(), R.string.error_noconnection, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.displaying_favourites, Toast.LENGTH_LONG).show();
                     }
                 }
                 if (which == 1) {
@@ -281,10 +279,8 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
                                 SORT_RATING).apply();
                     } else {
                         which = 2;
-                        Toast.makeText(getActivity(),
-                                R.string.error_noconnection,
-                                Toast.LENGTH_LONG)
-                                .show();
+                        Toast.makeText(getActivity(), R.string.error_noconnection, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.displaying_favourites, Toast.LENGTH_LONG).show();
                     }
                 }
                 if (which == 2) {
@@ -365,10 +361,8 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
             gridView.setAdapter(mMovieGridAdapter);
         } else {
             if (!isConnected) {
-                Toast.makeText(getActivity(),
-                        R.string.error_noconnection,
-                        Toast.LENGTH_LONG)
-                        .show();
+                Toast.makeText(getActivity(), R.string.error_noconnection, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.displaying_favourites, Toast.LENGTH_LONG).show();
             }
             gridView.setAdapter(mFavouritesGridAdapter);
         }
