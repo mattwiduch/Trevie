@@ -4,12 +4,18 @@
 
 package eu.redray.trevie;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Set;
+
+import eu.redray.trevie.database.MoviesContract;
+import eu.redray.trevie.database.MoviesDbHelper;
 
 /**
  * Represents movie item.
@@ -165,6 +171,32 @@ public class Movie implements Parcelable {
      */
     public boolean isFavourite(Set<String> favourites) {
         return favourites.contains(String.valueOf(mId));
+    }
+
+    /**
+     * Checks if movie is present in favourites collection
+     * @return true if it is, false otherwise
+     */
+    public boolean isFavourite(Context context) {
+        MoviesDbHelper dbHelper = new MoviesDbHelper(context);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String selectString = "SELECT * FROM " + MoviesContract.MoviesEntry.TABLE_NAME + " WHERE "
+                + MoviesContract.MoviesEntry._ID + " = ?";
+
+        // Put string in an array to avoid an unrecognized token error
+        Cursor cursor = db.rawQuery(selectString, new String[] {String.valueOf(mId)});
+
+        boolean isFavourite = false;
+        if(cursor.moveToFirst()){
+            isFavourite = true;
+        }
+
+        // Close cursor
+        cursor.close();
+        // Close database
+        db.close();
+        return isFavourite;
     }
 
     /**
