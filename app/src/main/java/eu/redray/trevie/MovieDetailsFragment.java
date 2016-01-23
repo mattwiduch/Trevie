@@ -4,10 +4,10 @@
 
 package eu.redray.trevie;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -49,8 +49,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import eu.redray.trevie.database.MoviesContract;
-import eu.redray.trevie.utility.PosterHeper;
+import eu.redray.trevie.utility.FavouritesHelper;
 import eu.redray.trevie.utility.YouTubeUri;
 
 /**
@@ -162,64 +161,13 @@ public class MovieDetailsFragment extends Fragment {
     void toggleFavourite() {
         // Update favourites database
         if (mMovie.isFavourite(getActivity())) {
-            // Remove movie from DB
-            getActivity().getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI,
-                    MoviesContract.MoviesEntry._ID + " = ?",
-                    new String[]{String.valueOf(mMovie.getId())});
-
-            // Remove all related trailers
-            getActivity().getContentResolver().delete(MoviesContract.TrailersEntry.CONTENT_URI,
-                    MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY + " = ?",
-                    new String[]{String.valueOf(mMovie.getId())});
-
-            // Remove all related reviews
-            getActivity().getContentResolver().delete(MoviesContract.ReviewsEntry.CONTENT_URI,
-                    MoviesContract.ReviewsEntry.COLUMN_MOVIE_KEY + " = ?",
-                    new String[]{String.valueOf(mMovie.getId())});
-
-            // Remove poster image from storage
-            boolean deleted = PosterHeper.deletePoster(getActivity(), mMovie.getTitle());
-            Log.v(TAG, "Deleted... " + deleted);
+            // Remove movie from favourites
+            FavouritesHelper.removeMovie(getActivity(), mMovie);
         } else {
-            ContentValues movieValues = new ContentValues();
-
-            // Save poster image
-            String posterPath = PosterHeper.savePoster(getActivity(),
-                    ((BitmapDrawable)posterImageView.getDrawable()).getBitmap(),
-                    mMovie.getTitle());
-
-            movieValues.put(MoviesContract.MoviesEntry._ID, mMovie.getId());
-            movieValues.put(MoviesContract.MoviesEntry.COLUMN_TITLE, mMovie.getTitle());
-            movieValues.put(MoviesContract.MoviesEntry.COLUMN_AVG_RATING, mMovie.getRating());
-            movieValues.put(MoviesContract.MoviesEntry.COLUMN_COUNTRIES, mMovie.getCountries());
-            movieValues.put(MoviesContract.MoviesEntry.COLUMN_GENRES, mMovie.getGenres());
-            movieValues.put(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH, posterPath);
-            movieValues.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE,mMovie.getReleaseDate());
-            movieValues.put(MoviesContract.MoviesEntry.COLUMN_RUNTIME, mMovie.getRuntime());
-            movieValues.put(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS, mMovie.getSynopsis());
-            // Add movie to DB
-            getActivity().getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, movieValues);
-
-            // Populate trailers db with links for this particular movie
-            if (mMovie.getTrailerLinks() != null) {
-                for (Object trailer : mMovie.getTrailerLinks()) {
-                    ContentValues trailersValues = new ContentValues();
-                    trailersValues.put(MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY, mMovie.getId());
-                    trailersValues.put(MoviesContract.TrailersEntry.COLUMN_URL, trailer.toString());
-                    getActivity().getContentResolver().insert(MoviesContract.TrailersEntry.CONTENT_URI, trailersValues);
-                }
-            }
-
-            // Populate reviews db with reviews for this particular movie
-            if (mMovie.getUserReviews() != null) {
-                for (Object review : mMovie.getUserReviews()) {
-                    ContentValues reviewsValues = new ContentValues();
-                    reviewsValues.put(MoviesContract.ReviewsEntry.COLUMN_MOVIE_KEY, mMovie.getId());
-                    reviewsValues.put(MoviesContract.ReviewsEntry.COLUMN_REVIEW, review.toString());
-                    getActivity().getContentResolver().insert(MoviesContract.ReviewsEntry.CONTENT_URI, reviewsValues);
-                }
-            }
-
+            // Get poster bitmap
+            Bitmap poster = ((BitmapDrawable)posterImageView.getDrawable()).getBitmap();
+            // Add movie to favourites
+            FavouritesHelper.addMovie(getActivity(), mMovie, poster);
         }
 
         // Sets correct icon
