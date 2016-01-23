@@ -27,9 +27,9 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
         // Create Movies table
         final String SQL_CREATE_MOVIES_TABLE = "CREATE TABLE " + MoviesEntry.TABLE_NAME + " (" +
                 // Movie ID fetched from TheMovieDB
-                MoviesEntry._ID + " INTEGER PRIMARY KEY," +
+                MoviesEntry._ID + " INTEGER PRIMARY KEY, " +
                 MoviesEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
-                MoviesEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL," +
+                MoviesEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
                 MoviesEntry.COLUMN_AVG_RATING + " TEXT NOT NULL, " +
                 MoviesEntry.COLUMN_SYNOPSIS + " TEXT NOT NULL, " +
                 MoviesEntry.COLUMN_POSTER_PATH + " TEXT NOT NULL, " +
@@ -44,7 +44,7 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
                 TrailersEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 // The id of a movie associated with this trailer
                 TrailersEntry.COLUMN_MOVIE_KEY + " INTEGER NOT NULL, " +
-                TrailersEntry.COLUMN_URL + " TEXT UNIQUE NOT NULL, " +
+                TrailersEntry.COLUMN_URL + " TEXT NOT NULL, " +
                 // Set up the location column as a foreign key to location table.
                 " FOREIGN KEY (" + TrailersEntry.COLUMN_MOVIE_KEY + ") REFERENCES " +
                 MoviesEntry.TABLE_NAME + " (" + MoviesEntry._ID +
@@ -57,7 +57,7 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
                 ReviewsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 // The id of a movie associated with this trailer
                 ReviewsEntry.COLUMN_MOVIE_KEY + " INTEGER NOT NULL, " +
-                ReviewsEntry.COLUMN_REVIEW + " TEXT UNIQUE NOT NULL, " +
+                ReviewsEntry.COLUMN_REVIEW + " TEXT NOT NULL, " +
                 // Set up the location column as a foreign key to location table.
                 " FOREIGN KEY (" + ReviewsEntry.COLUMN_MOVIE_KEY + ") REFERENCES " +
                 MoviesEntry.TABLE_NAME + " (" + MoviesEntry._ID +

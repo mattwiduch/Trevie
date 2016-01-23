@@ -189,6 +189,17 @@ public class MovieDetailsFragment extends Fragment {
             movieValues.put(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS, mMovie.getSynopsis());
             // Add movie to DB
             getActivity().getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, movieValues);
+
+            // Populate trailers db with links for this particular movie
+            if (mMovie.getTrailerLinks() != null) {
+                for (Object trailer : mMovie.getTrailerLinks()) {
+                    ContentValues trailersValues = new ContentValues();
+                    trailersValues.put(MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY, mMovie.getId());
+                    trailersValues.put(MoviesContract.TrailersEntry.COLUMN_URL, trailer.toString());
+                    getActivity().getContentResolver().insert(MoviesContract.TrailersEntry.CONTENT_URI, trailersValues);
+                }
+            }
+
         }
 
         // Sets correct icon

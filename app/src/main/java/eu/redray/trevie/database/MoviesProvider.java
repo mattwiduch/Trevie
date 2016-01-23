@@ -58,6 +58,45 @@ public class MoviesProvider extends ContentProvider {
         );
     }
 
+    private static final SQLiteQueryBuilder sTrailersByMovieIdQueryBuilder;
+    static{
+        sTrailersByMovieIdQueryBuilder = new SQLiteQueryBuilder();
+
+        //This is left outer join which looks like
+        //movies LEFT OUTER JOIN trailers ON movies._ID = trailers.movie_id ORDER BY movies._ID
+        sTrailersByMovieIdQueryBuilder.setTables(
+        MoviesContract.MoviesEntry.TABLE_NAME + " LEFT OUTER JOIN " +
+                MoviesContract.TrailersEntry.TABLE_NAME + " ON " +
+                MoviesContract.MoviesEntry.TABLE_NAME + "." + MoviesContract.MoviesEntry._ID +
+                " = " + MoviesContract.TrailersEntry.TABLE_NAME + "." +
+                MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY
+        );
+    }
+
+    //trailers.movie_id = ?
+    private static final String sTrailerByMovieIdSelection =
+            MoviesContract.MoviesEntry.TABLE_NAME +
+                    "." + MoviesContract.MoviesEntry._ID + " = ? ";
+
+    private Cursor getTrailersByMovieId(Uri uri, String[] projection, String sortOrder) {
+            String movieId = MoviesContract.MoviesEntry.getMovieIdFromUri(uri);
+
+            String[] selectionArgs;
+            String selection;
+
+                selection = sTrailerByMovieIdSelection;
+                selectionArgs = new String[]{movieId};
+
+            return sTrailersByMovieIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    sortOrder
+            );
+    }
+
     /**
      * Matches each URI to MOVIE, MOVIE_WITH_ID, TRAILERS and REVIEWS integer constants
      * @return UriMatcher
@@ -123,15 +162,7 @@ public class MoviesProvider extends ContentProvider {
             }
             // "trailers"
             case TRAILERS: {
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        MoviesContract.TrailersEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
+                retCursor = getTrailersByMovieId(uri, projection, sortOrder);
                 break;
             }
             // "reviews"
