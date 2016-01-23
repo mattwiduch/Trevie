@@ -98,11 +98,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         @Override
         public Loader<Movie[]> onCreateLoader(int id, Bundle args) {
             String sortType = mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY);
-            if (sortType.equals(SORT_POPULARITY) || sortType.equals(SORT_RATING)) {
-                return new MoviesLoader(getActivity(), sortType, mPage);
-            } else {
-                return null;
-            }
+            return new MoviesLoader(getActivity(), sortType, mPage);
         }
 
         @Override
