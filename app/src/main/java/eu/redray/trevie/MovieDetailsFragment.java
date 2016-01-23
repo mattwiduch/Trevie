@@ -4,10 +4,10 @@
 
 package eu.redray.trevie;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -44,12 +44,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import eu.redray.trevie.database.MoviesContract;
 import eu.redray.trevie.utility.YouTubeUri;
 
 /**
@@ -59,7 +58,6 @@ public class MovieDetailsFragment extends Fragment {
     private final String TAG = MovieDetailsFragment.class.getSimpleName();
     private ShareActionProvider mShareActionProvider;
     private MenuItem mShareMenuItem;
-    private SharedPreferences mSharedPreferences;
     private Movie mMovie;
 
     @Bind(R.id.movie_details_layout)
@@ -98,9 +96,6 @@ public class MovieDetailsFragment extends Fragment {
             mMovie = arguments.getParcelable(Movie.EXTRA_DETAILS);
         }
 
-        mSharedPreferences = getActivity().getSharedPreferences(getString(R.string.pref_favourite_movies),
-                Context.MODE_PRIVATE);
-
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
         ButterKnife.bind(this, rootView);
 
@@ -128,21 +123,11 @@ public class MovieDetailsFragment extends Fragment {
      * Sets correct favourite icon based on favourites collection
      */
     private void setFavouriteIcon() {
-        if(isFavourite()) {
+        if(mMovie.isFavourite(getActivity())) {
             favouriteIconImageView.setImageResource(R.drawable.ic_star_black_yellow_24dp);
         } else {
             favouriteIconImageView.setImageResource(R.drawable.ic_star_border_black_24dp);
         }
-    }
-
-    /**
-     * Checks if movie is present in favourites collection
-     * @return
-     */
-    private boolean isFavourite() {
-        return mMovie.isFavourite(mSharedPreferences.getStringSet(
-                getActivity().getString(R.string.pref_favourite_movies),
-                new HashSet<String>()));
     }
 
     @Override
@@ -169,41 +154,38 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     /**
-     * Updates favourite collection based on user action
+     * Updates favourite database based on user action
      */
     @OnClick(R.id.movie_details_favourite)
     void toggleFavourite() {
-        // Get set containing id's of favourite movies
-        Set<String> favourites = mSharedPreferences.getStringSet(
-                getActivity().getString(R.string.pref_favourite_movies),
-                new HashSet<String>());
-
-        // Update favourites collection
-        if (isFavourite()) {
-            // remove movie's id from collection
-            favourites.remove(String.valueOf(mMovie.getId()));
-            Log.v(TAG, "Adding....");
+        // Update favourites database
+        if (mMovie.isFavourite(getActivity())) {
+            // Remove movie from DB
+            getActivity().getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI,
+                    MoviesContract.MoviesEntry._ID + " = ?",
+                    new String[]{String.valueOf(mMovie.getId())});
         } else {
-            // add movie's id to collection
-            favourites.add(String.valueOf(mMovie.getId()));
-            Log.v(TAG, "Removing...");
+            ContentValues movieValues = new ContentValues();
+            movieValues.put(MoviesContract.MoviesEntry._ID, mMovie.getId());
+            movieValues.put(MoviesContract.MoviesEntry.COLUMN_TITLE, mMovie.getTitle());
+            movieValues.put(MoviesContract.MoviesEntry.COLUMN_AVG_RATING, mMovie.getRating());
+            movieValues.put(MoviesContract.MoviesEntry.COLUMN_COUNTRIES, mMovie.getCountries());
+            movieValues.put(MoviesContract.MoviesEntry.COLUMN_GENRES, mMovie.getGenres());
+            movieValues.put(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH, mMovie.getPosterPath());
+            movieValues.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE,mMovie.getReleaseDate());
+            movieValues.put(MoviesContract.MoviesEntry.COLUMN_RUNTIME, mMovie.getRuntime());
+            movieValues.put(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS, mMovie.getSynopsis());
+            // Add movie to DB
+            getActivity().getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, movieValues);
         }
-
-        // Add updated collection to shared preferences
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.clear();
-        editor.putStringSet(getString(R.string.pref_favourite_movies), favourites);
-        editor.commit();
 
         // Sets correct icon
         setFavouriteIcon();
 
-        //get gridview then get child then update icon
-
         // Re-draw master fragment
         MovieGridFragment mgf = (MovieGridFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.movie_grid_fragment);
-        if ( null != mgf ) {
-            mgf.updateFavouriteIcon();
+        if (mgf != null) {
+            mgf.onFavouritesUpdate();
         }
     }
 
@@ -218,7 +200,7 @@ public class MovieDetailsFragment extends Fragment {
             Toast.makeText(getActivity(), getString(R.string.error_message_notrailers), Toast.LENGTH_LONG).show();
         } else if (trailers.size() == 1) {
             // Launch trailer immediately if there is only one available
-            launchTrailerIntent(trailers.get(0));
+            startActivity(new Intent(Intent.ACTION_VIEW, trailers.get(0)));
         } else {
             // Create dialog to help user choose which trailer to play if there is more than one
             final String[] trailersList = new String[trailers.size()];
@@ -233,21 +215,14 @@ public class MovieDetailsFragment extends Fragment {
             sortDialog.setTitle(R.string.choose_trailer)
                     .setItems(trailersList, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            // The 'which' argument contains the index position
-                            // of the selected item
-                            launchTrailerIntent(trailers.get(which));
+                            // Fires intent to play trailer via native app. The 'which' argument
+                            // contains the index position of the selected item
+                            startActivity(new Intent(Intent.ACTION_VIEW, trailers.get(which)));
                             dialog.dismiss();
                         }
                     });
             sortDialog.show();
         }
-    }
-
-    /**
-     * Fires intent to play trailer via native app.
-     */
-    private void launchTrailerIntent(Uri uri) {
-        startActivity(new Intent(Intent.ACTION_VIEW, uri));
     }
 
     private class UpdateDetailsTask extends AsyncTask<Movie, Void, Void> {
