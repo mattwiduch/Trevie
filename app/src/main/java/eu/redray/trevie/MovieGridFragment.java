@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import eu.redray.trevie.database.MoviesContract;
+import eu.redray.trevie.utility.ConnectionDetector;
 import eu.redray.trevie.utility.FavouritesHelper;
 
 /**
@@ -65,6 +67,30 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
     private int mPage = FIRST_PAGE;
     private boolean mNextPage = true;
     private boolean mRestored = false;
+
+    // Specifies columns we need to read from movies database
+    private static final String[] MOVIE_COLUMNS = {
+            MoviesContract.MoviesEntry.TABLE_NAME + "." + MoviesContract.MoviesEntry._ID,
+            MoviesContract.MoviesEntry.COLUMN_TITLE,
+            MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE,
+            MoviesContract.MoviesEntry.COLUMN_AVG_RATING,
+            MoviesContract.MoviesEntry.COLUMN_SYNOPSIS,
+            MoviesContract.MoviesEntry.COLUMN_POSTER_PATH,
+            MoviesContract.MoviesEntry.COLUMN_RUNTIME,
+            MoviesContract.MoviesEntry.COLUMN_GENRES,
+            MoviesContract.MoviesEntry.COLUMN_COUNTRIES
+    };
+
+    // These indices are tied to MOVIE_COLUMNS. If MOVIE_COLUMNS changes, these must change too
+    static final int COL_MOVIE_ID = 0;
+    static final int COL_MOVIE_TITLE = 1;
+    static final int COL_MOVIE_RELEASE_DATE = 2;
+    static final int COL_MOVIE_AVG_RATING = 3;
+    static final int COL_MOVIE_SYNOPSIS = 4;
+    static final int COL_MOVIE_POSTER_PATH = 5;
+    static final int COL_MOVIE_RUNTIME = 6;
+    static final int COL_MOVIE_GENRES = 7;
+    static final int COL_MOVIE_COUNTRIES = 8;
 
     // TheMovieDB loader
     private LoaderManager.LoaderCallbacks<Movie[]> moviesResultLoaderListener
@@ -127,11 +153,11 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
             Uri moviesUri = MoviesContract.MoviesEntry.buildMoviesUri();
 
             return new CursorLoader(getActivity(),
-                moviesUri,
-                MOVIE_COLUMNS,
-                null,
-                null,
-                sortOrder);
+                    moviesUri,
+                    MOVIE_COLUMNS,
+                    null,
+                    null,
+                    sortOrder);
         }
 
         @Override
@@ -156,29 +182,6 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
             mFavouritesGridAdapter.swapCursor(null);
         }
     };
-
-    // Specifies columns we need to read from movies database
-    private static final String[] MOVIE_COLUMNS = {
-            MoviesContract.MoviesEntry.TABLE_NAME + "." + MoviesContract.MoviesEntry._ID,
-            MoviesContract.MoviesEntry.COLUMN_TITLE,
-            MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE,
-            MoviesContract.MoviesEntry.COLUMN_AVG_RATING,
-            MoviesContract.MoviesEntry.COLUMN_SYNOPSIS,
-            MoviesContract.MoviesEntry.COLUMN_POSTER_PATH,
-            MoviesContract.MoviesEntry.COLUMN_RUNTIME,
-            MoviesContract.MoviesEntry.COLUMN_GENRES,
-            MoviesContract.MoviesEntry.COLUMN_COUNTRIES
-    };
-    // These indices are tied to MOVIE_COLUMNS. If MOVIE_COLUMNS changes, these must change too
-    static final int COL_MOVIE_ID = 0;
-    static final int COL_MOVIE_TITLE = 1;
-    static final int COL_MOVIE_RELEASE_DATE = 2;
-    static final int COL_MOVIE_AVG_RATING = 3;
-    static final int COL_MOVIE_SYNOPSIS = 4;
-    static final int COL_MOVIE_POSTER_PATH = 5;
-    static final int COL_MOVIE_RUNTIME = 6;
-    static final int COL_MOVIE_GENRES = 7;
-    static final int COL_MOVIE_COUNTRIES = 8;
 
     public MovieGridFragment() {
         setArguments(new Bundle());
@@ -238,50 +241,74 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
      * Creates dialog that lets user choose sorting method for movie items in the grid.
      */
     private void createSortDialog() {
+        // Retrieves sort preference
         String preferredSort = mSharedPreferences.getString(getString(R.string.pref_sort_key),
                 SORT_POPULARITY);
+        // Checks if internet connection is available
+        final boolean isConnected = ConnectionDetector.isConnectingToInternet(getActivity());
+
         int defaultChoice = -1;
         if (preferredSort.equals(SORT_POPULARITY)) defaultChoice = 0;
         if (preferredSort.equals(SORT_RATING)) defaultChoice = 1;
         if (preferredSort.equals(SORT_FAVOURITES)) defaultChoice = 2;
 
-        final AlertDialog.Builder sortDialog = new AlertDialog.Builder(getActivity());
-        sortDialog.setTitle(R.string.sort_by)
-                .setSingleChoiceItems(R.array.sort_type, defaultChoice, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position
-                        // of the selected item
-                        SharedPreferences.Editor sharedPreferencesEditor = mSharedPreferences.edit();
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setTitle(R.string.sort_by);
+        dialogBuilder.setSingleChoiceItems(R.array.sort_type, defaultChoice, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // The 'which' argument contains the index position
+                // of the selected item
+                SharedPreferences.Editor sharedPreferencesEditor = mSharedPreferences.edit();
 
-                        if (which == 0) {
-                            gridView.setAdapter(mMovieGridAdapter);
-                            sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
-                                    SORT_POPULARITY).apply();
-                        }
-                        if (which == 1) {
-                            gridView.setAdapter(mMovieGridAdapter);
-                            sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
-                                    SORT_RATING).apply();
-                        }
-                        if (which == 2) {
-                            gridView.setAdapter(mFavouritesGridAdapter);
-                            sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
-                                    SORT_FAVOURITES).apply();
-                        }
-                        dialog.dismiss();
-
-                        // Clear the grid
-                        mMovieGridAdapter.clear();
-                        // Set next page to load to first
-                        mPage = FIRST_PAGE;
-                        // Remove grid state as it is not related to new query
-                        mGridState = null;
-                        // Set restored flag to false
-                        mRestored = false;
-                        // Update GridView
-                        updateGrid();
+                if (which == 0) {
+                    if (isConnected) {
+                        gridView.setAdapter(mMovieGridAdapter);
+                        sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
+                                SORT_POPULARITY).apply();
+                    } else {
+                        which = 2;
+                        Toast.makeText(getActivity(),
+                                R.string.error_noconnection,
+                                Toast.LENGTH_LONG)
+                                .show();
                     }
-                });
+                }
+                if (which == 1) {
+                    if (isConnected) {
+                        gridView.setAdapter(mMovieGridAdapter);
+
+                        sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
+                                SORT_RATING).apply();
+                    } else {
+                        which = 2;
+                        Toast.makeText(getActivity(),
+                                R.string.error_noconnection,
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                }
+                if (which == 2) {
+                    gridView.setAdapter(mFavouritesGridAdapter);
+                    sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
+                            SORT_FAVOURITES).apply();
+                }
+                dialog.dismiss();
+
+                // Clear the grid
+                mMovieGridAdapter.clear();
+                // Set next page to load to first
+                mPage = FIRST_PAGE;
+                // Remove grid state as it is not related to new query
+                mGridState = null;
+                // Set restored flag to false
+                mRestored = false;
+                // Update GridView
+                updateGrid();
+            }
+        });
+        // Creates dialog
+        AlertDialog sortDialog = dialogBuilder.create();
+        // Shows dialog
         sortDialog.show();
     }
 
@@ -313,7 +340,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         // Restart appropriate loader
         if (sortType.equals(SORT_RATING) || sortType.equals(SORT_POPULARITY)) {
             getLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesResultLoaderListener).forceLoad();
-        } else if (sortType.equals(SORT_FAVOURITES)){
+        } else if (sortType.equals(SORT_FAVOURITES)) {
             getLoaderManager().restartLoader(FAVOURITES_LOADER_ID, null, favouritesResultLoaderListener);
         }
     }
@@ -328,43 +355,53 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         mMovieGridAdapter = new MovieGridAdapter(getActivity(), R.layout.movie_grid_item, new ArrayList<Movie>());
         mFavouritesGridAdapter = new FavouritesGridAdapter(getActivity(), null, 0);
 
+        // Checks if internet connection is available
+        boolean isConnected = ConnectionDetector.isConnectingToInternet(getActivity());
+
         // Sets correct adapter
         String sortType = mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY);
-        if (sortType.equals(SORT_POPULARITY) || sortType.equals(SORT_RATING)) {
+        if ((sortType.equals(SORT_POPULARITY) || sortType.equals(SORT_RATING)) &&
+                isConnected) {
             gridView.setAdapter(mMovieGridAdapter);
-        } else if (sortType.equals(SORT_FAVOURITES)) {
+        } else {
+            if (!isConnected) {
+                Toast.makeText(getActivity(),
+                        R.string.error_noconnection,
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
             gridView.setAdapter(mFavouritesGridAdapter);
         }
 
         // Loads additional results when user scroll to the bottom of the list
         gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-                }
+            }
 
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    // The list is empty
-                    if (totalItemCount == 0) return;
-                    // Disable loading on scroll for favourites
-                    if (mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY)
-                            .equals(SORT_FAVOURITES)) return;
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                // The list is empty
+                if (totalItemCount == 0) return;
+                // Disable loading on scroll for favourites
+                if (mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY)
+                        .equals(SORT_FAVOURITES)) return;
 
-                    // Checks if user reached the bottom of the scroll view
-                    if (firstVisibleItem + visibleItemCount == totalItemCount) {
-                        // Check if we need to load next page
-                        if (mNextPage && mPage <= LAST_PAGE) {
-                            mPage++;
-                            mNextPage = false;
-                            updateGrid();
-                        }
-                    } else if (!mNextPage) {
-                        // Scrolling inside the list
-                        mNextPage = true;
+                // Checks if user reached the bottom of the scroll view
+                if (firstVisibleItem + visibleItemCount == totalItemCount) {
+                    // Check if we need to load next page
+                    if (mNextPage && mPage <= LAST_PAGE) {
+                        mPage++;
+                        mNextPage = false;
+                        updateGrid();
                     }
+                } else if (!mNextPage) {
+                    // Scrolling inside the list
+                    mNextPage = true;
                 }
-            });
+            }
+        });
 
         return view;
     }
@@ -372,7 +409,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
     /**
      * Restores grid state
      *
-     * @param view View that was created
+     * @param view               View that was created
      * @param savedInstanceState Bundle with saved state
      */
     @Override
@@ -471,10 +508,10 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
     }
 
     // Performs click on first grid item
-    private Handler handler = new Handler()  { // handler for commiting fragment after data is loaded
+    private Handler handler = new Handler() { // handler for commiting fragment after data is loaded
         @Override
         public void handleMessage(Message msg) {
-            if(msg.what == 100) {
+            if (msg.what == 100) {
                 gridView.performItemClick(
                         gridView.getAdapter().getView(0, null, null),
                         0,
