@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2016 Mateusz Widuch
+ */
 package eu.redray.trevie.database;
 
 import android.content.Context;
@@ -12,7 +15,6 @@ import eu.redray.trevie.database.MoviesContract.ReviewsEntry;
  * Manages a local database for movies data.
  */
 public class MoviesDbHelper extends SQLiteOpenHelper {
-
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 1;
 
