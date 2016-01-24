@@ -350,11 +350,11 @@ public class MovieGridFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.movie_grid_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_movie_grid, container, false);
         ButterKnife.bind(this, view);
 
         // Create adapter and add it to the grid
-        mMovieGridAdapter = new MovieGridAdapter(getActivity(), R.layout.movie_grid_item, new ArrayList<Movie>());
+        mMovieGridAdapter = new MovieGridAdapter(getActivity(), R.layout.item_movie_grid, new ArrayList<Movie>());
         mFavouritesGridAdapter = new FavouritesGridAdapter(getActivity(), null, 0);
 
         // Checks if internet connection is available

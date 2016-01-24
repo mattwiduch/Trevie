@@ -34,7 +34,7 @@ public class MovieGridAdapter extends ArrayAdapter<Movie> {
         if (convertView == null) {
             // inflate the GridView item layout
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(R.layout.movie_grid_item, parent, false);
+            convertView = inflater.inflate(R.layout.item_movie_grid, parent, false);
             // Set views
             viewHolder = new ViewHolder();
             viewHolder.moviePoster = (ImageView) convertView.findViewById(R.id.grid_movie_poster);
