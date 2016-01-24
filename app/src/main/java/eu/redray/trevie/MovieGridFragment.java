@@ -46,9 +46,9 @@ import eu.redray.trevie.utility.FavouritesHelper;
  */
 public class MovieGridFragment extends Fragment {
     // Available sort types
-    public final String SORT_POPULARITY = "popularity.desc";
-    public final String SORT_RATING = "vote_average.desc";
-    public final String SORT_FAVOURITES = "favourites";
+    private final String SORT_POPULARITY = "popularity.desc";
+    private final String SORT_RATING = "vote_average.desc";
+    private final String SORT_FAVOURITES = "favourites";
 
     // Member variables
     private MovieGridAdapter mMovieGridAdapter;

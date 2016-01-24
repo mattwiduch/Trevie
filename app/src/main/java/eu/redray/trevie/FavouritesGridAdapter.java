@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Creates custom CursorAdapter to display records from favourites database
  */
-public class FavouritesGridAdapter extends CursorAdapter {
+class FavouritesGridAdapter extends CursorAdapter {
     public FavouritesGridAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }

@@ -17,7 +17,7 @@ import java.io.OutputStream;
 /**
  * Provides methods for retrieving and deleting movie poster images
  */
-public class PosterHelper {
+class PosterHelper {
     private final static String FILE_EXTENSION = ".png";
     private final static String DIRECTORY = "Posters";
 

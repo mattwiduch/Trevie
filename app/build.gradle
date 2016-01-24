@@ -17,6 +17,7 @@ android {
         }
     }
     buildTypes.each {
+        //noinspection GroovyAssignabilityCheck
         it.buildConfigField 'String', 'OPEN_THE_MOVIEDB_API_KEY', MyTheMovieDBApiKey
     }
     //Required by Butter Knife

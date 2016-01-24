@@ -24,7 +24,7 @@ public class FavouritesHelper {
             MoviesContract.TrailersEntry.COLUMN_URL
     };
     // These indices are tied to TRAILER_COLUMNS
-    static final int COL_TRAILER_URL = 1;
+    private static final int COL_TRAILER_URL = 1;
 
     // Specifies columns we need to read from reviews database
     private static final String[] REVIEWS_COLUMNS = {
@@ -32,7 +32,7 @@ public class FavouritesHelper {
             MoviesContract.ReviewsEntry.COLUMN_REVIEW
     };
     // These indices are tied to TRAILER_COLUMNS
-    static final int COL_REVIEW_CONTENT = 1;
+    private static final int COL_REVIEW_CONTENT = 1;
 
     /**
      * Removes provided movie from favourites database

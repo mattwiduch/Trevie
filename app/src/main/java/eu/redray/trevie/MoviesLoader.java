@@ -22,9 +22,9 @@ import java.net.URL;
 /**
  * Creates AsyncTaskLoader to fetch movie data from TheMovieDB.
  */
-public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
+class MoviesLoader extends AsyncTaskLoader<Movie[]> {
     private final String TAG = MoviesLoader.class.getSimpleName();
-    public final String VOTE_COUNT = "100";
+    private final String VOTE_COUNT = "100";
     private String mSortParameter;
     private int mPageToLoad;
     private boolean DEBUG = false;
@@ -33,13 +33,13 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
     private Movie[] mMovies;
 
     // Construct query URL
-    final String TMDB_BASE_URL = "https://api.themoviedb.org/3";
-    final String DISCOVER_PATH = "discover";
-    final String MOVIE_PATH = "movie";
-    final String SORT_PARAM = "sort_by";
-    final String VOTE_COUNT_PARAM = "vote_count.gte";
-    final String PAGE_NUMBER = "page";
-    final String API_KEY_PARAM = "api_key";
+    private final String TMDB_BASE_URL = "https://api.themoviedb.org/3";
+    private final String DISCOVER_PATH = "discover";
+    private final String MOVIE_PATH = "movie";
+    private final String SORT_PARAM = "sort_by";
+    private final String VOTE_COUNT_PARAM = "vote_count.gte";
+    private final String PAGE_NUMBER = "page";
+    private final String API_KEY_PARAM = "api_key";
 
     public MoviesLoader(Context context, String sortParameter, int page) {
         super(context);
