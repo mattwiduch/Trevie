@@ -44,27 +44,25 @@ import eu.redray.trevie.utility.FavouritesHelper;
 /**
  * A fragment that contains movie grid view.
  */
-public class MovieGridFragment extends Fragment {//implements LoaderManager.LoaderCallbacks {
+public class MovieGridFragment extends Fragment {
+    // Available sort types
     public final String SORT_POPULARITY = "popularity.desc";
     public final String SORT_RATING = "vote_average.desc";
     public final String SORT_FAVOURITES = "favourites";
-    private static final int MOVIES_LOADER_ID = 0;
-    private static final int FAVOURITES_LOADER_ID = 1;
 
-    @Bind(R.id.movie_grid)
-    GridView gridView;
-    @Bind(R.id.movie_grid_empty)
-    RelativeLayout emptyGridView;
-    @Bind(R.id.movie_grid_blank)
-    FrameLayout blankGridView;
+    // Member variables
     private MovieGridAdapter mMovieGridAdapter;
     private FavouritesGridAdapter mFavouritesGridAdapter;
     private SharedPreferences mSharedPreferences;
 
+    // Loader IDs
+    private static final int MOVIES_LOADER_ID = 0;
+    private static final int FAVOURITES_LOADER_ID = 1;
+
     // Used to (re)store app state
-    private static final String GRID_KEY = "movie_list";
+    private static final String GRID_KEY = "grid_state";
     private static final String PAGE_KEY = "page_to_load";
-    private static final String MOVIES_KEY = "grid_state";
+    private static final String MOVIES_KEY = "movies_list";
     private Parcelable mGridState = null;
 
     // Used to load additional pages
@@ -73,6 +71,14 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
     private int mPage = FIRST_PAGE;
     private boolean mNextPage = true;
     private boolean mRestored = false;
+
+    // Binds views
+    @Bind(R.id.movie_grid)
+    GridView gridView;
+    @Bind(R.id.movie_grid_empty)
+    RelativeLayout emptyGridView;
+    @Bind(R.id.movie_grid_blank)
+    FrameLayout blankGridView;
 
     // Specifies columns we need to read from movies database
     private static final String[] MOVIE_COLUMNS = {
@@ -98,7 +104,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
     static final int COL_MOVIE_GENRES = 7;
     static final int COL_MOVIE_COUNTRIES = 8;
 
-    // TheMovieDB loader
+    /** TheMovieDB Loader */
     private LoaderManager.LoaderCallbacks<Movie[]> moviesResultLoaderListener
             = new LoaderManager.LoaderCallbacks<Movie[]>() {
         @Override
@@ -145,7 +151,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         }
     };
 
-    // Favourites database loader
+    /** Favourites database Loader */
     private LoaderManager.LoaderCallbacks<Cursor> favouritesResultLoaderListener
             = new LoaderManager.LoaderCallbacks<Cursor>() {
         @Override
@@ -189,6 +195,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         setArguments(new Bundle());
     }
 
+    /** Updates MovieGrid when new favourite was added. */
     public void onFavouritesUpdate() {
         if (!gridView.getAdapter().equals(mFavouritesGridAdapter)) {
             mGridState = gridView.onSaveInstanceState();
@@ -202,9 +209,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
      * selections.
      */
     public interface Callback {
-        /**
-         * DetailFragmentCallback for when an item has been selected.
-         */
+        /** DetailFragmentCallback for when an item has been selected. */
         void onItemSelected(Movie movie);
     }
 
@@ -239,9 +244,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Creates dialog that lets user choose sorting method for movie items in the grid.
-     */
+    /** Creates dialog that lets user choose sorting method for movie items in the grid. */
     private void createSortDialog() {
         // Retrieves sort preference
         String preferredSort = mSharedPreferences.getString(getString(R.string.pref_sort_key),
@@ -258,38 +261,14 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         dialogBuilder.setTitle(R.string.sort_by);
         dialogBuilder.setSingleChoiceItems(R.array.sort_type, defaultChoice, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                // The 'which' argument contains the index position
-                // of the selected item
+                // The 'which' argument contains the index position of the selected item
                 SharedPreferences.Editor sharedPreferencesEditor = mSharedPreferences.edit();
 
                 if (which == 0) {
-                    if (isConnected) {
-                        // Removes empty grid view
-                        gridView.setEmptyView(blankGridView);
-                        // Sets correct adapter
-                        gridView.setAdapter(mMovieGridAdapter);
-                        sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
-                                SORT_POPULARITY).apply();
-                    } else {
-                        which = 2;
-                        Toast.makeText(getActivity(), R.string.error_message_noconnection, Toast.LENGTH_LONG).show();
-                        Toast.makeText(getActivity(), R.string.displaying_favourites, Toast.LENGTH_LONG).show();
-                    }
+                    which = getWhich(which, sharedPreferencesEditor, SORT_POPULARITY);
                 }
                 if (which == 1) {
-                    if (isConnected) {
-                        // Removes empty grid view
-                        gridView.setEmptyView(blankGridView);
-                        // Sets correct adapter
-                        gridView.setAdapter(mMovieGridAdapter);
-
-                        sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
-                                SORT_RATING).apply();
-                    } else {
-                        which = 2;
-                        Toast.makeText(getActivity(), R.string.error_message_noconnection, Toast.LENGTH_LONG).show();
-                        Toast.makeText(getActivity(), R.string.displaying_favourites, Toast.LENGTH_LONG).show();
-                    }
+                    which = getWhich(which, sharedPreferencesEditor, SORT_RATING);
                 }
                 if (which == 2) {
                     // Sets empty grid view
@@ -311,7 +290,26 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
                 // Update GridView
                 updateGrid();
             }
+
+            /** Sets correct adapter for given sort type if there is internet connection.
+             *  Otherwise, displays warning and selects favourites. */
+            private int getWhich(int which, SharedPreferences.Editor sharedPreferencesEditor, String sortType) {
+                if (isConnected) {
+                    // Removes empty grid view
+                    gridView.setEmptyView(blankGridView);
+                    // Sets correct adapter
+                    gridView.setAdapter(mMovieGridAdapter);
+                    sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
+                            sortType).apply();
+                } else {
+                    which = 2;
+                    Toast.makeText(getActivity(), R.string.error_message_noconnection, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.displaying_favourites, Toast.LENGTH_LONG).show();
+                }
+                return which;
+            }
         });
+
         // Creates dialog
         AlertDialog sortDialog = dialogBuilder.create();
         // Shows dialog
@@ -324,9 +322,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         updateGrid();
     }
 
-    /**
-     * Updates the movie grid according to chosen sorting method.
-     */
+    /** Updates the movie grid according to chosen sorting method. */
     private void updateGrid() {
         String sortType = mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY);
 
@@ -412,12 +408,6 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         return view;
     }
 
-    /**
-     * Restores grid state
-     *
-     * @param view               View that was created
-     * @param savedInstanceState Bundle with saved state
-     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -443,11 +433,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         }
     }
 
-    /**
-     * Saves grid state
-     *
-     * @param outState Bundle to contain saved state
-     */
+    /** Saves grid state. */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (gridView.getAdapter().equals(mMovieGridAdapter)) {
