@@ -30,12 +30,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         // Retrieves data from intent to pass it to the fragment
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
+            // Create the detail fragment and add it to the activity using a fragment transaction
             Bundle arguments = new Bundle();
             arguments.putParcelable(Movie.EXTRA_DETAILS, getIntent().getParcelableExtra(Movie.EXTRA_DETAILS));
 
@@ -47,18 +48,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
     }
 
-    // Override up button behaviour so it goes back to previously created MainActivity
+    /** Override up button behaviour so it navigates back to parent activity without recreating it. */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                //Intent intent = NavUtils.getParentActivityIntent(this);
-                //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                //NavUtils.navigateUpTo(this, intent);
                 onBackPressed();
-                return(true);
+                return (true);
         }
 
-        return(super.onOptionsItemSelected(item));
+        return (super.onOptionsItemSelected(item));
     }
 }
