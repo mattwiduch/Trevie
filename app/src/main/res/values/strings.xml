@@ -1,7 +1,6 @@
 <resources>
     <!-- App & Activity titles -->
     <string name="app_name">Trevie</string>
-    <string name="title_activity_movie">MovieActivity</string>
 
     <!-- Menu items -->
     <string name="action_sort">Sort Movies</string>
