@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 
 /**
  * Starts the application.
@@ -20,6 +21,9 @@ public class MainActivity extends AppCompatActivity implements MovieGridFragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Initialises progress bar
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setProgressBarIndeterminateVisibility(true);
         super.onCreate(savedInstanceState);
         // Initialise Stetho debug bridge
         //initializeWithDefaults(this);

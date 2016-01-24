@@ -29,6 +29,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,18 +86,27 @@ public class MovieDetailsFragment extends Fragment {
     Button trailerButton;
     @Bind(R.id.movie_details_reviews)
     TextView reviewsTextView;
+    @Bind(R.id.movie_details_frame)
+    LinearLayout detailsFrame;
+    @Bind(R.id.progress_details)
+    ProgressBar detailsProgress;
+    @Bind(R.id.progress_reviews)
+    ProgressBar reviewsProgress;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Adds toolbar
         setHasOptionsMenu(true);
 
+        // Retrieves passed movie
         Bundle arguments = getArguments();
         if (arguments != null) {
             mMovie = arguments.getParcelable(Movie.EXTRA_DETAILS);
         }
 
+        // Inflates view
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
         ButterKnife.bind(this, rootView);
 
@@ -285,6 +295,14 @@ public class MovieDetailsFragment extends Fragment {
             return null;
         }
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Shows progress bars
+            reviewsProgress.setVisibility(View.VISIBLE);
+            detailsProgress.setVisibility(View.VISIBLE);
+        }
+
         /**
          * Populates Fragment views with freshly fetched data
          * @param aVoid Not used
@@ -330,6 +348,13 @@ public class MovieDetailsFragment extends Fragment {
                     detailsLayout.addView(textView);
                 }
             }
+
+            // Hide progress bars
+            detailsProgress.setVisibility(View.GONE);
+            reviewsProgress.setVisibility(View.GONE);
+
+            // Show details
+            detailsFrame.setVisibility(View.VISIBLE);
 
             // Set share trailer intent if there is provider available
             if (mShareActionProvider != null) {
