@@ -172,7 +172,7 @@ public class MovieDetailsFragment extends Fragment {
         // Update favourites database
         if (mMovie.isFavourite(getActivity())) {
             // Remove movie from favourites
-            FavouritesHelper.removeMovie(getActivity(), mMovie);
+            FavouritesHelper.removeMovie(getActivity(), String.valueOf(mMovie.getId()));
         } else {
             // Get poster bitmap
             Bitmap poster = ((BitmapDrawable)posterImageView.getDrawable()).getBitmap();
