@@ -51,10 +51,10 @@ class FavouritesGridAdapter extends CursorAdapter {
 
     /** Holds all the views used to display data in movie grid item. */
     private static class ViewHolder {
-        ImageView posterView;
-        ImageView favouriteIconView;
-        TextView titleView;
-        TextView yearView;
+        final ImageView posterView;
+        final ImageView favouriteIconView;
+        final TextView titleView;
+        final TextView yearView;
 
         public ViewHolder(View view) {
             posterView = (ImageView) view.findViewById(R.id.grid_movie_poster);
