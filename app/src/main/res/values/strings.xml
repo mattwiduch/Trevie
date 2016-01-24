@@ -28,7 +28,7 @@
     <string name="label_movie_average_rating">Average Rating:</string>
     <string name="label_movie_synopsis">Plot Synopsis</string>
     <string name="label_movie_reviews">User Reviews</string>
-    <string name="error_message_noreviews">There are no reviews.</string>
+    <string name="error_message_no_reviews">There are no reviews.</string>
 
     <!-- Descriptions for images -->
     <string name="description_movie_poster">Movie Poster</string>
@@ -38,11 +38,11 @@
     <!-- Strings related to playing trailers -->
     <string name="play_trailer">Trailer</string>
     <string name="choose_trailer">Choose trailer to play…</string>
-    <string name="error_message_notrailers">There are no trailers to play</string>
+    <string name="error_message_no_trailers">There are no trailers to play</string>
     <string name="share_trailer">Share Trailer</string>
 
     <!-- Various error messages -->
-    <string name="error_message_noconnection">There is no internet connection.</string>
+    <string name="error_message_no_connection">There is no internet connection.</string>
     <string name="displaying_favourites">Displaying Favourites Collection</string>
     <string name="empty_grid_message">Oh noes, there is nothing\n in favourites…</string>
     <string name="error_try_again">Something went wrong... Please try again.</string>

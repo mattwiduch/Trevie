@@ -15,7 +15,7 @@ import android.view.Window;
  * Starts the application.
  */
 public class MainActivity extends AppCompatActivity implements MovieGridFragment.Callback {
-    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+    private static final String DETAIL_FRAGMENT_TAG = "DF_TAG";
     private boolean mTwoPane;
 
     @Override
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements MovieGridFragment
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.movie_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .replace(R.id.movie_detail_container, fragment, DETAIL_FRAGMENT_TAG)
                     .commit();
         } else {
             Intent intent = new Intent(this, MovieDetailsActivity.class);

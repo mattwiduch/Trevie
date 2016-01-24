@@ -12,6 +12,6 @@
     <item android:state_activated="true"
           android:drawable="@color/colorPrimary" />
 
-    <!-- Default, "just hangin' out" state. -->
+    <!-- Default, "just hanging out" state. -->
     <item android:drawable="@drawable/poster_shadow" />
 </selector>

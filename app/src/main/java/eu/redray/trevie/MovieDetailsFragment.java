@@ -210,7 +210,7 @@ public class MovieDetailsFragment extends Fragment {
         final ArrayList<Uri> trailers = mMovie.getTrailerLinks();
         if (trailers.size() < 1) {
             // Show error message if there are no trailers to play
-            Toast.makeText(getActivity(), getString(R.string.error_message_notrailers), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getString(R.string.error_message_no_trailers), Toast.LENGTH_LONG).show();
         } else if (trailers.size() == 1) {
             // Launch trailer immediately if there is only one available
             startActivity(new Intent(Intent.ACTION_VIEW, trailers.get(0)));
@@ -328,7 +328,7 @@ public class MovieDetailsFragment extends Fragment {
             countriesTextView.setText(mMovie.getCountries());
             countriesTextView.setSelected(true);
             if (mMovie.getUserReviews() == null || mMovie.getUserReviews().size() < 1) {
-                reviewsTextView.setText(R.string.error_message_noreviews);
+                reviewsTextView.setText(R.string.error_message_no_reviews);
             } else if (mMovie.getUserReviews().size() == 1) {
                 reviewsTextView.setText(mMovie.getUserReviews().get(0));
             } else {

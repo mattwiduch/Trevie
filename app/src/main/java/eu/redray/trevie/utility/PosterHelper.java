@@ -17,7 +17,7 @@ import java.io.OutputStream;
 /**
  * Provides methods for retrieving and deleting movie poster images
  */
-public class PosterHeper {
+public class PosterHelper {
     private final static String FILE_EXTENSION = ".png";
     private final static String DIRECTORY = "Posters";
 
@@ -44,7 +44,7 @@ public class PosterHeper {
             outputFileUri = Uri.fromFile(sdImageMainDirectory);
             fOut = new FileOutputStream(sdImageMainDirectory);
         } catch (FileNotFoundException e) {
-            Log.e(PosterHeper.class.getSimpleName(), e.getMessage(), e);
+            Log.e(PosterHelper.class.getSimpleName(), e.getMessage(), e);
             e.printStackTrace();
         } finally {
             try {
@@ -53,7 +53,7 @@ public class PosterHeper {
                     fOut.close();
                 }
             } catch (IOException e) {
-                Log.e(PosterHeper.class.getSimpleName(), e.getMessage(), e);
+                Log.e(PosterHelper.class.getSimpleName(), e.getMessage(), e);
                 e.printStackTrace();
             }
         }

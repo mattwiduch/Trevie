@@ -57,7 +57,7 @@ public class FavouritesHelper {
                 new String[]{movieId});
 
         // Remove poster image from storage
-        PosterHeper.deletePoster(context, movieId);
+        PosterHelper.deletePoster(context, movieId);
     }
 
     /**
@@ -71,7 +71,7 @@ public class FavouritesHelper {
         ContentValues movieValues = new ContentValues();
 
         // Save poster image
-        String posterPath = PosterHeper.savePoster(context,
+        String posterPath = PosterHelper.savePoster(context,
                 poster,
                 movie.getTitle());
 

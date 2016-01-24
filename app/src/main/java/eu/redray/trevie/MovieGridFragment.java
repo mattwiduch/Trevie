@@ -303,7 +303,7 @@ public class MovieGridFragment extends Fragment {
                             sortType).apply();
                 } else {
                     which = 2;
-                    Toast.makeText(getActivity(), R.string.error_message_noconnection, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.error_message_no_connection, Toast.LENGTH_LONG).show();
                     Toast.makeText(getActivity(), R.string.displaying_favourites, Toast.LENGTH_LONG).show();
                 }
                 return which;
@@ -368,7 +368,7 @@ public class MovieGridFragment extends Fragment {
             gridView.setAdapter(mMovieGridAdapter);
         } else {
             if (!isConnected && mRestored) {
-                Toast.makeText(getActivity(), R.string.error_message_noconnection, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.error_message_no_connection, Toast.LENGTH_LONG).show();
                 Toast.makeText(getActivity(), R.string.displaying_favourites, Toast.LENGTH_LONG).show();
             }
             gridView.setEmptyView(emptyGridView);
@@ -500,7 +500,7 @@ public class MovieGridFragment extends Fragment {
     }
 
     // Performs click on first grid item
-    private Handler handler = new Handler() { // handler for commiting fragment after data is loaded
+    private Handler handler = new Handler() { // handler for committing fragment after data is loaded
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 100) {
