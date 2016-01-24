@@ -247,7 +247,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         String preferredSort = mSharedPreferences.getString(getString(R.string.pref_sort_key),
                 SORT_POPULARITY);
         // Checks if internet connection is available
-        final boolean isConnected = ConnectionDetector.isConnectingToInternet(getActivity());
+        final boolean isConnected = ConnectionDetector.isInternetConnectionAvailable(getActivity());
 
         int defaultChoice = -1;
         if (preferredSort.equals(SORT_POPULARITY)) defaultChoice = 0;
@@ -362,7 +362,7 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         mFavouritesGridAdapter = new FavouritesGridAdapter(getActivity(), null, 0);
 
         // Checks if internet connection is available
-        boolean isConnected = ConnectionDetector.isConnectingToInternet(getActivity());
+        boolean isConnected = ConnectionDetector.isInternetConnectionAvailable(getActivity());
 
         // Sets correct adapter
         String sortType = mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY);
