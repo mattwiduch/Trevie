@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ShareActionProvider;
@@ -349,7 +350,7 @@ public class MovieDetailsFragment extends Fragment {
                             Math.round(1 * displayMetrics.density));
                     layoutParams.gravity = Gravity.CENTER;
                     separator.setLayoutParams(layoutParams);
-                    separator.setBackgroundColor(getResources().getColor(R.color.colorDivider));
+                    separator.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorDivider));
                     detailsLayout.addView(separator);
 
                     // Add next review
