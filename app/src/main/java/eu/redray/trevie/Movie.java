@@ -12,7 +12,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 import eu.redray.trevie.database.MoviesContract;
 import eu.redray.trevie.database.MoviesDbHelper;
@@ -165,16 +164,8 @@ public class Movie implements Parcelable {
     }
 
     /**
-     * Checks if user has added movie to their favourites collection
-     * @param favourites Set containing id's of favourtie movies
-     * @return Returns true if movie is in favourites collection
-     */
-    public boolean isFavourite(Set<String> favourites) {
-        return favourites.contains(String.valueOf(mId));
-    }
-
-    /**
-     * Checks if movie is present in favourites collection
+     * Checks if movie is present in favourites database
+     *
      * @return true if it is, false otherwise
      */
     public boolean isFavourite(Context context) {
