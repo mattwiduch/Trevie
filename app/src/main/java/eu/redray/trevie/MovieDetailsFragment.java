@@ -174,10 +174,14 @@ public class MovieDetailsFragment extends Fragment {
             // Remove movie from favourites
             FavouritesHelper.removeMovie(getActivity(), String.valueOf(mMovie.getId()));
         } else {
-            // Get poster bitmap
-            Bitmap poster = ((BitmapDrawable)posterImageView.getDrawable()).getBitmap();
-            // Add movie to favourites
-            FavouritesHelper.addMovie(getActivity(), mMovie, poster);
+            if (posterImageView.getDrawable() != null) {
+                // Get poster bitmap
+                Bitmap poster = ((BitmapDrawable) posterImageView.getDrawable()).getBitmap();
+                // Add movie to favourites
+                FavouritesHelper.addMovie(getActivity(), mMovie, poster);
+            } else {
+                Toast.makeText(getActivity(), R.string.error_try_again, Toast.LENGTH_LONG).show();
+            }
         }
 
         // Sets correct icon

@@ -45,4 +45,5 @@
     <string name="error_message_noconnection">There is no internet connection.</string>
     <string name="displaying_favourites">Displaying Favourites Collection</string>
     <string name="empty_grid_message">Oh noes, there is nothing\n in favourites…</string>
+    <string name="error_try_again">Something went wrong... Please try again.</string>
 </resources>
