@@ -32,6 +32,7 @@ import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -54,6 +55,7 @@ public class MovieGridFragment extends Fragment {
     private MovieGridAdapter mMovieGridAdapter;
     private FavouritesGridAdapter mFavouritesGridAdapter;
     private SharedPreferences mSharedPreferences;
+    private ClickHandler mClickHandler;
 
     // Loader IDs
     private static final int MOVIES_LOADER_ID = 0;
@@ -130,7 +132,7 @@ public class MovieGridFragment extends Fragment {
                 // Go to first item in the grid on new query
                 if (gridView.getCount() > 0 && mGridState == null && mPage == FIRST_PAGE) {
                     if (getActivity().findViewById(R.id.movie_detail_container) != null) {
-                        handler.sendEmptyMessage(100);
+                        new ClickHandler(gridView).sendEmptyMessage(100);
                     } else {
                         gridView.smoothScrollToPosition(0);
                     }
@@ -178,7 +180,7 @@ public class MovieGridFragment extends Fragment {
             // Go to first item in the grid on new query
             if (gridView.getCount() > 0 && mGridState == null) {
                 if (getActivity().findViewById(R.id.movie_detail_container) != null) {
-                    handler.sendEmptyMessage(100);
+                    new ClickHandler(gridView).sendEmptyMessage(100);
                 } else {
                     gridView.smoothScrollToPosition(0);
                 }
@@ -499,17 +501,22 @@ public class MovieGridFragment extends Fragment {
                 reviews);
     }
 
-    // Performs click on first grid item
-    private Handler handler = new Handler() { // handler for committing fragment after data is loaded
+    static class ClickHandler extends Handler {
+        private final WeakReference<GridView> mGrid;
+
+        ClickHandler(GridView gridView) {
+            mGrid = new WeakReference<>(gridView);
+        }
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 100) {
-                gridView.performItemClick(
-                        gridView.getAdapter().getView(0, null, null),
+                GridView grid = mGrid.get();
+                grid.performItemClick(
+                        grid.getAdapter().getView(0, null, null),
                         0,
-                        gridView.getAdapter().getItemId(0));
-                gridView.smoothScrollToPosition(0);
+                        grid.getAdapter().getItemId(0));
+                grid.smoothScrollToPosition(0);
             }
         }
-    };
+    }
 }
