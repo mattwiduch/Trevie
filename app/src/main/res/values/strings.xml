@@ -39,6 +39,9 @@
     <string name="choose_trailer">Choose trailer to play...</string>
     <string name="error_message_notrailers">There are no trailers to play</string>
     <string name="share_trailer">Share Trailer</string>
+
+    <!-- Various error messages -->
     <string name="error_noconnection">There is no internet connection.</string>
     <string name="displaying_favourites">Displaying Favourites Collection</string>
+    <string name="empty_grid_message">Oh noes, there is nothing in favourites...</string>
 </resources>
