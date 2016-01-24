@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2016 Mateusz Widuch
+ */
 package eu.redray.trevie.utility;
 
 import android.content.Context;
@@ -6,22 +9,25 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Created by frano on 23/01/2016.
+ * Provides methods for retrieving and deleting movie poster images
  */
 public class PosterHeper {
-    private final static String FILE_EXTENSION = ".jpg";
+    private final static String FILE_EXTENSION = ".png";
     private final static String DIRECTORY = "Posters";
 
     /**
      * Saves poster image to internal storage
-     * @param context Application's context
-     * @param bitmap Movie poster to save
-     * @param title Movie's title
-     * @return Path to saved file
+     *
+     * @param context the context of the app giving access to file storage
+     * @param bitmap  the poster of a movie provided as bitmap
+     * @param title   the title of a movie
+     * @return        the path to saved image
      */
     public static String savePoster(Context context, Bitmap bitmap, String title) {
         OutputStream fOut = null;
@@ -29,27 +35,39 @@ public class PosterHeper {
         try {
             File root = new File(context.getFilesDir()
                     + File.separator + DIRECTORY + File.separator);
-            root.mkdirs();
+            // Create root directory if it doesn't exist
+            if (!root.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                root.mkdirs();
+            }
             File sdImageMainDirectory = new File(root, title + FILE_EXTENSION);
             outputFileUri = Uri.fromFile(sdImageMainDirectory);
             fOut = new FileOutputStream(sdImageMainDirectory);
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             Log.e(PosterHeper.class.getSimpleName(), e.getMessage(), e);
             e.printStackTrace();
-        }
-
-        try {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-            fOut.flush();
-            fOut.close();
-        } catch (Exception e) {
-            Log.e(PosterHeper.class.getSimpleName(), e.getMessage(), e);
-            e.printStackTrace();
+        } finally {
+            try {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                if (fOut != null) {
+                    fOut.close();
+                }
+            } catch (IOException e) {
+                Log.e(PosterHeper.class.getSimpleName(), e.getMessage(), e);
+                e.printStackTrace();
+            }
         }
 
         return outputFileUri.toString();
     }
 
+    /**
+     * Deletes poster image from internal storage
+     *
+     * @param context the context of the app giving access to file storage
+     * @param title   the title of a movie
+     * @return        true if successful
+     */
     public static boolean deletePoster(Context context, String title) {
         File file = new File(context.getFilesDir() + File.separator + DIRECTORY + File.separator,
                 title + FILE_EXTENSION);
