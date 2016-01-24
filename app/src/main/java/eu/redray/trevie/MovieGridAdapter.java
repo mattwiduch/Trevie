@@ -35,7 +35,7 @@ public class MovieGridAdapter extends ArrayAdapter<Movie> {
             // inflate the GridView item layout
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.movie_grid_item, parent, false);
-            //set views
+            // Set views
             viewHolder = new ViewHolder();
             viewHolder.moviePoster = (ImageView) convertView.findViewById(R.id.grid_movie_poster);
             viewHolder.favouriteIcon = (ImageView) convertView.findViewById(R.id.grid_movie_favourite);
@@ -58,9 +58,7 @@ public class MovieGridAdapter extends ArrayAdapter<Movie> {
         return convertView;
     }
 
-    /**
-     * Holds all the views used to display data in movie grid item.
-     */
+    /** Holds all the views used to display data in movie grid item. */
     private static class ViewHolder {
         ImageView moviePoster;
         ImageView favouriteIcon;
@@ -68,11 +66,9 @@ public class MovieGridAdapter extends ArrayAdapter<Movie> {
         TextView movieYear;
     }
 
-    /**
-     * Sets correct favourite icon based on favourites collection
-     */
+    /** Sets correct favourite icon based on favourites collection. */
     private void setFavouriteIcon(ViewHolder viewHolder, Movie movie) {
-        if(movie.isFavourite(mContext)) {
+        if (movie.isFavourite(mContext)) {
             // Show icon if movie is favourite
             viewHolder.favouriteIcon.setVisibility(View.VISIBLE);
         } else {
