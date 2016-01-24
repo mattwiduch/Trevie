@@ -182,7 +182,7 @@ public class MovieDetailsFragment extends Fragment {
             // Remove movie from favourites
             FavouritesHelper.removeMovie(getActivity(), String.valueOf(mMovie.getId()));
         } else {
-            if (posterImageView.getDrawable() != null && !mMovie.needsMoreData()) {
+            if (posterImageView.getDrawable() != null && mMovie.isAllDataDownloaded()) {
                 // Get poster bitmap
                 Bitmap poster = ((BitmapDrawable) posterImageView.getDrawable()).getBitmap();
                 // Add movie to favourites
@@ -265,7 +265,7 @@ public class MovieDetailsFragment extends Fragment {
                 return null;
             }
             // Check if additional data needs to be downloaded
-            if (!mMovie.needsMoreData()) {
+            if (mMovie.isAllDataDownloaded()) {
                 return null;
             }
 

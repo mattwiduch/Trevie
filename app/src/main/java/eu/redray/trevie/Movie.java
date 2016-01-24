@@ -193,10 +193,10 @@ public class Movie implements Parcelable {
     }
 
     /**
-     * Checks if additional data needs to be downloaded
+     * Checks if all data has been downloaded
      */
-    public boolean needsMoreData() {
-        return (mRuntime.equals("") && mCountries.equals("") && mGenres.equals("")
-                && mTrailerLinks == null && mUserReviews == null);
+    public boolean isAllDataDownloaded() {
+        return (!mRuntime.equals("") || !mCountries.equals("") || !mGenres.equals("")
+                || mTrailerLinks != null || mUserReviews != null);
     }
 }
