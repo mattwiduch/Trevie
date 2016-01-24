@@ -77,7 +77,7 @@ public class MovieGridAdapter extends ArrayAdapter<Movie> {
             viewHolder.favouriteIcon.setVisibility(View.VISIBLE);
         } else {
             // Hide icon if movie is not favourite
-            viewHolder.favouriteIcon.setVisibility(View.INVISIBLE);
+            viewHolder.favouriteIcon.setVisibility(View.GONE);
         }
     }
 }
