@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -51,6 +52,8 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
 
     @Bind(R.id.movie_grid)
     GridView gridView;
+    @Bind(R.id.movie_grid_empty)
+    RelativeLayout emptyGridView;
     private MovieGridAdapter mMovieGridAdapter;
     private FavouritesGridAdapter mFavouritesGridAdapter;
     private SharedPreferences mSharedPreferences;
@@ -362,6 +365,9 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
             }
             gridView.setAdapter(mFavouritesGridAdapter);
         }
+
+        // Sets empty grid view
+        gridView.setEmptyView(emptyGridView);
 
         // Loads additional results when user scroll to the bottom of the list
         gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
