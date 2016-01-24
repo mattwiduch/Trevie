@@ -26,14 +26,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/movie_grid_empty"
-        android:orientation="vertical"
         android:visibility="gone">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorBackground"
-            android:alpha="0.18"/>
+            android:background="@color/colorBackground"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -43,8 +41,8 @@
             android:layout_centerHorizontal="true"
             android:alpha="0.18"
             android:scaleX="3"
-            android:scaleY="3"/>
-
+            android:scaleY="3"
+            android:contentDescription="@string/description_favourite_icon"/>
         <TextView
             android:id="@+id/empty_grid_message"
             android:layout_width="wrap_content"
@@ -56,5 +54,12 @@
             android:layout_centerInParent="true"
             android:paddingTop="56dp"/>
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/movie_grid_blank"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+    </FrameLayout>
 
 </LinearLayout>

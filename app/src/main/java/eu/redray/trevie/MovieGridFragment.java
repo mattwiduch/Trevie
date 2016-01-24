@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -54,6 +55,8 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
     GridView gridView;
     @Bind(R.id.movie_grid_empty)
     RelativeLayout emptyGridView;
+    @Bind(R.id.movie_grid_blank)
+    FrameLayout blankGridView;
     private MovieGridAdapter mMovieGridAdapter;
     private FavouritesGridAdapter mFavouritesGridAdapter;
     private SharedPreferences mSharedPreferences;
@@ -261,28 +264,36 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
 
                 if (which == 0) {
                     if (isConnected) {
+                        // Removes empty grid view
+                        gridView.setEmptyView(blankGridView);
+                        // Sets correct adapter
                         gridView.setAdapter(mMovieGridAdapter);
                         sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
                                 SORT_POPULARITY).apply();
                     } else {
                         which = 2;
-                        Toast.makeText(getActivity(), R.string.error_noconnection, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.error_message_noconnection, Toast.LENGTH_LONG).show();
                         Toast.makeText(getActivity(), R.string.displaying_favourites, Toast.LENGTH_LONG).show();
                     }
                 }
                 if (which == 1) {
                     if (isConnected) {
+                        // Removes empty grid view
+                        gridView.setEmptyView(blankGridView);
+                        // Sets correct adapter
                         gridView.setAdapter(mMovieGridAdapter);
 
                         sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
                                 SORT_RATING).apply();
                     } else {
                         which = 2;
-                        Toast.makeText(getActivity(), R.string.error_noconnection, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.error_message_noconnection, Toast.LENGTH_LONG).show();
                         Toast.makeText(getActivity(), R.string.displaying_favourites, Toast.LENGTH_LONG).show();
                     }
                 }
                 if (which == 2) {
+                    // Sets empty grid view
+                    gridView.setEmptyView(emptyGridView);
                     gridView.setAdapter(mFavouritesGridAdapter);
                     sharedPreferencesEditor.putString(getString(R.string.pref_sort_key),
                             SORT_FAVOURITES).apply();
@@ -357,17 +368,16 @@ public class MovieGridFragment extends Fragment {//implements LoaderManager.Load
         String sortType = mSharedPreferences.getString(getString(R.string.pref_sort_key), SORT_POPULARITY);
         if ((sortType.equals(SORT_POPULARITY) || sortType.equals(SORT_RATING)) &&
                 isConnected) {
+            gridView.setEmptyView(blankGridView);
             gridView.setAdapter(mMovieGridAdapter);
         } else {
             if (!isConnected && mRestored) {
-                Toast.makeText(getActivity(), R.string.error_noconnection, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.error_message_noconnection, Toast.LENGTH_LONG).show();
                 Toast.makeText(getActivity(), R.string.displaying_favourites, Toast.LENGTH_LONG).show();
             }
+            gridView.setEmptyView(emptyGridView);
             gridView.setAdapter(mFavouritesGridAdapter);
         }
-
-        // Sets empty grid view
-        gridView.setEmptyView(emptyGridView);
 
         // Loads additional results when user scroll to the bottom of the list
         gridView.setOnScrollListener(new AbsListView.OnScrollListener() {

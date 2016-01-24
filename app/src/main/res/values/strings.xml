@@ -32,16 +32,17 @@
 
     <!-- Descriptions for images -->
     <string name="description_movie_poster">Movie Poster</string>
-    <string name="description_favourite_button">Favourite Button</string>
+    <string name="description_favourite_button">Favourites Button</string>
+    <string name="description_favourite_icon">Favourites Icon</string>
 
     <!-- Strings related to playing trailers -->
     <string name="play_trailer">Trailer</string>
-    <string name="choose_trailer">Choose trailer to play...</string>
+    <string name="choose_trailer">Choose trailer to play…</string>
     <string name="error_message_notrailers">There are no trailers to play</string>
     <string name="share_trailer">Share Trailer</string>
 
     <!-- Various error messages -->
-    <string name="error_noconnection">There is no internet connection.</string>
+    <string name="error_message_noconnection">There is no internet connection.</string>
     <string name="displaying_favourites">Displaying Favourites Collection</string>
-    <string name="empty_grid_message">Oh noes, there is nothing in favourites...</string>
+    <string name="empty_grid_message">Oh noes, there is nothing\n in favourites…</string>
 </resources>
