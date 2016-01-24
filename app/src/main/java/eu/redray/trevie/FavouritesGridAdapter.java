@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2016 Mateusz Widuch
+ */
 package eu.redray.trevie;
 
 import android.content.Context;
@@ -46,9 +49,7 @@ public class FavouritesGridAdapter extends CursorAdapter {
                 placeholder(R.drawable.temp).error(R.drawable.error).fit().into(viewHolder.posterView);
     }
 
-    /**
-     * Holds all the views used to display data in movie grid item.
-     */
+    /** Holds all the views used to display data in movie grid item. */
     private static class ViewHolder {
         ImageView posterView;
         ImageView favouriteIconView;
