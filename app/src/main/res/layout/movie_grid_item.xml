@@ -61,7 +61,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_margin="16dp"
-            android:contentDescription="@string/description_favourite_button"
+            android:contentDescription="@string/description_favourite_icon"
             android:src="@drawable/ic_star_border_white_24dp"/>
     </RelativeLayout>
 
