@@ -34,7 +34,8 @@
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/movie_details_favourite"
                 android:layout_toStartOf="@+id/movie_details_favourite"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="@dimen/text_size_large"
+                android:textColor="@color/colorPrimaryDark"
                 android:textStyle="bold"/>
 
 
@@ -48,7 +49,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:contentDescription="@string/description_favourite_button"
-                android:padding="8dp"
+                android:padding="12dp"
                 android:src="@drawable/ic_star_border_black_24dp"/>
 
         </RelativeLayout>
@@ -71,7 +72,7 @@
             <ImageView
                 android:id="@+id/movie_details_poster"
                 android:layout_width="0dp"
-                android:layout_height="160dp"
+                android:layout_height="192dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/description_movie_poster"
                 android:src="@drawable/temp"/>
@@ -98,10 +99,12 @@
                     android:visibility="gone">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginRight="8dp">
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_weight="1">
 
                         <TextView
                             android:id="@+id/movie_details_genre_label"
@@ -110,7 +113,7 @@
                             android:padding="2dp"
                             android:text="@string/label_movie_genre"
                             android:textColor="@android:color/black"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/text_size_small"
                             android:textStyle="bold"/>
 
                         <TextView
@@ -120,7 +123,7 @@
                             android:padding="2dp"
                             android:text="@string/label_movie_duration"
                             android:textColor="@android:color/black"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/text_size_small"
                             android:textStyle="bold"/>
 
                         <TextView
@@ -130,7 +133,7 @@
                             android:padding="2dp"
                             android:text="@string/label_movie_release_date"
                             android:textColor="@android:color/black"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/text_size_small"
                             android:textStyle="bold"/>
 
                         <TextView
@@ -140,7 +143,7 @@
                             android:padding="2dp"
                             android:text="@string/label_movie_country"
                             android:textColor="@android:color/black"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/text_size_small"
                             android:textStyle="bold"/>
 
                         <TextView
@@ -150,15 +153,17 @@
                             android:padding="2dp"
                             android:text="@string/label_movie_average_rating"
                             android:textColor="@android:color/black"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/text_size_small"
                             android:textStyle="bold"/>
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:layout_marginRight="16dp">
 
                         <TextView
                             android:id="@+id/movie_details_genre"
@@ -170,21 +175,21 @@
                             android:padding="2dp"
                             android:scrollHorizontally="true"
                             android:singleLine="true"
-                            android:textSize="12sp"/>
+                            android:textSize="@dimen/text_size_small"/>
 
                         <TextView
                             android:id="@+id/movie_details_duration"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="2dp"
-                            android:textSize="12sp"/>
+                            android:textSize="@dimen/text_size_small"/>
 
                         <TextView
                             android:id="@+id/movie_details_release_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="2dp"
-                            android:textSize="12sp"/>
+                            android:textSize="@dimen/text_size_small"/>
 
                         <TextView
                             android:id="@+id/movie_details_country"
@@ -196,14 +201,14 @@
                             android:padding="2dp"
                             android:scrollHorizontally="true"
                             android:singleLine="true"
-                            android:textSize="12sp"/>
+                            android:textSize="@dimen/text_size_small"/>
 
                         <TextView
                             android:id="@+id/movie_details_rating"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="2dp"
-                            android:textSize="12sp"/>
+                            android:textSize="@dimen/text_size_small"/>
 
                     </LinearLayout>
                 </LinearLayout>

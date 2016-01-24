@@ -39,7 +39,7 @@
             android:singleLine="true"
             android:text="@string/loading"
             android:textColor="@color/colorAccent"
-            android:textSize="14sp"/>
+            android:textSize="@dimen/text_size_small"/>
 
         <TextView
             android:id="@+id/grid_movie_genre"
@@ -51,7 +51,7 @@
             android:layout_marginLeft="16dp"
             android:text="@string/loading"
             android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"/>
+            android:textSize="@dimen/text_size_small"/>
 
         <ImageView
             android:id="@+id/grid_movie_favourite"
