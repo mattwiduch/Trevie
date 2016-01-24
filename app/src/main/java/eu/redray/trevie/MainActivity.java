@@ -31,11 +31,7 @@ public class MainActivity extends AppCompatActivity implements MovieGridFragment
         setSupportActionBar(toolbar);
 
         // Determine if app is one or two pane mode
-        if (findViewById(R.id.movie_detail_container) != null) {
-            mTwoPane = true;
-        } else {
-            mTwoPane = false;
-        }
+        mTwoPane = findViewById(R.id.movie_detail_container) != null;
     }
 
     @Override
