@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,54 +15,24 @@ import android.view.MenuItem;
  * Starts the application.
  */
 public class MainActivity extends AppCompatActivity implements MovieGridFragment.Callback {
-    private static final String TAG = "TREVIE";
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
     private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Initialise Stetho debug bridge
+        //initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Log.v(TAG, "onCreate");
 
+        // Determine if app is one or two pane mode
         if (findViewById(R.id.movie_detail_container) != null) {
             mTwoPane = true;
         } else {
             mTwoPane = false;
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.v(TAG, "onStart");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.v(TAG, "onPause");
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v(TAG, "onResume");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.v(TAG, "onRestart");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.v(TAG, "onDestroy");
     }
 
     @Override

@@ -42,8 +42,8 @@ public class FavouritesLoader extends AsyncTaskLoader<Movie[]> {
     public Movie[] loadInBackground() {
         // Get ids of all favourite movies
         Set<String> favourites = getContext().getSharedPreferences(
-                getContext().getString(R.string.preference_favourite_movies), Context.MODE_PRIVATE)
-                .getStringSet(getContext().getString(R.string.preference_favourite_movies),
+                getContext().getString(R.string.pref_favourite_movies), Context.MODE_PRIVATE)
+                .getStringSet(getContext().getString(R.string.pref_favourite_movies),
                         new HashSet<String>());
 
         ArrayList<Movie> movies = new ArrayList<>();
@@ -148,7 +148,7 @@ public class FavouritesLoader extends AsyncTaskLoader<Movie[]> {
         JSONObject movieJson = new JSONObject(moviesJsonString);
 
         // Get appropriate data
-        String id = movieJson.getString(TMDB_ID);
+        int id = movieJson.getInt(TMDB_ID);
         String title = movieJson.getString(TMDB_TITLE);
         String releaseDate = movieJson.getString(TMDB_RELEASE_DATE);
         String avgRating = movieJson.getString(TMDB_AVG_RATING);

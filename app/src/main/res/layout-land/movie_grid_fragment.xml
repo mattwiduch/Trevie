@@ -22,4 +22,39 @@
         android:smoothScrollbar="true"
         android:stretchMode="columnWidth"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/movie_grid_empty"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorBackground"
+            android:alpha="0.18"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_star_border_black_48dp"
+            android:layout_above="@+id/empty_grid_message"
+            android:layout_centerHorizontal="true"
+            android:alpha="0.18"
+            android:scaleX="3"
+            android:scaleY="3"/>
+
+        <TextView
+            android:id="@+id/empty_grid_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_grid_message"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textColor="@color/colorPrimaryAlpha"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:paddingTop="56dp"/>
+    </RelativeLayout>
+
 </LinearLayout>

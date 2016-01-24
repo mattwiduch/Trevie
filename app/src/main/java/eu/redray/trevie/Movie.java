@@ -4,12 +4,18 @@
 
 package eu.redray.trevie;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Set;
+
+import eu.redray.trevie.database.MoviesContract;
+import eu.redray.trevie.database.MoviesDbHelper;
 
 /**
  * Represents movie item.
@@ -29,7 +35,7 @@ public class Movie implements Parcelable {
         }
     };
 
-    private String mId;
+    private int mId;
     private String mTitle;
     private String mReleaseDate;
     private String mRating;
@@ -41,7 +47,7 @@ public class Movie implements Parcelable {
     private ArrayList mTrailerLinks;
     private ArrayList mUserReviews;
 
-    public Movie(String id, String title, String releaseDate, String avgRating, String overview, String posterPath,
+    public Movie(int id, String title, String releaseDate, String avgRating, String overview, String posterPath,
                  String runtime, String genres, String countries, ArrayList trailers, ArrayList reviews) {
         mId = id;
         mTitle = title;
@@ -57,7 +63,7 @@ public class Movie implements Parcelable {
     }
 
     protected Movie(Parcel in) {
-        mId = in.readString();
+        mId = in.readInt();
         mTitle = in.readString();
         mReleaseDate = in.readString();
         mRating = in.readString();
@@ -77,7 +83,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mId);
+        dest.writeInt(mId);
         dest.writeString(mTitle);
         dest.writeString(mReleaseDate);
         dest.writeString(mRating);
@@ -90,7 +96,7 @@ public class Movie implements Parcelable {
         dest.writeList(mUserReviews);
     }
 
-    public String getId() {
+    public int getId() {
         return mId;
     }
 
@@ -164,7 +170,33 @@ public class Movie implements Parcelable {
      * @return Returns true if movie is in favourites collection
      */
     public boolean isFavourite(Set<String> favourites) {
-        return favourites.contains(mId);
+        return favourites.contains(String.valueOf(mId));
+    }
+
+    /**
+     * Checks if movie is present in favourites collection
+     * @return true if it is, false otherwise
+     */
+    public boolean isFavourite(Context context) {
+        MoviesDbHelper dbHelper = new MoviesDbHelper(context);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String selectString = "SELECT * FROM " + MoviesContract.MoviesEntry.TABLE_NAME + " WHERE "
+                + MoviesContract.MoviesEntry._ID + " = ?";
+
+        // Put string in an array to avoid an unrecognized token error
+        Cursor cursor = db.rawQuery(selectString, new String[] {String.valueOf(mId)});
+
+        boolean isFavourite = false;
+        if(cursor.moveToFirst()){
+            isFavourite = true;
+        }
+
+        // Close cursor
+        cursor.close();
+        // Close database
+        db.close();
+        return isFavourite;
     }
 
     /**

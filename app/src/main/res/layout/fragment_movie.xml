@@ -47,6 +47,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
+                android:padding="8dp"
                 android:contentDescription="@string/description_favourite_button"
                 android:src="@drawable/ic_star_border_black_24dp"/>
 

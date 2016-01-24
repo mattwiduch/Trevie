@@ -5,7 +5,6 @@
 package eu.redray.trevie;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -74,11 +72,7 @@ public class MovieGridAdapter extends ArrayAdapter<Movie> {
      * Sets correct favourite icon based on favourites collection
      */
     private void setFavouriteIcon(ViewHolder viewHolder, Movie movie) {
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences(
-                mContext.getString(R.string.preference_favourite_movies), Context.MODE_PRIVATE);
-
-        if(movie.isFavourite(sharedPreferences.getStringSet(mContext.getString(R.string.preference_favourite_movies),
-                new HashSet<String>()))) {
+        if(movie.isFavourite(mContext)) {
             // Show icon if movie is favourite
             viewHolder.favouriteIcon.setVisibility(View.VISIBLE);
         } else {
