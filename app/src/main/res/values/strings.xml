@@ -3,22 +3,21 @@
     <string name="app_name">Trevie</string>
     <string name="title_activity_movie">MovieActivity</string>
 
-    <!-- Labels for menu items -->
-    <string name="action_settings">Settings</string>
+    <!-- Menu items -->
+    <string name="action_sort">Sort Movies</string>
 
     <!-- Keys for SharedPreferences -->
     <string name="pref_sort_key">sort type</string>
     <string name="pref_file_key">user preferences</string>
-    <string name="pref_favourite_movies">eu.redray.trevie.FAVOURITE_MOVIES</string>
 
     <!-- TextView placeholder text -->
     <string name="loading">…</string>
 
     <!-- Labels for sort type dialog -->
-    <string name="sort_by">Sort movies by…</string>
+    <string name="sort_dialog_title">Sort movies by…</string>
     <string name="most_popular">Most Popular</string>
     <string name="highest_rated">Highest Rated</string>
-    <string name="sort_favourites">Favourites</string>
+    <string name="favourites">Favourites</string>
 
     <!-- Labels for movie details screen -->
     <string name="label_movie_genre">Genre:</string>
@@ -36,7 +35,7 @@
     <string name="description_favourite_icon">Favourites Icon</string>
 
     <!-- Strings related to playing trailers -->
-    <string name="play_trailer">Trailer</string>
+    <string name="label_trailer_button">Trailer</string>
     <string name="choose_trailer">Choose trailer to play…</string>
     <string name="error_message_no_trailers">There are no trailers to play</string>
     <string name="share_trailer">Share Trailer</string>
@@ -44,6 +43,7 @@
     <!-- Various error messages -->
     <string name="error_message_no_connection">There is no internet connection.</string>
     <string name="displaying_favourites">Displaying Favourites Collection</string>
-    <string name="empty_grid_message">Oh noes, there is nothing\n in favourites…</string>
-    <string name="error_try_again">Something went wrong... Please try again.</string>
+    <string name="empty_favourites">Oh noes, there is nothing\n in favourites…</string>
+    <string name="error_try_again">Something went wrong… Please try again.</string>
+
 </resources>

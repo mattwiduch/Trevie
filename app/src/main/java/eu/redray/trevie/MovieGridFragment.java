@@ -258,7 +258,7 @@ public class MovieGridFragment extends Fragment {
         if (preferredSort.equals(SORT_FAVOURITES)) defaultChoice = 2;
 
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle(R.string.sort_by);
+        dialogBuilder.setTitle(R.string.sort_dialog_title);
         dialogBuilder.setSingleChoiceItems(R.array.sort_type, defaultChoice, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // The 'which' argument contains the index position of the selected item
@@ -335,7 +335,7 @@ public class MovieGridFragment extends Fragment {
             subTitle = getResources().getString(R.string.highest_rated);
         }
         if (sortType.equals(SORT_FAVOURITES)) {
-            subTitle = getResources().getString(R.string.sort_favourites);
+            subTitle = getResources().getString(R.string.favourites);
         }
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(subTitle);
 

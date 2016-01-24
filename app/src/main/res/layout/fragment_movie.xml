@@ -218,7 +218,7 @@
                     android:drawableStart="@drawable/ic_play_arrow_black_24dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="16dp"
-                    android:text="@string/play_trailer"/>
+                    android:text="@string/label_trailer_button"/>
 
             </RelativeLayout>
 
