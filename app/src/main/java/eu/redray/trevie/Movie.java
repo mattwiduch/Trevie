@@ -43,11 +43,11 @@ public class Movie implements Parcelable {
     private String mRuntime;
     private String mGenres;
     private String mCountries;
-    private ArrayList mTrailerLinks;
-    private ArrayList mUserReviews;
+    private ArrayList<Uri> mTrailerLinks;
+    private ArrayList<String> mUserReviews;
 
     public Movie(int id, String title, String releaseDate, String avgRating, String overview, String posterPath,
-                 String runtime, String genres, String countries, ArrayList trailers, ArrayList reviews) {
+                 String runtime, String genres, String countries, ArrayList<Uri> trailers, ArrayList<String> reviews) {
         mId = id;
         mTitle = title;
         mReleaseDate = releaseDate;
@@ -71,7 +71,9 @@ public class Movie implements Parcelable {
         mRuntime = in.readString();
         mGenres = in.readString();
         mCountries = in.readString();
+        //noinspection unchecked
         mTrailerLinks = in.readArrayList(Uri.class.getClassLoader());
+        //noinspection unchecked
         mUserReviews = in.readArrayList(String.class.getClassLoader());
     }
 
@@ -127,7 +129,7 @@ public class Movie implements Parcelable {
         return mRuntime;
     }
 
-    public void setTrailerLinks(ArrayList trailerLinks) {
+    public void setTrailerLinks(ArrayList<Uri> trailerLinks) {
         mTrailerLinks = trailerLinks;
     }
 
@@ -151,15 +153,15 @@ public class Movie implements Parcelable {
         return mCountries;
     }
 
-    public ArrayList getTrailerLinks() {
+    public ArrayList<Uri> getTrailerLinks() {
         return mTrailerLinks;
     }
 
-    public ArrayList getUserReviews() {
+    public ArrayList<String> getUserReviews() {
         return mUserReviews;
     }
 
-    public void setUserReviews(ArrayList userReviews) {
+    public void setUserReviews(ArrayList<String> userReviews) {
         mUserReviews = userReviews;
     }
 
