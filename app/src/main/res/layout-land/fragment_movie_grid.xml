@@ -14,10 +14,10 @@
         android:clipToPadding="false"
         android:gravity="center"
         android:numColumns="3"
-        android:paddingBottom="2dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingTop="0dp"
+        android:paddingBottom="@dimen/grid_padding"
+        android:paddingLeft="@dimen/grid_padding"
+        android:paddingRight="@dimen/grid_padding"
+        android:paddingTop="@dimen/grid_padding_top"
         android:scrollbarStyle="outsideOverlay"
         android:smoothScrollbar="true"
         android:stretchMode="columnWidth"/>
@@ -54,7 +54,7 @@
             android:textColor="@color/colorPrimaryAlpha"
             android:gravity="center"
             android:layout_centerInParent="true"
-            android:paddingTop="56dp"/>
+            android:paddingTop="@dimen/grid_spinner_offset"/>
     </RelativeLayout>
 
     <FrameLayout
