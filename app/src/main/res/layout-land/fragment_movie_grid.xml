@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="eu.redray.trevie.MovieGridFragment"
+              tools:showIn="@layout/activity_main">
+
+    <GridView
+        android:id="@+id/movie_grid"
+        style="@style/MovieGridStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:gravity="center"
+        android:numColumns="3"
+        android:paddingBottom="@dimen/grid_padding"
+        android:paddingLeft="@dimen/grid_padding"
+        android:paddingRight="@dimen/grid_padding"
+        android:paddingTop="@dimen/grid_padding_top"
+        android:scrollbarStyle="outsideOverlay"
+        android:smoothScrollbar="true"
+        android:stretchMode="columnWidth"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/movie_grid_empty"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorBackground"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_star_border_black_48dp"
+            android:contentDescription="@string/description_favourite_icon"
+            android:layout_above="@+id/empty_grid_message"
+            android:layout_centerHorizontal="true"
+            android:alpha="0.18"
+            android:scaleX="3"
+            android:scaleY="3"/>
+
+        <TextView
+            android:id="@+id/empty_grid_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_favourites"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textColor="@color/colorPrimaryAlpha"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:paddingTop="@dimen/grid_spinner_offset"/>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/movie_grid_blank"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progress_details"
+            style="@android:style/Widget.ProgressBar.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+</LinearLayout>

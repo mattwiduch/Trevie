@@ -8,62 +8,30 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.view.Window;
 
 /**
  * Starts the application.
  */
 public class MainActivity extends AppCompatActivity implements MovieGridFragment.Callback {
-    private static final String TAG = "TREVIE";
-    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+    private static final String DETAIL_FRAGMENT_TAG = "DF_TAG";
     private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Initialises progress bar
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setProgressBarIndeterminateVisibility(true);
         super.onCreate(savedInstanceState);
+        // Initialise Stetho debug bridge
+        //initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Log.v(TAG, "onCreate");
 
-        if (findViewById(R.id.movie_detail_container) != null) {
-            mTwoPane = true;
-        } else {
-            mTwoPane = false;
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.v(TAG, "onStart");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.v(TAG, "onPause");
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v(TAG, "onResume");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.v(TAG, "onRestart");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.v(TAG, "onDestroy");
+        // Determine if app is one or two pane mode
+        mTwoPane = findViewById(R.id.movie_detail_container) != null;
     }
 
     @Override
@@ -71,21 +39,6 @@ public class MainActivity extends AppCompatActivity implements MovieGridFragment
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
-            return true;
-        }*/
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -101,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements MovieGridFragment
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.movie_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .replace(R.id.movie_detail_container, fragment, DETAIL_FRAGMENT_TAG)
                     .commit();
         } else {
             Intent intent = new Intent(this, MovieDetailsActivity.class);

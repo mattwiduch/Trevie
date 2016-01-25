@@ -7,11 +7,14 @@ package eu.redray.trevie;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ShareActionProvider;
@@ -25,8 +28,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,12 +48,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import eu.redray.trevie.utility.FavouritesHelper;
 import eu.redray.trevie.utility.YouTubeUri;
 
 /**
@@ -57,7 +61,7 @@ import eu.redray.trevie.utility.YouTubeUri;
 public class MovieDetailsFragment extends Fragment {
     private final String TAG = MovieDetailsFragment.class.getSimpleName();
     private ShareActionProvider mShareActionProvider;
-    private SharedPreferences mSharedPreferences;
+    private MenuItem mShareMenuItem;
     private Movie mMovie;
 
     @Bind(R.id.movie_details_layout)
@@ -80,23 +84,31 @@ public class MovieDetailsFragment extends Fragment {
     TextView countriesTextView;
     @Bind(R.id.movie_details_poster)
     ImageView posterImageView;
+    @Bind(R.id.trailer_button)
+    Button trailerButton;
     @Bind(R.id.movie_details_reviews)
     TextView reviewsTextView;
+    @Bind(R.id.movie_details_frame)
+    LinearLayout detailsFrame;
+    @Bind(R.id.progress_details)
+    ProgressBar detailsProgress;
+    @Bind(R.id.progress_reviews)
+    ProgressBar reviewsProgress;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Adds toolbar
         setHasOptionsMenu(true);
 
+        // Retrieves passed movie
         Bundle arguments = getArguments();
         if (arguments != null) {
             mMovie = arguments.getParcelable(Movie.EXTRA_DETAILS);
         }
 
-        mSharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_favourite_movies),
-                Context.MODE_PRIVATE);
-
+        // Inflates view
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
         ButterKnife.bind(this, rootView);
 
@@ -110,6 +122,9 @@ public class MovieDetailsFragment extends Fragment {
         // Sets favourite icon
         setFavouriteIcon();
 
+        // Disables trailer button until data is loaded
+        trailerButton.setEnabled(false);
+
         // Fetches additional movie details
         UpdateDetailsTask updateDetailsTask = new UpdateDetailsTask();
         updateDetailsTask.execute(mMovie);
@@ -118,33 +133,24 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     /**
-     * Sets correct favourite icon based on favourites collection
+     * Sets correct favourite icon based on favourites collection.
      */
     private void setFavouriteIcon() {
-        if(isFavourite()) {
+        if (mMovie.isFavourite(getActivity())) {
             favouriteIconImageView.setImageResource(R.drawable.ic_star_black_yellow_24dp);
         } else {
             favouriteIconImageView.setImageResource(R.drawable.ic_star_border_black_24dp);
         }
     }
 
-    /**
-     * Checks if movie is present in favourites collection
-     * @return
-     */
-    private boolean isFavourite() {
-        return mMovie.isFavourite(mSharedPreferences.getStringSet(
-                getActivity().getString(R.string.preference_favourite_movies),
-                new HashSet<String>()));
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_details, menu);
         // Locate MenuItem with ShareActionProvider
-        MenuItem item = menu.findItem(R.id.menu_item_share_trailer);
+        mShareMenuItem = menu.findItem(R.id.menu_item_share_trailer);
+        mShareMenuItem.setVisible(false);
         // Fetch and store ShareActionProvider
-        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mShareMenuItem);
     }
 
     /**
@@ -152,7 +158,14 @@ public class MovieDetailsFragment extends Fragment {
      */
     private Intent createShareTrailerIntent() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        // This flag is used to open a document into a new task rooted at the activity launched
+        // by this Intent
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        } else {
+            //noinspection deprecation
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        }
         shareIntent.setType("text/plain");
         // Add movie title and trailer link to the intent
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, mMovie.getTitle() + " Trailer");
@@ -161,32 +174,33 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     /**
-     * Updates favourite collection based on user action
+     * Updates favourite database based on user action.
      */
     @OnClick(R.id.movie_details_favourite)
     void toggleFavourite() {
-        // Get set containing id's of favourite movies
-        Set<String> favourites = mSharedPreferences.getStringSet(
-                getActivity().getString(R.string.preference_favourite_movies),
-                new HashSet<String>());
-
-        // Update favourites collection
-        if (isFavourite()) {
-            // remove movie's id from collection
-            favourites.remove(mMovie.getId());
+        // Update favourites database
+        if (mMovie.isFavourite(getActivity())) {
+            // Remove movie from favourites
+            FavouritesHelper.removeMovie(getActivity(), String.valueOf(mMovie.getId()));
         } else {
-            // add movie's id to collection
-            favourites.add(mMovie.getId());
+            if (posterImageView.getDrawable() != null && mMovie.isAllDataDownloaded()) {
+                // Get poster bitmap
+                Bitmap poster = ((BitmapDrawable) posterImageView.getDrawable()).getBitmap();
+                // Add movie to favourites
+                FavouritesHelper.addMovie(getActivity(), mMovie, poster);
+            } else {
+                Toast.makeText(getActivity(), R.string.error_try_again, Toast.LENGTH_LONG).show();
+            }
         }
-
-        // Add updated collection to shared preferences
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.clear();
-        editor.putStringSet(getString(R.string.preference_favourite_movies), favourites);
-        editor.commit();
 
         // Sets correct icon
         setFavouriteIcon();
+
+        // Re-draw master fragment
+        MovieGridFragment mgf = (MovieGridFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.movie_grid_fragment);
+        if (mgf != null) {
+            mgf.onFavouritesUpdate();
+        }
     }
 
     /**
@@ -197,11 +211,10 @@ public class MovieDetailsFragment extends Fragment {
         final ArrayList<Uri> trailers = mMovie.getTrailerLinks();
         if (trailers.size() < 1) {
             // Show error message if there are no trailers to play
-            Toast.makeText(getActivity(), getString(R.string.error_message_notrailers), Toast.LENGTH_LONG).show();
-        }
-        if (trailers.size() == 1) {
+            Toast.makeText(getActivity(), getString(R.string.error_message_no_trailers), Toast.LENGTH_LONG).show();
+        } else if (trailers.size() == 1) {
             // Launch trailer immediately if there is only one available
-            launchTrailerIntent(trailers.get(0));
+            startActivity(new Intent(Intent.ACTION_VIEW, trailers.get(0)));
         } else {
             // Create dialog to help user choose which trailer to play if there is more than one
             final String[] trailersList = new String[trailers.size()];
@@ -216,9 +229,9 @@ public class MovieDetailsFragment extends Fragment {
             sortDialog.setTitle(R.string.choose_trailer)
                     .setItems(trailersList, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            // The 'which' argument contains the index position
-                            // of the selected item
-                            launchTrailerIntent(trailers.get(which));
+                            // Fires intent to play trailer via native app. The 'which' argument
+                            // contains the index position of the selected item
+                            startActivity(new Intent(Intent.ACTION_VIEW, trailers.get(which)));
                             dialog.dismiss();
                         }
                     });
@@ -227,12 +240,8 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     /**
-     * Fires intent to play trailer via native app.
+     * Fetches movie extras if not present already.
      */
-    private void launchTrailerIntent(Uri uri) {
-        startActivity(new Intent(Intent.ACTION_VIEW, uri));
-    }
-
     private class UpdateDetailsTask extends AsyncTask<Movie, Void, Void> {
         // Query URL values
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3";
@@ -256,18 +265,22 @@ public class MovieDetailsFragment extends Fragment {
             if (params.length == 0) {
                 return null;
             }
+            // Check if additional data needs to be downloaded
+            if (mMovie.isAllDataDownloaded()) {
+                return null;
+            }
 
             // Movie details Uri
             Uri detailsUri = Uri.parse(TMDB_BASE_URL).buildUpon()
                     .appendPath(MOVIE_PATH)
-                    .appendPath(params[0].getId())
+                    .appendPath(params[0].getId() + "")
                     .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
                     .build();
 
             // Trailers Uri
             Uri trailersUri = Uri.parse(TMDB_BASE_URL).buildUpon()
                     .appendPath(MOVIE_PATH)
-                    .appendPath(params[0].getId())
+                    .appendPath(params[0].getId() + "")
                     .appendPath(TRAILERS_PATH)
                     .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
                     .build();
@@ -275,7 +288,7 @@ public class MovieDetailsFragment extends Fragment {
             // Reviews Uri
             Uri reviewsUri = Uri.parse(TMDB_BASE_URL).buildUpon()
                     .appendPath(MOVIE_PATH)
-                    .appendPath(params[0].getId())
+                    .appendPath(params[0].getId() + "")
                     .appendPath(REVIEWS_PATH)
                     .appendQueryParameter(API_KEY_PARAM, BuildConfig.OPEN_THE_MOVIEDB_API_KEY)
                     .build();
@@ -298,24 +311,29 @@ public class MovieDetailsFragment extends Fragment {
             return null;
         }
 
-        /**
-         * Populates Fragment views with freshly fetched data
-         * @param aVoid Not used
-         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Shows progress bars
+            reviewsProgress.setVisibility(View.VISIBLE);
+            detailsProgress.setVisibility(View.VISIBLE);
+        }
+
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            // Populates fragment views with fetched data
             runtimeTextView.setText(mMovie.getRuntime());
             genresTextView.setText(mMovie.getGenres());
             genresTextView.setSelected(true);
             countriesTextView.setText(mMovie.getCountries());
             countriesTextView.setSelected(true);
             if (mMovie.getUserReviews() == null || mMovie.getUserReviews().size() < 1) {
-                reviewsTextView.setText(R.string.error_message_noreviews);
-            } else if (mMovie.getUserReviews().size() == 1){
-                reviewsTextView.setText((String)mMovie.getUserReviews().get(0));
+                reviewsTextView.setText(R.string.error_message_no_reviews);
+            } else if (mMovie.getUserReviews().size() == 1) {
+                reviewsTextView.setText(mMovie.getUserReviews().get(0));
             } else {
-                reviewsTextView.setText((String)mMovie.getUserReviews().get(0));
+                reviewsTextView.setText(mMovie.getUserReviews().get(0));
 
                 // Provides ratio for density pixels
                 DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -332,21 +350,35 @@ public class MovieDetailsFragment extends Fragment {
                             Math.round(1 * displayMetrics.density));
                     layoutParams.gravity = Gravity.CENTER;
                     separator.setLayoutParams(layoutParams);
-                    separator.setBackgroundColor(getResources().getColor(R.color.colorDivider));
+                    separator.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorDivider));
                     detailsLayout.addView(separator);
 
                     // Add next review
                     TextView textView = new TextView(getActivity());
-                    textView.setText((String)mMovie.getUserReviews().get(i));
+                    textView.setText(mMovie.getUserReviews().get(i));
                     textView.setPadding(0, Math.round(16 * displayMetrics.density),
                             0, Math.round(16 * displayMetrics.density));
                     detailsLayout.addView(textView);
                 }
             }
 
+            // Hide progress bars
+            detailsProgress.setVisibility(View.GONE);
+            reviewsProgress.setVisibility(View.GONE);
+
+            // Show movie details
+            detailsFrame.setVisibility(View.VISIBLE);
+
             // Set share trailer intent if there is provider available
             if (mShareActionProvider != null) {
-                mShareActionProvider.setShareIntent(createShareTrailerIntent());
+                // And if trailer is available
+                if (mMovie.getTrailerLinks() != null && mMovie.getTrailerLinks().size() > 0) {
+                    mShareActionProvider.setShareIntent(createShareTrailerIntent());
+                    // Set share menu item visible
+                    mShareMenuItem.setVisible(true);
+                    // Activate play trailer button
+                    trailerButton.setEnabled(true);
+                }
             }
         }
 
@@ -372,7 +404,7 @@ public class MovieDetailsFragment extends Fragment {
                     return null;
                 }
 
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
                 String line;
@@ -380,7 +412,7 @@ public class MovieDetailsFragment extends Fragment {
                     // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                     // But it does make debugging a *lot* easier if you print out the completed
                     // buffer for debugging.
-                    buffer.append(line + "\n");
+                    buffer.append(line).append("\n");
                 }
 
                 if (buffer.length() == 0) {
@@ -408,26 +440,26 @@ public class MovieDetailsFragment extends Fragment {
             return jsonString;
         }
 
-        private void updateMovieDetailsFromJsonData(Movie movie, String detailsJsonString) throws JSONException{
+        private void updateMovieDetailsFromJsonData(Movie movie, String detailsJsonString) throws JSONException {
             JSONObject detailsJson = new JSONObject(detailsJsonString);
             String runtime = detailsJson.getString(TMDB_RUNTIME) + " minutes";
 
             JSONArray genresArray = detailsJson.getJSONArray(TMDB_GENRES);
             String genres = "";
-            String delim = "";
+            String delimiter = "";
             for (int j = 0; j < genresArray.length(); j++) {
                 JSONObject genre = genresArray.getJSONObject(j);
-                genres = genres + delim + genre.getString(TMDB_NAME);
-                delim = ", ";
+                genres = genres + delimiter + genre.getString(TMDB_NAME);
+                delimiter = ", ";
             }
 
             JSONArray countriesArray = detailsJson.getJSONArray(TMDB_COUNTRIES);
             String countries = "";
-            delim = "";
+            delimiter = "";
             for (int j = 0; j < countriesArray.length(); j++) {
                 JSONObject country = countriesArray.getJSONObject(j);
-                countries = countries + delim + country.getString(TMDB_NAME);
-                delim = ", ";
+                countries = countries + delimiter + country.getString(TMDB_NAME);
+                delimiter = ", ";
             }
 
             movie.setRuntime(runtime);
@@ -435,7 +467,7 @@ public class MovieDetailsFragment extends Fragment {
             movie.setCountries(countries);
         }
 
-        private void updateMovieTrailersFromJsonData(Movie movie, String trailersJsonString) throws JSONException{
+        private void updateMovieTrailersFromJsonData(Movie movie, String trailersJsonString) throws JSONException {
             JSONObject trailersJson = new JSONObject(trailersJsonString);
             JSONArray trailersArray = trailersJson.getJSONArray(TMDB_RESULTS);
             ArrayList<Uri> trailersLinks = new ArrayList<>();
@@ -448,7 +480,7 @@ public class MovieDetailsFragment extends Fragment {
             movie.setTrailerLinks(trailersLinks);
         }
 
-        private void updateMovieReviewsFromJsonData(Movie movie, String reviewsJsonString) throws JSONException{
+        private void updateMovieReviewsFromJsonData(Movie movie, String reviewsJsonString) throws JSONException {
             JSONObject reviewsJson = new JSONObject(reviewsJsonString);
             JSONArray reviewsArray = reviewsJson.getJSONArray(TMDB_RESULTS);
             ArrayList<String> userReviews = new ArrayList<>();
