@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2016 Mateusz Widuch
+ */
 package eu.redray.trevie.utility;
 
 import android.content.ContentValues;
@@ -12,7 +15,7 @@ import eu.redray.trevie.Movie;
 import eu.redray.trevie.database.MoviesContract;
 
 /**
- * Holds methods related to favourites db operations
+ * Provides methods for retrieving and deleting movie data from favourites database
  */
 public class FavouritesHelper {
     // Specifies columns we need to read from trailers database
@@ -21,8 +24,7 @@ public class FavouritesHelper {
             MoviesContract.TrailersEntry.COLUMN_URL
     };
     // These indices are tied to TRAILER_COLUMNS
-    static final int COL_TRAILER_ID = 0;
-    static final int COL_TRAILER_URL = 1;
+    private static final int COL_TRAILER_URL = 1;
 
     // Specifies columns we need to read from reviews database
     private static final String[] REVIEWS_COLUMNS = {
@@ -30,45 +32,46 @@ public class FavouritesHelper {
             MoviesContract.ReviewsEntry.COLUMN_REVIEW
     };
     // These indices are tied to TRAILER_COLUMNS
-    static final int COL_REVIEW_ID = 0;
-    static final int COL_REVIEW_CONTENT = 1;
+    private static final int COL_REVIEW_CONTENT = 1;
 
     /**
      * Removes provided movie from favourites database
-     * @param context of the app
-     * @param movie to remove from db
+     *
+     * @param context the context of the app giving access to content provider
+     * @param movieId the id of a movie to be removed from the database
      */
-    public static void removeMovie(Context context, Movie movie) {
+    public static void removeMovie(Context context, String movieId) {
         // Remove movie from DB
         context.getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI,
                 MoviesContract.MoviesEntry._ID + " = ?",
-                new String[]{String.valueOf(movie.getId())});
+                new String[]{movieId});
 
         // Remove all related trailers
         context.getContentResolver().delete(MoviesContract.TrailersEntry.CONTENT_URI,
                 MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY + " = ?",
-                new String[]{String.valueOf(movie.getId())});
+                new String[]{movieId});
 
         // Remove all related reviews
         context.getContentResolver().delete(MoviesContract.ReviewsEntry.CONTENT_URI,
                 MoviesContract.ReviewsEntry.COLUMN_MOVIE_KEY + " = ?",
-                new String[]{String.valueOf(movie.getId())});
+                new String[]{movieId});
 
         // Remove poster image from storage
-        PosterHeper.deletePoster(context, movie.getTitle());
+        PosterHelper.deletePoster(context, movieId);
     }
 
     /**
      * Adds provided movie to favourites database
-     * @param context of the app
-     * @param movie to be added
-     * @param poster of the movie as bitmap
+     *
+     * @param context the context of the app giving access to content provider
+     * @param movie the movie object to be added to the database
+     * @param poster the poster of a movie provided as bitmap
      */
     public static void addMovie(Context context, Movie movie, Bitmap poster) {
         ContentValues movieValues = new ContentValues();
 
         // Save poster image
-        String posterPath = PosterHeper.savePoster(context,
+        String posterPath = PosterHelper.savePoster(context,
                 poster,
                 movie.getTitle());
 
@@ -107,10 +110,11 @@ public class FavouritesHelper {
     }
 
     /**
-     * Retrievs trailers associated with given movie
-     * @param context of the app
-     * @param movieId id of the movie
-     * @return array list of trailer URIs
+     * Retrieves trailers associated with given movie
+     *
+     * @param context the context of the app giving access to content provider
+     * @param movieId the id of a movie
+     * @return        an array list of trailer URIs associated with given movie id
      */
     public static ArrayList<Uri> getTrailers(Context context, String movieId) {
         Cursor trailersCursor = context.getContentResolver().query(
@@ -134,9 +138,10 @@ public class FavouritesHelper {
 
     /**
      * Retrieve user reviews for given movie
-     * @param context of the app
-     * @param movieId id of the movie
-     * @return array list of review strings
+     *
+     * @param context the context of the app giving access to content provider
+     * @param movieId the id of a movie
+     * @return        an array list of reviews associated with given movie id
      */
     public static ArrayList<String> getReviews(Context context, String movieId) {
         Cursor reviewsCursor = context.getContentResolver().query(

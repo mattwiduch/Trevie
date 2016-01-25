@@ -12,7 +12,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 import eu.redray.trevie.database.MoviesContract;
 import eu.redray.trevie.database.MoviesDbHelper;
@@ -44,11 +43,11 @@ public class Movie implements Parcelable {
     private String mRuntime;
     private String mGenres;
     private String mCountries;
-    private ArrayList mTrailerLinks;
-    private ArrayList mUserReviews;
+    private ArrayList<Uri> mTrailerLinks;
+    private ArrayList<String> mUserReviews;
 
     public Movie(int id, String title, String releaseDate, String avgRating, String overview, String posterPath,
-                 String runtime, String genres, String countries, ArrayList trailers, ArrayList reviews) {
+                 String runtime, String genres, String countries, ArrayList<Uri> trailers, ArrayList<String> reviews) {
         mId = id;
         mTitle = title;
         mReleaseDate = releaseDate;
@@ -62,7 +61,7 @@ public class Movie implements Parcelable {
         mUserReviews = reviews;
     }
 
-    protected Movie(Parcel in) {
+    private Movie(Parcel in) {
         mId = in.readInt();
         mTitle = in.readString();
         mReleaseDate = in.readString();
@@ -72,7 +71,9 @@ public class Movie implements Parcelable {
         mRuntime = in.readString();
         mGenres = in.readString();
         mCountries = in.readString();
+        //noinspection unchecked
         mTrailerLinks = in.readArrayList(Uri.class.getClassLoader());
+        //noinspection unchecked
         mUserReviews = in.readArrayList(String.class.getClassLoader());
     }
 
@@ -128,7 +129,7 @@ public class Movie implements Parcelable {
         return mRuntime;
     }
 
-    public void setTrailerLinks(ArrayList trailerLinks) {
+    public void setTrailerLinks(ArrayList<Uri> trailerLinks) {
         mTrailerLinks = trailerLinks;
     }
 
@@ -152,29 +153,21 @@ public class Movie implements Parcelable {
         return mCountries;
     }
 
-    public ArrayList getTrailerLinks() {
+    public ArrayList<Uri> getTrailerLinks() {
         return mTrailerLinks;
     }
 
-    public ArrayList getUserReviews() {
+    public ArrayList<String> getUserReviews() {
         return mUserReviews;
     }
 
-    public void setUserReviews(ArrayList userReviews) {
+    public void setUserReviews(ArrayList<String> userReviews) {
         mUserReviews = userReviews;
     }
 
     /**
-     * Checks if user has added movie to their favourites collection
-     * @param favourites Set containing id's of favourtie movies
-     * @return Returns true if movie is in favourites collection
-     */
-    public boolean isFavourite(Set<String> favourites) {
-        return favourites.contains(String.valueOf(mId));
-    }
-
-    /**
-     * Checks if movie is present in favourites collection
+     * Checks if movie is present in favourites database
+     *
      * @return true if it is, false otherwise
      */
     public boolean isFavourite(Context context) {
@@ -200,10 +193,10 @@ public class Movie implements Parcelable {
     }
 
     /**
-     * Checks if additional data needs to be downloaded
+     * Checks if all data has been downloaded
      */
-    public boolean needsMoreData() {
-        return (mRuntime.equals("") && mCountries.equals("") && mGenres.equals("")
-                && mTrailerLinks == null && mUserReviews == null);
+    public boolean isAllDataDownloaded() {
+        return (!mRuntime.equals("") || !mCountries.equals("") || !mGenres.equals("")
+                || mTrailerLinks != null || mUserReviews != null);
     }
 }

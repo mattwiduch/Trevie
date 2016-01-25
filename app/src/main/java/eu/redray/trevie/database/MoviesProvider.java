@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2016 Mateusz Widuch
+ */
 package eu.redray.trevie.database;
 
 import android.annotation.TargetApi;
@@ -8,15 +11,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
+/**
+ * Providers content provider for favourite movies database
+ */
 public class MoviesProvider extends ContentProvider {
-
     // The URI Matcher used by this content provider.
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private MoviesDbHelper mOpenHelper;
 
     static final int MOVIES = 100;
-    static final int MOVIES_WITH_ID = 101;
     static final int TRAILERS = 200;
     static final int TRAILERS_WITH_ID = 201;
     static final int REVIEWS = 300;
@@ -29,28 +34,36 @@ public class MoviesProvider extends ContentProvider {
         return true;
     }
 
-    private static final SQLiteQueryBuilder sMovieByIdQueryBuilder;
-    static{
-        sMovieByIdQueryBuilder = new SQLiteQueryBuilder();
-        sMovieByIdQueryBuilder.setTables(
-                MoviesContract.MoviesEntry.TABLE_NAME);
+    /** Creates SQL query for LEFT OUTER JOIN on movies and trailers. */
+    private static final SQLiteQueryBuilder sTrailersByMovieIdQueryBuilder;
+    static {
+        sTrailersByMovieIdQueryBuilder = new SQLiteQueryBuilder();
+        //movies LEFT OUTER JOIN trailers ON movies._ID = trailers.movie_id ORDER BY movies._ID
+        sTrailersByMovieIdQueryBuilder.setTables(
+                MoviesContract.MoviesEntry.TABLE_NAME + " LEFT OUTER JOIN " +
+                        MoviesContract.TrailersEntry.TABLE_NAME + " ON " +
+                        MoviesContract.MoviesEntry.TABLE_NAME + "." + MoviesContract.MoviesEntry._ID +
+                        " = " + MoviesContract.TrailersEntry.TABLE_NAME + "." +
+                        MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY
+        );
     }
 
-    //movies.movie_id = ?
-    private static final String sMovieIdSelection =
-            MoviesContract.MoviesEntry.TABLE_NAME +
-                    "." + MoviesContract.MoviesEntry._ID + " = ? ";
+    //trailers.movie_id = ?
+    private static final String sTrailerByMovieIdSelection =
+            MoviesContract.TrailersEntry.TABLE_NAME +
+                    "." + MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY + " = ? ";
 
-    private Cursor getMovieById(Uri uri, String[] projection, String sortOrder) {
+    /** Creates cursor that reads trailer links from trailers table based on movie id. */
+    private Cursor getTrailersByMovieId(Uri uri, String[] projection, String sortOrder) {
         String movieId = MoviesContract.MoviesEntry.getMovieIdFromUri(uri);
 
         String[] selectionArgs;
         String selection;
 
-            selection = sMovieIdSelection;
-            selectionArgs = new String[]{movieId};
+        selection = sTrailerByMovieIdSelection;
+        selectionArgs = new String[]{movieId};
 
-        return sMovieByIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+        return sTrailersByMovieIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 selection,
                 selectionArgs,
@@ -60,51 +73,11 @@ public class MoviesProvider extends ContentProvider {
         );
     }
 
-    private static final SQLiteQueryBuilder sTrailersByMovieIdQueryBuilder;
-    static{
-        sTrailersByMovieIdQueryBuilder = new SQLiteQueryBuilder();
-
-        //This is left outer join which looks like
-        //movies LEFT OUTER JOIN trailers ON movies._ID = trailers.movie_id ORDER BY movies._ID
-        sTrailersByMovieIdQueryBuilder.setTables(
-        MoviesContract.MoviesEntry.TABLE_NAME + " LEFT OUTER JOIN " +
-                MoviesContract.TrailersEntry.TABLE_NAME + " ON " +
-                MoviesContract.MoviesEntry.TABLE_NAME + "." + MoviesContract.MoviesEntry._ID +
-                " = " + MoviesContract.TrailersEntry.TABLE_NAME + "." +
-                MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY
-        );
-    }
-
-    //trailers.movie_id = ?
-    private static final String sTrailerByMovieIdSelection =
-            MoviesContract.TrailersEntry.TABLE_NAME +
-                    "." + MoviesContract.TrailersEntry.COLUMN_MOVIE_KEY + " = ? ";
-
-    private Cursor getTrailersByMovieId(Uri uri, String[] projection, String sortOrder) {
-            String movieId = MoviesContract.MoviesEntry.getMovieIdFromUri(uri);
-
-            String[] selectionArgs;
-            String selection;
-
-                selection = sTrailerByMovieIdSelection;
-                selectionArgs = new String[]{movieId};
-
-            return sTrailersByMovieIdQueryBuilder.query(mOpenHelper.getReadableDatabase(),
-                    projection,
-                    selection,
-                    selectionArgs,
-                    null,
-                    null,
-                    sortOrder
-            );
-    }
-
+    /** Creates SQL query for LEFT OUTER JOIN on movies and reviews. */
     private static final SQLiteQueryBuilder sReviewsByMovieIdQueryBuilder;
-    static{
+    static {
         sReviewsByMovieIdQueryBuilder = new SQLiteQueryBuilder();
-
-        //This is left outer join which looks like
-        //movies LEFT OUTER JOIN trailers ON movies._ID = trailers.movie_id ORDER BY movies._ID
+        //movies LEFT OUTER JOIN reviews ON movies._ID = reviews.movie_id ORDER BY movies._ID
         sReviewsByMovieIdQueryBuilder.setTables(
                 MoviesContract.MoviesEntry.TABLE_NAME + " LEFT OUTER JOIN " +
                         MoviesContract.ReviewsEntry.TABLE_NAME + " ON " +
@@ -119,6 +92,7 @@ public class MoviesProvider extends ContentProvider {
             MoviesContract.ReviewsEntry.TABLE_NAME +
                     "." + MoviesContract.ReviewsEntry.COLUMN_MOVIE_KEY + " = ? ";
 
+    /** Creates cursor that reads reviews from reviews table based on movie id. */
     private Cursor getReviewsByMovieId(Uri uri, String[] projection, String sortOrder) {
         String movieId = MoviesContract.MoviesEntry.getMovieIdFromUri(uri);
 
@@ -140,6 +114,7 @@ public class MoviesProvider extends ContentProvider {
 
     /**
      * Matches each URI to MOVIE, MOVIE_WITH_ID, TRAILERS_WITH_ID and REVIEWS integer constants
+     *
      * @return UriMatcher
      */
     static UriMatcher buildUriMatcher() {
@@ -149,7 +124,6 @@ public class MoviesProvider extends ContentProvider {
 
         // Adds URIs to the matcher to match each of the defined types
         matcher.addURI(authority, MoviesContract.PATH_MOVIES, MOVIES);
-        matcher.addURI(authority, MoviesContract.PATH_MOVIES + "/#", MOVIES_WITH_ID);
         matcher.addURI(authority, MoviesContract.PATH_TRAILERS, TRAILERS);
         matcher.addURI(authority, MoviesContract.PATH_TRAILERS + "/#", TRAILERS_WITH_ID);
         matcher.addURI(authority, MoviesContract.PATH_REVIEWS, REVIEWS);
@@ -160,15 +134,13 @@ public class MoviesProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         // Use the Uri Matcher to determine what kind of URI this is
         final int match = sUriMatcher.match(uri);
 
         switch (match) {
             case MOVIES:
                 return MoviesContract.MoviesEntry.CONTENT_TYPE;
-            case MOVIES_WITH_ID:
-                return MoviesContract.MoviesEntry.CONTENT_ITEM_TYPE;
             case TRAILERS:
                 return MoviesContract.TrailersEntry.CONTENT_TYPE;
             case TRAILERS_WITH_ID:
@@ -183,17 +155,12 @@ public class MoviesProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
         // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
-            // "movies/*"
-            case MOVIES_WITH_ID: {
-                retCursor = getMovieById(uri, projection, sortOrder);
-                break;
-            }
             // "movies"
             case MOVIES: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
@@ -225,7 +192,7 @@ public class MoviesProvider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         Uri returnUri;
@@ -234,7 +201,7 @@ public class MoviesProvider extends ContentProvider {
         switch (match) {
             case MOVIES: {
                 long _id = db.insert(MoviesContract.MoviesEntry.TABLE_NAME, null, values);
-                if ( _id > 0 )
+                if (_id > 0)
                     returnUri = MoviesContract.MoviesEntry.buildMoviesUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
@@ -242,15 +209,15 @@ public class MoviesProvider extends ContentProvider {
             }
             case TRAILERS: {
                 long _id = db.insert(MoviesContract.TrailersEntry.TABLE_NAME, null, values);
-                if ( _id > 0 )
+                if (_id > 0)
                     returnUri = MoviesContract.TrailersEntry.buildTrailersUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
-                    break;
+                break;
             }
             case REVIEWS: {
                 long _id = db.insert(MoviesContract.ReviewsEntry.TABLE_NAME, null, values);
-                if ( _id > 0 )
+                if (_id > 0)
                     returnUri = MoviesContract.ReviewsEntry.buildReviewsUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
@@ -264,13 +231,13 @@ public class MoviesProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
 
         // If selection is null, delete all rows
-        if ( null == selection ) selection = "1";
+        if (null == selection) selection = "1";
 
         // Choose database to delete from based on UriMatcher
         switch (match) {
@@ -288,7 +255,7 @@ public class MoviesProvider extends ContentProvider {
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
-                }
+        }
 
         // Notify the uri listener only if rows were deleted
         if (rowsDeleted != 0) {
@@ -299,7 +266,7 @@ public class MoviesProvider extends ContentProvider {
 
     @Override
     public int update(
-            Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+            @NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsUpdated;
@@ -330,7 +297,7 @@ public class MoviesProvider extends ContentProvider {
     }
 
     @Override
-    public int bulkInsert(Uri uri, ContentValues[] values) {
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         switch (match) {

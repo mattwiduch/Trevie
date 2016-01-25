@@ -3,8 +3,7 @@
     <color name="colorPrimary">#FFC107</color>
     <color name="colorPrimaryAlpha">#BA000000</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorSecondary">#FFF8E1</color>
     <color name="colorAccent">#FFC107</color>
-    <color name="colorBackground">#E0E0E0</color>
+    <color name="colorBackground">#F5F5F5</color>
     <color name="colorDivider">#1F000000</color>
 </resources>

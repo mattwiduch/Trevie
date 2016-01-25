@@ -8,10 +8,9 @@
     android:fitsSystemWindows="true"
     tools:context="eu.redray.trevie.MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -20,16 +19,21 @@
             android:background="@color/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:titleTextAppearance="@style/AppTheme.ToolbarTitleStyle"
-            app:subtitleTextAppearance="@style/AppTheme.ToolbarSubtitleStyle"/>
+            app:subtitleTextAppearance="@style/AppTheme.ToolbarSubtitleStyle"
+            android:layout_alignParentTop="true"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@drawable/shadow"/>
+        <include layout="@layout/content_main"
+            android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_below="@id/toolbar"/>
 
-        <include layout="@layout/content_main"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shadow_height"
+            android:background="@drawable/shadow"
+            android:layout_below="@id/toolbar"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 

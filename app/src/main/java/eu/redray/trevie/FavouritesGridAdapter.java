@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2016 Mateusz Widuch
+ */
 package eu.redray.trevie;
 
 import android.content.Context;
@@ -14,14 +17,14 @@ import com.squareup.picasso.Picasso;
 /**
  * Creates custom CursorAdapter to display records from favourites database
  */
-public class FavouritesGridAdapter extends CursorAdapter {
+class FavouritesGridAdapter extends CursorAdapter {
     public FavouritesGridAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.movie_grid_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_movie_grid, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         view.setTag(viewHolder);
 
@@ -46,14 +49,12 @@ public class FavouritesGridAdapter extends CursorAdapter {
                 placeholder(R.drawable.temp).error(R.drawable.error).fit().into(viewHolder.posterView);
     }
 
-    /**
-     * Holds all the views used to display data in movie grid item.
-     */
+    /** Holds all the views used to display data in movie grid item. */
     private static class ViewHolder {
-        ImageView posterView;
-        ImageView favouriteIconView;
-        TextView titleView;
-        TextView yearView;
+        final ImageView posterView;
+        final ImageView favouriteIconView;
+        final TextView titleView;
+        final TextView yearView;
 
         public ViewHolder(View view) {
             posterView = (ImageView) view.findViewById(R.id.grid_movie_poster);

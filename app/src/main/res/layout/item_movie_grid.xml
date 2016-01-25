@@ -17,7 +17,7 @@
     <RelativeLayout
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="@dimen/grid_item_height"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -29,8 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_toLeftOf="@+id/grid_movie_favourite"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
@@ -39,7 +39,7 @@
             android:singleLine="true"
             android:text="@string/loading"
             android:textColor="@color/colorAccent"
-            android:textSize="14sp"/>
+            android:textSize="@dimen/text_size_small"/>
 
         <TextView
             android:id="@+id/grid_movie_genre"
@@ -47,11 +47,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:text="@string/loading"
             android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"/>
+            android:textSize="@dimen/text_size_small"/>
 
         <ImageView
             android:id="@+id/grid_movie_favourite"
@@ -60,8 +60,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_margin="16dp"
-            android:contentDescription="@string/description_favourite_button"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:contentDescription="@string/description_favourite_icon"
             android:src="@drawable/ic_star_border_white_24dp"/>
     </RelativeLayout>
 

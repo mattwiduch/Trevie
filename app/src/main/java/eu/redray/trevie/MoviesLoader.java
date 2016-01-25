@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2016 Mateusz Widuch
+ */
 package eu.redray.trevie;
 
 import android.content.Context;
@@ -17,11 +20,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by frano on 18/01/2016.
+ * Creates AsyncTaskLoader to fetch movie data from TheMovieDB.
  */
-public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
+class MoviesLoader extends AsyncTaskLoader<Movie[]> {
     private final String TAG = MoviesLoader.class.getSimpleName();
-    public final String VOTE_COUNT = "100";
+    private final String VOTE_COUNT = "100";
     private String mSortParameter;
     private int mPageToLoad;
     private boolean DEBUG = false;
@@ -30,13 +33,13 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
     private Movie[] mMovies;
 
     // Construct query URL
-    final String TMDB_BASE_URL = "https://api.themoviedb.org/3";
-    final String DISCOVER_PATH = "discover";
-    final String MOVIE_PATH = "movie";
-    final String SORT_PARAM = "sort_by";
-    final String VOTE_COUNT_PARAM = "vote_count.gte";
-    final String PAGE_NUMBER = "page";
-    final String API_KEY_PARAM = "api_key";
+    private final String TMDB_BASE_URL = "https://api.themoviedb.org/3";
+    private final String DISCOVER_PATH = "discover";
+    private final String MOVIE_PATH = "movie";
+    private final String SORT_PARAM = "sort_by";
+    private final String VOTE_COUNT_PARAM = "vote_count.gte";
+    private final String PAGE_NUMBER = "page";
+    private final String API_KEY_PARAM = "api_key";
 
     public MoviesLoader(Context context, String sortParameter, int page) {
         super(context);
@@ -74,6 +77,7 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
         return null;
     }
 
+    /** Retrieves JSON string from provided Uri. */
     private String getJsonString(Uri builtUri) {
         // Will retrieve data
         HttpURLConnection urlConnection = null;
@@ -96,7 +100,7 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
                 return null;
             }
 
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
             String line;
@@ -104,7 +108,7 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
                 // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                 // But it does make debugging a *lot* easier if you print out the completed
                 // buffer for debugging.
-                buffer.append(line + "\n");
+                buffer.append(line).append("\n");
             }
 
             if (buffer.length() == 0) {
@@ -137,7 +141,7 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
      *
      * @param moviesJsonString JSON string that contains movie data
      * @return                 the array of movies loaded from JSON string
-     * @throws JSONException
+     * @throws                 JSONException
      */
     private Movie[] getMovieDataFromJsonString(String moviesJsonString) throws JSONException {
         // Names of JSON objects to be extracted
@@ -182,7 +186,8 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
     @Override
     public void deliverResult(Movie[] movies) {
         if (isReset()) {
-            if (DEBUG) Log.w(TAG, "+++ Warning! An async query came in while the Loader was reset! +++");
+            if (DEBUG)
+                Log.w(TAG, "+++ Warning! An async query came in while the Loader was reset! +++");
             // The Loader has been reset; ignore the result and invalidate the data.
             // This can happen when the Loader is reset while an asynchronous query
             // is working in the background. That is, when the background thread
@@ -251,7 +256,7 @@ public class MoviesLoader extends AsyncTaskLoader<Movie[]> {
         onStopLoading();
 
         // At this point we can release the resources associated with 'apps'.
-        if (mMovies!= null) {
+        if (mMovies != null) {
             releaseResources(mMovies);
             mMovies = null;
         }
