@@ -123,7 +123,9 @@ public class MovieDetailsFragment extends Fragment {
         setFavouriteIcon();
 
         // Disables trailer button until data is loaded
-        trailerButton.setEnabled(false);
+        if (!mMovie.isAllDataDownloaded()) {
+            trailerButton.setEnabled(false);
+        }
 
         // Fetches additional movie details
         UpdateDetailsTask updateDetailsTask = new UpdateDetailsTask();
@@ -148,7 +150,9 @@ public class MovieDetailsFragment extends Fragment {
         inflater.inflate(R.menu.menu_details, menu);
         // Locate MenuItem with ShareActionProvider
         mShareMenuItem = menu.findItem(R.id.menu_item_share_trailer);
-        mShareMenuItem.setVisible(false);
+        if (!mMovie.isAllDataDownloaded()) {
+            mShareMenuItem.setVisible(false);
+        }
         // Fetch and store ShareActionProvider
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mShareMenuItem);
     }
