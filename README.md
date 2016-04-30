@@ -1,7 +1,6 @@
 # Trevie
-<img src="https://cloud.githubusercontent.com/assets/15446842/14937280/65861d10-0efa-11e6-924c-3653c6d73fdd.png" width="320" align="right"/>
 *Popular and trending movies catalogue.*
-
+<img src="https://cloud.githubusercontent.com/assets/15446842/14937639/fc5402a6-0f05-11e6-8fa9-a9f5f56aac7c.png"/>
 Trevie is an user friendly movie discovery application for Android tablets and smartphones running Android 4.0.1 (API level 14) or newer. It demonstrates use of [TheMovieDB API](https://www.themoviedb.org/documentation/api) to create fully featured application.
 
 **Features:**
