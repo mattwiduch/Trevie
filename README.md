@@ -14,8 +14,6 @@ Trevie is an user friendly movie discovery application for Android tablets and s
 - Stores favourite movies in local database
 - Features master-detail tablet layout
 
-**Disclaimer:** The project was created as part of Udacity Android Nanodegree.
-
 ## Dependencies
 Trevie uses following third-party libraries:
 - [Picasso] (http://square.github.io/picasso/)
