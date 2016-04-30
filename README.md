@@ -1,4 +1,4 @@
-# Trevie
+# Trevie - Trending movies companion
 
 <img src="https://cloud.githubusercontent.com/assets/15446842/14937639/fc5402a6-0f05-11e6-8fa9-a9f5f56aac7c.png"/>
 
