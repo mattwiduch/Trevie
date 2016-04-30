@@ -35,7 +35,7 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import eu.redray.trevie.database.MoviesContract;
@@ -75,11 +75,11 @@ public class MovieGridFragment extends Fragment {
     private boolean mRestored = false;
 
     // Binds views
-    @Bind(R.id.movie_grid)
+    @BindView(R.id.movie_grid)
     GridView gridView;
-    @Bind(R.id.movie_grid_empty)
+    @BindView(R.id.movie_grid_empty)
     RelativeLayout emptyGridView;
-    @Bind(R.id.movie_grid_blank)
+    @BindView(R.id.movie_grid_blank)
     FrameLayout blankGridView;
 
     // Specifies columns we need to read from movies database

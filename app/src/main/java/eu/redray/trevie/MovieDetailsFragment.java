@@ -49,7 +49,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.redray.trevie.utility.FavouritesHelper;
@@ -64,35 +64,35 @@ public class MovieDetailsFragment extends Fragment {
     private MenuItem mShareMenuItem;
     private Movie mMovie;
 
-    @Bind(R.id.movie_details_layout)
+    @BindView(R.id.movie_details_layout)
     LinearLayout detailsLayout;
-    @Bind(R.id.movie_details_title)
+    @BindView(R.id.movie_details_title)
     TextView titleTextView;
-    @Bind(R.id.movie_details_favourite)
+    @BindView(R.id.movie_details_favourite)
     ImageView favouriteIconImageView;
-    @Bind(R.id.movie_details_release_date)
+    @BindView(R.id.movie_details_release_date)
     TextView releaseTextView;
-    @Bind(R.id.movie_details_rating)
+    @BindView(R.id.movie_details_rating)
     TextView ratingTextView;
-    @Bind(R.id.movie_details_synopsis)
+    @BindView(R.id.movie_details_synopsis)
     TextView synopsisTextView;
-    @Bind(R.id.movie_details_duration)
+    @BindView(R.id.movie_details_duration)
     TextView runtimeTextView;
-    @Bind(R.id.movie_details_genre)
+    @BindView(R.id.movie_details_genre)
     TextView genresTextView;
-    @Bind(R.id.movie_details_country)
+    @BindView(R.id.movie_details_country)
     TextView countriesTextView;
-    @Bind(R.id.movie_details_poster)
+    @BindView(R.id.movie_details_poster)
     ImageView posterImageView;
-    @Bind(R.id.trailer_button)
+    @BindView(R.id.trailer_button)
     Button trailerButton;
-    @Bind(R.id.movie_details_reviews)
+    @BindView(R.id.movie_details_reviews)
     TextView reviewsTextView;
-    @Bind(R.id.movie_details_frame)
+    @BindView(R.id.movie_details_frame)
     LinearLayout detailsFrame;
-    @Bind(R.id.progress_details)
+    @BindView(R.id.progress_details)
     ProgressBar detailsProgress;
-    @Bind(R.id.progress_reviews)
+    @BindView(R.id.progress_reviews)
     ProgressBar reviewsProgress;
 
     @Override
