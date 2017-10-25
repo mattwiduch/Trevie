@@ -16,8 +16,8 @@ Trevie is an user friendly movie discovery application for Android tablets and s
 
 ## Dependencies
 Trevie uses following third-party libraries:
-- [Picasso] (http://square.github.io/picasso/)
-- [ButterKnife] (http://jakewharton.github.io/butterknife/)
+- [Picasso](http://square.github.io/picasso/)
+- [ButterKnife](http://jakewharton.github.io/butterknife/)
 
 ## Try it out
 Try Trevie by following these steps:
