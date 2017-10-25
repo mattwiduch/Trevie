@@ -14,24 +14,27 @@ Trevie is an user friendly movie discovery application for Android tablets and s
 - Stores favourite movies in local database
 - Features master-detail tablet layout
 
+## Try it out
+To install the app on a connected device or running emulator, run:
+
+```gradle
+git clone https://github.com/mattwiduch/Trevie.git
+cd Trevie
+./gradlew installDevelopDebug
+```
+
+**TheMovieDB API Key is required**
+
+In order for the Trevie app to function properly an API key for [TheMovieDB](https://www.themoviedb.org/) must be included with the build. Please include your own key for the build by adding the following line to `[USER_HOME]/.gradle/gradle.properties`
+
+```gradle
+MyTheMovieDBApiKey=<"UNIQUE_API_KEY">
+```
+
 ## Dependencies
 Trevie uses following third-party libraries:
 - [Picasso](http://square.github.io/picasso/)
 - [ButterKnife](http://jakewharton.github.io/butterknife/)
-
-## Try it out
-Try Trevie by following these steps:
-
-1. Download repo
-2. Add [TheMovieDB](https://www.themoviedb.org/) API key to the build
-3. Run `./gradlew clean build` in root directory
-4. Enjoy!
-
-**TheMovieDB API Key is required**
-
-In order for the Trevie app to function properly an API key for [TheMovieDB](https://www.themoviedb.org/) must be included with the build. Please include your own key for the build by adding the following line to [USER_HOME]/.gradle/gradle.properties
-
-`MyTheMovieDBApiKey="<UNIQUE_API_KEY">`
 
 ## License
 ```
